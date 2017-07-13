@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:layout_marginRight="25dp"
+    android:layout_marginLeft="25dp"
+    >
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/app_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:id="@+id/appicon"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:src="@drawable/close"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/setcancel"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="WITHOUT PHONE NUMBER !"
+        android:textColor="@color/appColor"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:id="@+id/needphnnotxttitle"
+        android:layout_below="@+id/appicon"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You need to set your phone number in profile. Without phone number rider can't able to contact you"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/needphnnotxt"
+        android:gravity="center"
+        android:layout_below="@+id/needphnnotxttitle"
+        android:textSize="17sp"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightGrey"
+        android:layout_below="@+id/needphnnotxt"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:id="@+id/blackline"
+        >
+    </View>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/blackline"
+        android:text="Set now"
+        android:textSize="20sp"
+        android:textColor="@color/appColor"
+        android:id="@+id/setphone"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignEnd="@+id/blackline" />
+
+
+
+</RelativeLayout>

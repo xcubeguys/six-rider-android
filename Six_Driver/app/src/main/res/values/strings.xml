@@ -1,0 +1,143 @@
+<resources>
+
+    <!--FB APP ID-->
+    <string name="app_id">319497751803903</string>
+    <string name="demo_app_id">275737512892498</string>
+
+    <string name="app_name">SIX DRIVER</string>
+    <string name="action_settings">Settings</string>
+    <string name="appName">SIX</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="register">Register</string>
+    <string name="app_font">lato.ttf</string>
+    <string name="or">or</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="cc">CC</string>
+    <string name="mobile">Mobile</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="city">City</string>
+    <string name="continue_button">CONTINUE</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="txt_send_email_to_you">Enter you email address and we will send you a link to
+        reset you password.
+    </string>
+    <string name="capital_forget_password">FORGOT PASSWORD</string>
+    <string name="reset_password">RESET PASSWORD</string>
+    <string name="uploadText">To complete signup Go to 316 Tanglin Road #02-01, Phoenix Park, Singapore 247978 for documentation verification.
+</string>
+    <string name="upload_document">Upload Document</string>
+    <string name="select_id">Please select a Driver License to upload</string>
+    <string name="licence">Please select a insurance document to upload</string>
+    <string name="arcaprofile">Please select your ARCA profile to upload</string>
+    <string name="vehiclereg">Please select your vehicle registration document to upload</string>
+    <string name="commercialreg">Please select your commercial document to upload</string>
+    <string name="profile_photo">Profile Photo</string>
+    <string name="option">Select any option</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="close">Cancel</string>
+    <string name="take_photo">TAKE PHOTO</string>
+    <string name="attachPhoto">Please attach your photo</string>
+    <string name="title_activity_map_">Map</string>
+    <string name="go_online">GO ONLINE</string>
+    <string name="ok">OK</string>
+    <string name="you_are_now_online">You are now online</string>
+    <string name="you_are_now_offline">You are now offline</string>
+    <string name="proof_not_accept">Your proof status is pending</string>
+    <string name="proof_rejected">Your proof status is Rejected</string>
+    <string name="go_offline">GO OFFLINE</string>
+    <string name="not_now">Not now</string>
+    <string name="attach_license">Please upload license proof to login</string>
+    <string name="attach_id_proof">Please upload an ID proof to login</string>
+    <string name="attach_licenceplate_proof">Please upload Car Licence proof to login</string>
+    <string name="attach_arca_proof">Please upload your ARCA proof to login</string>
+    <string name="vehicle_reg_proof">Please upload your vehicle registration proof to login</string>
+    <string name="commercial_id_proof">Please upload your commercial id proof to login</string>
+    <string name="logout_msg">Do you want to Log out?</string>
+    <string name="logout_header">Log out</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="start_trip">START TRIP</string>
+    <string name="arriving_now">ARRIVE NOW</string>
+    <string name="end_trip">END TRIP</string>
+    <string name="complete_trip">COMPLETE TRIP</string>
+    <string name="complete_rating">COMPLETE RATING</string>
+    <string name="what_is_your_email">What is Your Email?</string>
+    <string name="enter_valid_cc">Enter valid Country code</string>
+    <string name="invalid_mobile_number">Invalid Mobile number</string>
+    <string name="enter_mobile_number">Enter Mobile number</string>
+    <string name="enter_a_valid_mobile_number">Enter a valid mobile number</string>
+    <string name="submit">SUBMIT</string>
+    <string name="request_from_rider">Request from rider</string>
+    <string name="touch_to_accept">TOUCH TO ACCEPT</string>
+    <string name="google_msg">Connecting to google...</string>
+    <string name="fb_msg">Connecting to facebook...</string>
+    <string name="earnings">Earnings</string>
+    <string name="total_earnings">TOTAL EARNINGS</string>
+    <string name="total_referralearnings">TOTAL REFERRAL EARNINGS</string>
+    <string name="last_trip">Last Trip:</string>
+    <string name="last_trip_time">Jan 4, 2017 11:55:05 AM</string>
+    <string name="enter_country_code">Enter Country Code</string>
+    <string name="overall_rating">OVERALL RATING</string>
+    <string name="rating_content">Great work! you have good reputation</string>
+    <string name="low_rating">You need to workhard..!!!</string>
+    <string name="your_rating">Your rating</string>
+    <string name="no_rating_yet">No Rating Yet..!</string>
+
+
+    <string name="select_category">Please select the category</string>
+    <string name="cancel_trip">Cancel Trip</string>
+    <string name="cancel_trip_request">Request cancelled</string>
+    <string name="cancel_dis">Are you sure you want to cancel the trip?</string>
+    <string name="rider_cancel">Trip has been cancelled by the Rider.</string>
+    <string name="rider_request_cancel">Trip request has been cancelled by the Rider.</string>
+    <string name="carlicenseplate">Please select your Insurance Doc to upload</string>
+    <string name="display_name">Display Name</string>
+    <!--<string name="referral_code_optional">ENTER REFERRAL CODE</string>-->
+    <string name="referral_code_optional">Enter Referral Code (Optional)</string>
+    <string name="default_cc">+65</string>
+    <string name="referral_invalid">Referral Invalid</string>
+    <string name="sms_text">Start earning a Six-figure income by signing up with SIX and participate in SIX unique referral bonus program. Use this referral code during sign-up.</string>
+    <string name="referred_count">Referred Count</string>
+    <string name="referral_alert_header">Referral</string>
+    <string name="share_referral_msg">Your Referral code was shared to your contacts</string>
+    <string name="no_contact_alert">Select Contacts to Share Referral</string>
+    <string name="select_the_number_of_passengers">Enter the number of passengers</string>
+    <string name="bank_details">Bank Details</string>
+
+    <string name="total_referral_earnings">Total Earnings</string>
+    <string name="total_referral_earnings_daily">Daily Earnings</string>
+    <string name="total_referral_earnings_weekly">Weekly Earnings</string>
+    <string name="total_referral_earnings_monthly">Monthly Earnings</string>
+    <string name="total_referral_earnings_yearly">Yearly Earnings</string>
+    <string name="referrer_count">Referrer Count</string>
+    <string name="share_text">Start earning a Six-figure income by signing up with SIX and participate in SIX unique referral bonus program. Use the referral code below during sign-up.</string>
+    <string name="sms_text_last">Once signed up share the unique referral code that you will receive with others.</string>
+    <string name="vehicle_make">Vehicle Make</string>
+    <string name="vehicle_model">Vehicle Model</string>
+    <string name="vehicle_year">Vehicle Year</string>
+    <string name="vehicle_mileage">Vehicle Mileage</string>
+    <string name="timeout">Time out!</string>
+    <string name="time_out_msg">It seems you have been idle for long time try again</string>
+    <string name="no_internet_connection">No internet connection</string>
+
+    <string name="content1">Maintain the required trips per hour. Trips per hour (TPH) is calculated by taking your total number of completed trips in a given incentive period divided by the total number of hours that you were online during that same incentive period.</string>
+    <string name="content2">Maintain the required acceptance rate over all hours driven. Your acceptance rate is calculated by taking the total number of trip requests that you accepted during the incentive period divided by the total number of trip requests that were sent to you during that same incentive period.</string>
+    <string name="content3">Maintain the required completion rate over all hours driven. Completion rate is calculated by taking your total number of completed trips in a given incentive period divided by the total number of trip requests that you received in the given incentive period.Guarantee available for a limited time only. Terms subject to change.</string>
+    <string name="drop_location">Drop Location</string>
+    <string name="pickup_location">Pickup Location</string>
+    <string name="you_rated">You Rated</string>
+    <string name="driver_name">Driver name</string>
+    <string name="your_rides">Your Rides</string>
+    <string name="trip_detail">Trip Detail</string>
+    <string name="verify_doc_str">Verification Document (NRIC) \n(Upload readable doc)</string>
+
+    <string-array name="termscontent">
+        <item>@string/content1</item>
+        <item>@string/content2</item>
+        <item>@string/content3</item>
+    </string-array>
+</resources>

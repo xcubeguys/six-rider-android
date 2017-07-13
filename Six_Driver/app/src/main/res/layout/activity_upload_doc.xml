@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="@color/colorWhite" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/appColor"
+        android:id="@+id/toolbar" >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back"
+            app:srcCompat="@drawable/arrow_left"
+            android:background="@null"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/back"
+            android:text="@string/upload_document"
+            android:textColor="@color/colorWhite"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/toolbar"
+        android:fillViewport="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/relative_doc"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/idproofImg"
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/file_document" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/idproofImg"
+                    android:layout_alignBottom="@+id/idproofImg"
+                    android:id="@+id/txtidproof"
+                    android:text="Add Driver License"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/appColor"
+                    android:textSize="15sp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentTop="true" />
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/commercial"
+                    android:layout_marginTop="20dp"
+                    android:scaleType="fitXY"
+                    android:visibility="visible"
+                    android:layout_marginLeft="20dp"
+                    android:layout_below="@+id/idproofImg"
+                    android:background="@drawable/file_document" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/commercial"
+                    android:layout_alignBottom="@+id/commercial"
+                    android:id="@+id/txtcommercial"
+                    android:text="Add Commercial insurance Doc"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtidproof"
+                    android:textColor="@color/appColor"
+                    android:textSize="15sp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical" />
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/arcaprofile"
+                    android:layout_marginTop="20dp"
+                    android:scaleType="fitXY"
+                    android:visibility="visible"
+                    android:layout_marginLeft="20dp"
+                    android:layout_below="@+id/commercial"
+                    android:background="@drawable/file_document" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/arcaprofile"
+                    android:layout_alignBottom="@+id/arcaprofile"
+                    android:id="@+id/txtarcaprofile"
+                    android:text="Add ACRA / Rental Document"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtcommercial"
+                    android:textColor="@color/appColor"
+                    android:textSize="15sp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical" />
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/licenceplateImg1"
+                    android:layout_marginTop="20dp"
+                    android:scaleType="fitXY"
+                    android:visibility="visible"
+                    android:layout_marginLeft="20dp"
+                    android:layout_below="@+id/arcaprofile"
+                    android:background="@drawable/file_document" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/commercial"
+                    android:layout_alignBottom="@+id/licenceplateImg1"
+                    android:id="@+id/txtlicenceplate1"
+                    android:text="Add Vehicle Registration Doc"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtarcaprofile"
+                    android:textColor="@color/appColor"
+                    android:textSize="15sp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical" />
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/licenceImg"
+                    android:layout_marginTop="20dp"
+                    android:scaleType="fitXY"
+                    android:visibility="visible"
+                    android:layout_marginLeft="20dp"
+                    android:layout_below="@+id/licenceplateImg1"
+                    android:background="@drawable/file_document" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/licenceImg"
+                    android:layout_alignBottom="@+id/licenceImg"
+                    android:id="@+id/txtidlicence"
+                    android:text="Add Vocational License \nRequired from july1,2017"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtlicenceplate1"
+                    android:textColor="@color/appColor"
+                    android:textSize="15sp"
+                    android:paddingLeft="10dp"
+                    android:visibility="visible"
+                    android:gravity="center_vertical" />
+
+                <Spinner
+                    android:id="@+id/car_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="35dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="35dp"
+                    android:textColor="@color/appColor"
+                    android:spinnerMode="dropdown"
+                    android:background="@drawable/spinner_layout"
+                    android:overlapAnchor="false"
+                    android:layout_below="@+id/licenceImg"
+                    android:layout_alignEnd="@+id/txtarcaprofile"/>
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/numberofpass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    app:met_floatingLabelAlwaysShown="false"
+                    app:met_textColorHint="@color/colorPrimary"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="5dp"
+                    android:inputType="number"
+                    android:layout_below="@+id/car_category"
+                    app:met_floatingLabelAnimating="true"
+                    app:met_floatingLabel="highlight"
+                    android:maxLength="2"
+                    android:digits="._abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@ "
+                    android:hint="@string/select_the_number_of_passengers"
+                    android:layout_alignEnd="@+id/car_category"
+                    android:layout_alignStart="@+id/car_category" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/linearLayout"
+                    android:layout_alignEnd="@+id/car_category"
+                    android:layout_alignStart="@+id/car_category"
+                    android:layout_below="@+id/numberofpass">
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/vehicle_make"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        app:met_floatingLabelAlwaysShown="false"
+                        app:met_textColorHint="@color/colorPrimary"
+                        android:layout_marginTop="5dp"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                        android:layout_marginBottom="5dp"
+                        android:inputType="textWebEmailAddress"
+                        app:met_floatingLabelAnimating="true"
+                        app:met_floatingLabel="highlight"
+                        android:maxLength="10"
+                        android:hint="@string/vehicle_make" />
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/vehicle_model"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        app:met_floatingLabelAlwaysShown="false"
+                        app:met_textColorHint="@color/colorPrimary"
+                        android:layout_marginTop="5dp"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                        android:layout_marginBottom="5dp"
+                        android:inputType="textWebEmailAddress"
+                        app:met_floatingLabelAnimating="true"
+                        app:met_floatingLabel="highlight"
+                        android:maxLength="10"
+                        android:hint="@string/vehicle_model" />
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/vehicle_year"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        app:met_floatingLabelAlwaysShown="false"
+                        app:met_textColorHint="@color/colorPrimary"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:inputType="number"
+                        app:met_floatingLabelAnimating="true"
+                        app:met_floatingLabel="highlight"
+                        android:maxLength="4"
+                        android:hint="@string/vehicle_year" />
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/vehicle_mileage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        app:met_floatingLabelAlwaysShown="false"
+                        app:met_textColorHint="@color/colorPrimary"
+                        android:layout_marginTop="5dp"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                        android:layout_marginBottom="5dp"
+                        android:inputType="number"
+                        app:met_floatingLabelAnimating="true"
+                        app:met_floatingLabel="highlight"
+                        android:maxLength="6"
+                        android:hint="@string/vehicle_mileage" />
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/vehicle_numberplate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        app:met_floatingLabelAlwaysShown="false"
+                        app:met_textColorHint="@color/colorPrimary"
+                        android:layout_marginTop="5dp"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                        android:layout_marginBottom="5dp"
+                        android:inputType="textEmailAddress"
+                        app:met_floatingLabelAnimating="true"
+                        app:met_floatingLabel="highlight"
+                        android:maxLength="30"
+                        android:hint="Vehicle License Plate Number" />
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/input_Referral_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        app:met_floatingLabelAlwaysShown="false"
+                        app:met_textColorHint="@color/colorPrimary"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:inputType="textWebEmailAddress"
+                        app:met_floatingLabelAnimating="true"
+                        app:met_floatingLabel="highlight"
+                        android:maxLength="20"
+                        android:hint="@string/referral_code_optional" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:layout_below="@+id/linearLayout"
+                    android:text="@string/uploadText"
+                    android:id="@+id/textView" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/appColor"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:id="@+id/continuebut"
+                    android:textSize="15sp"
+                    android:layout_below="@+id/termslay"
+                    android:gravity="center"
+                    android:layout_marginBottom="30dp"
+                    android:text="@string/continue_button" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/appColor"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:id="@+id/continuebt"
+                    android:visibility="gone"
+                    android:textSize="15sp"
+                    android:layout_below="@+id/continuebut"
+                    android:gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/continue_button" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView"
+                    android:id="@+id/termslay"
+                    android:layout_centerHorizontal="true">
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Terms and conditions"
+                        android:id="@+id/termsandconditions"
+                        android:textColor="@color/colorPrimary" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.tommy.driver.SettingActivity">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/header_layout">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:text="@string/app_name"
+                    android:background="@color/colorPrimary"
+                    android:id="@+id/header"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/colorWhite"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/backButton"
+                    android:padding="5dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignBottom="@+id/header"
+                    app:srcCompat="@drawable/arrow_left"
+                    android:background="@null"
+                    tools:ignore="VectorDrawableCompat" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Setting"
+                    android:textAllCaps="false"
+                    android:padding="5dp"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center"
+                    android:id="@+id/textView2"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/backButton"
+                    android:layout_alignBottom="@+id/header" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editButton"
+                    android:padding="5dp"
+                    android:src="@drawable/pencil_circle"
+                    android:background="@null"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    tools:ignore="VectorDrawableCompat" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editCancelButton"
+                    android:padding="5dp"
+                    android:src="@drawable/arrow_left"
+                    android:background="@null"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignBottom="@+id/header"
+                    android:layout_alignParentTop="true"
+                    android:visibility="gone"
+                    tools:ignore="VectorDrawableCompat" />
+
+            </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header_layout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_image_layout"
+                android:background="#f5f5f5"
+                android:padding="10dp" >
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/profileImage"
+                    android:background="@drawable/account_circle_grey"
+                    android:foregroundGravity="center"
+                    android:layout_alignParentTop="true"
+                    android:clickable="false"
+                    android:layout_alignParentStart="true" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/profile_image_layout"
+                android:id="@+id/name_layout">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_alignParentTop="true"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_alignBottom="@+id/fname_layout"
+                    />
+
+
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:background="#EDEDED"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/view4"
+                    android:layout_alignBottom="@+id/fname_layout"
+                    android:layout_alignParentTop="true" />
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/fname_layout"
+                    android:layout_toStartOf="@+id/view4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FirstName"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="#A4A4AC"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/text_firstname"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/edtFirstName"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="First Name"
+                        android:hint="First Name"
+                        android:background="@null"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_below="@+id/text_firstname"
+                        android:layout_alignParentStart="true"
+                        android:enabled="false"
+                        android:layout_alignParentEnd="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/fname_layout"
+                    android:layout_toEndOf="@+id/fname_layout"
+                    android:id="@+id/lname_layout">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LastName"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="#A4A4AC"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/lname_title"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/edtLastName"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Last Name"
+                        android:hint="Last Name"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_below="@+id/lname_title"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/nick_layout"
+                android:layout_below="@+id/name_layout"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/display_name"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/nick_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edtnickname"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="@string/display_name"
+                    android:hint="@string/display_name"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/nick_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="false"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_below="@+id/carcategory"
+                    tools:ignore="NotSibling" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mobile_layout"
+                android:layout_below="@+id/nick_layout"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/mobile_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edtCountryCode"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="CC"
+                    android:hint="CC"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/mobile_title"
+                    android:layout_alignParentStart="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edtMobile"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="+XX XXXXXXXXXX"
+                    android:hint="Mobile Number"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_alignBottom="@+id/edtCountryCode"
+                    android:layout_alignEnd="@+id/mobile_title"
+                    android:enabled="false"
+                    android:layout_toEndOf="@+id/edtCountryCode" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EDEDED"
+                android:layout_below="@+id/mobile_layout"
+                android:layout_alignParentStart="true" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/category_layout"
+                android:layout_below="@+id/email_layout"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/category_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/carcategory"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="xxx"
+                    android:hint="First Name"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/category_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="false"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_below="@+id/carcategory"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/email_layout"
+                android:layout_below="@+id/mobile_layout"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/email_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edtEmail"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="xxx@gmail.com"
+                    android:hint="First Name"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/email_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="false"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_below="@+id/edtEmail"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/referralcode_layout"
+                android:layout_below="@+id/vehiclenuberplate_layout"
+                android:orientation="horizontal"
+                android:layout_alignEnd="@+id/logout_button"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:id="@+id/Referral_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:inputType="textWebEmailAddress"
+                    android:maxLength="20"
+                    android:digits="._abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@ "
+                    android:hint="Referral Code" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Referral_code"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:hint="TYMS11"
+                    android:text="TYMS11"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/Referral_title"
+                    android:layout_alignParentStart="true"
+                    android:enabled="false"/>
+
+
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EDEDED"
+                android:layout_below="@+id/referralcode_layout"
+                />
+
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@color/appColor"
+                android:textColor="@color/colorWhite"
+                android:textSize="10sp"
+                android:id="@+id/share"
+                android:gravity="center"
+                android:text="Share"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignTop="@+id/referralcode_layout"
+                android:layout_toEndOf="@+id/referralcode_layout"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_alignParentEnd="true"/>
+
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/vehiclemake_layout"
+                android:layout_below="@+id/category_layout"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vehicle Make"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/vehiclemake_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_vehiclemake"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Vehicle Make"
+                    android:hint="Vehicle Make"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/vehiclemake_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="false"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_below="@+id/edit_vehiclemake"
+                    />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/vehiclemodel_layout"
+                android:layout_below="@+id/vehiclemake_layout"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vehicle Model"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/vehiclemodel_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_vehiclemodel"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Vehicle Model"
+                    android:hint="Vehicle Model"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/vehiclemodel_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="false"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_below="@+id/edit_vehiclemodel"
+                    />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/vehicleyear_layout"
+                android:layout_below="@+id/vehiclemodel_layout"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vehicle Year"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/vehicleyear_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_vehicleyear"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Vehicle Year"
+                    android:hint="Vehicle Year"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/vehicleyear_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="false"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_below="@+id/edit_vehicleyear"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/vehiclenuberplate_layout"
+                android:layout_below="@+id/vehiclemileage_layout"
+                android:layout_alignParentStart="true"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vehicle License Plate Number"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/vehiclenumberplate_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_vehiclenumberplate"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:editable="false"
+                    android:enabled="false"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Vehicle License Plate Number"
+                    android:hint="Vehicle License Plate Number"
+                    android:background="@null"
+                    android:maxLength="30"
+                    android:inputType="textEmailAddress"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/vehiclenumberplate_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_below="@+id/edit_vehiclenumberplate"
+                    />
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/vehiclemileage_layout"
+                android:layout_below="@+id/vehicleyear_layout"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vehicle Mileage"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#A4A4AC"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/vehiclemileage_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_vehiclemileage"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Vehicle Mileage"
+                    android:hint="Vehicle Mileage"
+                    android:background="@null"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/vehiclemileage_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="false"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EDEDED"
+                    android:layout_below="@+id/edit_vehiclemileage"
+                    />
+
+            </RelativeLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="FEEDBACK"
+                android:textColor="@color/colorWhite"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="15dp"
+                android:elevation="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/feedback_button"
+                android:gravity="center"
+                android:layout_below="@id/referralcode_layout"
+                android:layout_alignParentEnd="true"
+                android:background="@color/appColor"
+                android:layout_alignParentStart="true"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LOGOUT"
+                android:textColor="@color/colorWhite"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:elevation="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/logout_button"
+                android:gravity="center"
+                android:layout_below="@id/feedback_button"
+                android:layout_alignParentEnd="true"
+                android:background="@color/appColor"
+                android:layout_alignParentStart="true"
+                />
+
+
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+    <com.tommy.driver.CountryCodePicker
+        android:id="@+id/ccp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>

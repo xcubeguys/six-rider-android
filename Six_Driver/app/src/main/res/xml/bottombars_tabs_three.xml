@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+
+    <tab
+        id="@+id/tab_profile"
+        icon="@drawable/account_box_outline"
+        title="" />
+
+    <tab
+        id="@+id/tab_earning"
+        icon="@drawable/credit_card"
+        title="" />
+
+    <tab
+        id="@+id/trip_history"
+        icon="@drawable/trip_car"
+        title="" />
+
+
+    <tab
+        id="@+id/tab_rating"
+        icon="@drawable/star"
+        title="" />
+
+
+
+
+</tabs>

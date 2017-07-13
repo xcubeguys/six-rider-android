@@ -1,0 +1,194 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ProgressWheel="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/progresslayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appColor"
+    android:orientation="vertical"
+
+    >
+
+
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_below="@+id/textView4"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/map_view"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp" />
+
+        <com.tommy.driver.ProgressWheel
+            android:id="@+id/progressBarTwo"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
+            android:layout_marginTop="20dp"
+            android:layout_centerInParent="true"
+            ProgressWheel:pwBarColor="#000"
+            ProgressWheel:pwBarLength="50dp"
+            ProgressWheel:pwBarWidth="0dp"
+            ProgressWheel:pwRimColor="#FFF"
+            ProgressWheel:pwRimWidth="2dp"
+            ProgressWheel:pwSpinSpeed="2dp"
+            ProgressWheel:pwTextColor="#00000000"
+            ProgressWheel:pwTextSize="14sp" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="@string/request_from_rider"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:text="@string/touch_to_accept"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/pickup_location_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/linearLayout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+
+        <ImageButton
+            android:id="@+id/start_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:padding="5dp"
+            android:src="@mipmap/upper" />
+
+        <TextView
+            android:id="@+id/pick_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/start_icon"
+            android:ellipsize="end"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentEnd="true"
+            android:gravity="left|center"
+            android:maxLines="2"
+            android:text="Pickup Location "
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorWhite" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/droplocationlay"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="7dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/pickup_location_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <ImageButton
+            android:id="@+id/imageButton5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:padding="5dp"
+            android:src="@mipmap/lower" />
+
+        <TextView
+            android:id="@+id/drop_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/imageButton5"
+            android:ellipsize="end"
+            android:gravity="left|center"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentEnd="true"
+            android:maxLines="2"
+            android:text="Set Drop Location"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorWhite" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/droplocationlay"
+        android:layout_marginTop="15dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/eta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="30dp"
+            android:text="ETA: 5 mins"
+            android:textSize="15sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp"
+            android:gravity="right"
+            android:text="Distance: 1Km"
+            android:textSize="15sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorWhite" />
+
+
+        <TextView
+            android:id="@+id/fare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/eta"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="Estimated Fare: $12"
+            android:textSize="15sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorWhite" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
