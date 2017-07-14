@@ -29,11 +29,6 @@
     <string name="uploadText">To complete signup Go to 316 Tanglin Road #02-01, Phoenix Park, Singapore 247978 for documentation verification.
 </string>
     <string name="upload_document">Upload Document</string>
-    <string name="select_id">Please select a Driver License to upload</string>
-    <string name="licence">Please select a insurance document to upload</string>
-    <string name="arcaprofile">Please select your ARCA profile to upload</string>
-    <string name="vehiclereg">Please select your vehicle registration document to upload</string>
-    <string name="commercialreg">Please select your commercial document to upload</string>
     <string name="profile_photo">Profile Photo</string>
     <string name="option">Select any option</string>
     <string name="camera">Camera</string>
@@ -50,12 +45,37 @@
     <string name="proof_rejected">Your proof status is Rejected</string>
     <string name="go_offline">GO OFFLINE</string>
     <string name="not_now">Not now</string>
-    <string name="attach_license">Please upload license proof to login</string>
-    <string name="attach_id_proof">Please upload an ID proof to login</string>
-    <string name="attach_licenceplate_proof">Please upload Car Licence proof to login</string>
-    <string name="attach_arca_proof">Please upload your ARCA proof to login</string>
-    <string name="vehicle_reg_proof">Please upload your vehicle registration proof to login</string>
-    <string name="commercial_id_proof">Please upload your commercial id proof to login</string>
+
+    <string name="select_id">Please select a Driver License to upload</string>
+    <string name="licence">Please select a insurance document to upload</string>
+    <string name="arcaprofile">Please select your ARCA profile to upload</string>
+    <string name="vehiclereg">Please select your vehicle registration document to upload</string>
+    <string name="commercialreg">Please select your commercial document to upload</string>
+
+    <string-array name="image_upload_messages">
+        <item>"Please select front side of your Driving License proof to upload"</item>
+        <item>"Please select back side of your Driving License proof to upload"</item>
+        <item>"Please select front side of your NRIC proof to upload"</item>
+        <item>"Please select back side of your NRIC proof to upload"</item>
+        <item>"Please select ACRA Business Profile / Rental Document proof to upload"</item>
+        <item>"Please select Vehicle Registration (Log Card) / LTA letter for conversion of private vehicle (if it is a private car) proof to upload"</item>
+        <item>"Please select Commercial Insurance proof to upload"</item>
+        <item>"Please select Min 1 month experience as a Private Hired (PH) car - Screenshot of driver’s profile proof to upload"</item>
+        <item>"Please select Private Hire Car Driver’s Vocational License (PDVL) WEF 1 July 2017 (Please bring alone if you already acquired it) proof to upload"</item>
+    </string-array>
+
+    <string-array name="image_upload_errors">
+        <item>"Please upload front side of your Driving License proof to login"</item>
+        <item>"Please upload back side of your Driving License proof to login"</item>
+        <item>"Please upload front side of your NRIC proof to login"</item>
+        <item>"Please upload back side of your NRIC proof to login"</item>
+        <item>"Please upload ACRA Business Profile / Rental Document proof to login"</item>
+        <item>"Please upload Vehicle Registration (Log Card) / LTA letter for conversion of private vehicle (if it is a private car) proof to login"</item>
+        <item>"Please upload Commercial Insurance proof to login"</item>
+        <item>"Please upload Min 1 month experience as a Private Hired (PH) car - Screenshot of driver’s profile proof to login"</item>
+        <item>"Please upload Private Hire Car Driver’s Vocational License (PDVL) WEF 1 July 2017 (Please bring alone if you already acquired it) proof to login"</item>
+    </string-array>
+
     <string name="logout_msg">Do you want to Log out?</string>
     <string name="logout_header">Log out</string>
     <string name="yes">Yes</string>

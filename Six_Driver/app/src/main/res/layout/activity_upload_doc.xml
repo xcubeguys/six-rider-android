@@ -56,129 +56,53 @@
                 android:id="@+id/relative_doc"
                 android:layout_alignParentStart="true">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:id="@+id/idproofImg"
-                    android:scaleType="fitXY"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:background="@drawable/file_document" />
-
-                <TextView
-                    android:layout_width="match_parent"
+                <include
+                    android:id="@+id/driver_license_ll"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/idproofImg"
-                    android:layout_alignBottom="@+id/idproofImg"
-                    android:id="@+id/txtidproof"
-                    android:text="Add Driver License"
-                    android:layout_marginTop="20dp"
-                    android:textColor="@color/appColor"
-                    android:textSize="15sp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical"
-                    android:layout_alignParentTop="true" />
+                    layout="@layout/upload_doc_template"/>
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:id="@+id/commercial"
-                    android:layout_marginTop="20dp"
-                    android:scaleType="fitXY"
-                    android:visibility="visible"
-                    android:layout_marginLeft="20dp"
-                    android:layout_below="@+id/idproofImg"
-                    android:background="@drawable/file_document" />
-
-                <TextView
-                    android:layout_width="match_parent"
+                <include
+                    android:id="@+id/nric_ll"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/commercial"
-                    android:layout_alignBottom="@+id/commercial"
-                    android:id="@+id/txtcommercial"
-                    android:text="Add Commercial insurance Doc"
-                    android:layout_marginTop="20dp"
-                    android:layout_below="@+id/txtidproof"
-                    android:textColor="@color/appColor"
-                    android:textSize="15sp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical" />
+                    layout="@layout/upload_doc_template"
+                    android:layout_below="@+id/driver_license_ll"/>
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:id="@+id/arcaprofile"
-                    android:layout_marginTop="20dp"
-                    android:scaleType="fitXY"
-                    android:visibility="visible"
-                    android:layout_marginLeft="20dp"
-                    android:layout_below="@+id/commercial"
-                    android:background="@drawable/file_document" />
-
-                <TextView
-                    android:layout_width="match_parent"
+                <include
+                    android:id="@+id/acra_rental_ll"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/arcaprofile"
-                    android:layout_alignBottom="@+id/arcaprofile"
-                    android:id="@+id/txtarcaprofile"
-                    android:text="Add ACRA / Rental Document"
-                    android:layout_marginTop="20dp"
-                    android:layout_below="@+id/txtcommercial"
-                    android:textColor="@color/appColor"
-                    android:textSize="15sp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical" />
+                    layout="@layout/upload_doc_template"
+                    android:layout_below="@+id/nric_ll"/>
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:id="@+id/licenceplateImg1"
-                    android:layout_marginTop="20dp"
-                    android:scaleType="fitXY"
-                    android:visibility="visible"
-                    android:layout_marginLeft="20dp"
-                    android:layout_below="@+id/arcaprofile"
-                    android:background="@drawable/file_document" />
-
-                <TextView
-                    android:layout_width="match_parent"
+                <include
+                    android:id="@+id/vehicle_registration_ll"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/commercial"
-                    android:layout_alignBottom="@+id/licenceplateImg1"
-                    android:id="@+id/txtlicenceplate1"
-                    android:text="Add Vehicle Registration Doc"
-                    android:layout_marginTop="20dp"
-                    android:layout_below="@+id/txtarcaprofile"
-                    android:textColor="@color/appColor"
-                    android:textSize="15sp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical" />
+                    layout="@layout/upload_doc_template"
+                    android:layout_below="@+id/acra_rental_ll"/>
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:id="@+id/licenceImg"
-                    android:layout_marginTop="20dp"
-                    android:scaleType="fitXY"
-                    android:visibility="visible"
-                    android:layout_marginLeft="20dp"
-                    android:layout_below="@+id/licenceplateImg1"
-                    android:background="@drawable/file_document" />
-
-                <TextView
-                    android:layout_width="match_parent"
+                <include
+                    android:id="@+id/commercial_insurance_ll"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/licenceImg"
-                    android:layout_alignBottom="@+id/licenceImg"
-                    android:id="@+id/txtidlicence"
-                    android:text="Add Vocational License \nRequired from july1,2017"
-                    android:layout_marginTop="20dp"
-                    android:layout_below="@+id/txtlicenceplate1"
-                    android:textColor="@color/appColor"
-                    android:textSize="15sp"
-                    android:paddingLeft="10dp"
-                    android:visibility="visible"
-                    android:gravity="center_vertical" />
+                    layout="@layout/upload_doc_template"
+                    android:layout_below="@+id/vehicle_registration_ll"/>
+
+                <include
+                    android:id="@+id/experience_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/upload_doc_template"
+                    android:layout_below="@+id/commercial_insurance_ll"/>
+
+                <include
+                    android:id="@+id/private_vocational_license_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/upload_doc_template"
+                    android:layout_below="@+id/experience_ll"/>
 
                 <Spinner
                     android:id="@+id/car_category"
@@ -191,8 +115,7 @@
                     android:spinnerMode="dropdown"
                     android:background="@drawable/spinner_layout"
                     android:overlapAnchor="false"
-                    android:layout_below="@+id/licenceImg"
-                    android:layout_alignEnd="@+id/txtarcaprofile"/>
+                    android:layout_below="@+id/private_vocational_license_ll"/>
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/numberofpass"
@@ -243,7 +166,7 @@
                         app:met_floatingLabelAlwaysShown="false"
                         app:met_textColorHint="@color/colorPrimary"
                         android:layout_marginTop="5dp"
-                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ."
                         android:layout_marginBottom="5dp"
                         android:inputType="textWebEmailAddress"
                         app:met_floatingLabelAnimating="true"
