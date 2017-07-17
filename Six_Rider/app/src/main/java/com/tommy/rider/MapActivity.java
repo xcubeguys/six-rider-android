@@ -66,7 +66,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -151,10 +150,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.jaredrummler.materialspinner.MaterialSpinner;
-import com.tommy.rider.adapter.AppController;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.Contributor;
 import com.tommy.rider.adapter.CustomRatingBar;

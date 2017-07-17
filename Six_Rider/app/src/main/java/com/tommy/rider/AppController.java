@@ -1,4 +1,4 @@
-package com.tommy.rider.adapter;
+package com.tommy.rider;
 
 import android.app.Application;
 import android.content.Context;
@@ -16,7 +16,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.tommy.rider.R;
+import com.tommy.rider.adapter.LruBitmapCache;
 
 import io.fabric.sdk.android.Fabric;
 

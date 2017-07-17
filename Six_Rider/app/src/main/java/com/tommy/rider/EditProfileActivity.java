@@ -44,7 +44,6 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
-import com.tommy.rider.adapter.AppController;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.CountryCodeDialog;
 import com.tommy.rider.adapter.CountryCodePicker;

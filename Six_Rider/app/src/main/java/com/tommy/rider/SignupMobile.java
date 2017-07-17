@@ -32,7 +32,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.tommy.rider.adapter.AppController;
 import com.tommy.rider.adapter.BulletTextUtil;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.CountryCodeDialog;
