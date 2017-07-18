@@ -16,7 +16,8 @@ public class Constants {
     //public static final String BASE_URL   =   "http://demo.cogzideltemplates.com/tommy/";
     //public static final String BASE_URL   =   "http://34.225.236.233/";
     //public static final String BASE_URL   =   "http://www.sixtnc.com/";
-    public static final String BASE_URL   =   "http://192.168.2.126/sixtnc/";     // PT
+    //public static final String BASE_URL   =   "http://192.168.2.126/sixtnc/";     // PT
+    public static final String BASE_URL   =   "http://52.64.2.146/";                // PT
 
     //Playstore App URL
     public static final String Play_Store_URL = "https://play.google.com/store/apps/developer?id=6%20SIX&hl=en";

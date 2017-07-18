@@ -57,11 +57,11 @@
         android:theme="@style/MyMaterialTheme"
         tools:replace="android:icon">
         <activity android:name=".SplashActivity">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
 
             <intent-filter
                 android:label="@string/app_name">
@@ -148,13 +148,7 @@
 
         <activity
             android:name=".DocUpload_Activity_"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ImageUpload_"
             android:screenOrientation="portrait"/>
