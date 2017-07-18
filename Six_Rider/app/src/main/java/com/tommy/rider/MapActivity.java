@@ -1,6 +1,5 @@
 package com.tommy.rider;
 
-
 import android.animation.IntEvaluator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
@@ -193,7 +192,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 
 public class MapActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         LocationSource, LocationListener, android.location.LocationListener,
@@ -2986,34 +2984,35 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     //Payment Type Listener
     private void getPaymentReference() {
         if (userID != null) {
-
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("riders_location").child(userID).child("Paymenttype");
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                     if (dataSnapshot.getValue() != null) {
                         String status = dataSnapshot.getValue().toString();
                         if (status != null) {
                             if (status.matches("stripe")) {
                                 cashButton.setBackground(getResources().getDrawable(R.mipmap.ub__payment_type_delegate));
                             } else if (status.matches("cash")) {
-
                                 //getCashStatus
                                 getCashOnOff();
-
                             } else if (status.matches("corpID")) {
                                 cashButton.setBackground(getResources().getDrawable(R.mipmap.ic_cardss));
 
                             }
                         }
+                    } else {
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("riders_location").child(userID);
+                        Map<String, Object> taskMap = new HashMap<>();
+                        taskMap.put("Paymenttype", Constants.PAYMENT_TYPE_CASH);
+                        databaseReference.updateChildren(taskMap);
+                        getCashOnOff();
                     }
-
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    getCashOnOff();
                 }
             });
         }
@@ -3021,25 +3020,20 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     //Payment Type Listener
     private void getCashOnOff() {
-
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("cashoption").child("status");
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                     if (dataSnapshot.getValue() != null) {
                         cashStatus = dataSnapshot.getValue().toString();
                         Drawable drawable = cashButton.getBackground();
-                        if (!cashStatus.matches("on")) {
-
-                            cashButton.setBackground(getResources().getDrawable(R.drawable.ub__payment_type_cash_no));
-
-
-                        } else {
-
+                        if (cashStatus.matches("on")) {
                             cashButton.setBackground(getResources().getDrawable(R.drawable.ub__payment_type_cash));
-
+                        } else {
+                            cashButton.setBackground(getResources().getDrawable(R.drawable.ub__payment_type_cash_no));
                         }
+                    } else {
+                        cashButton.setBackground(getResources().getDrawable(R.drawable.ub__payment_type_cash_no));
                     }
 
                 }

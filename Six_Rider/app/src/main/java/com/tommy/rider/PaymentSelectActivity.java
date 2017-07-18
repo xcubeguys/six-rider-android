@@ -139,7 +139,6 @@ public class PaymentSelectActivity extends AppCompatActivity {
 
     @Click(R.id.add_payment)
     void addPayment() {
-
         showPaymentGatewaydialog();
     }
 
@@ -158,28 +157,16 @@ public class PaymentSelectActivity extends AppCompatActivity {
     }
 
     private void getPaymentReference() {
-
             DatabaseReference databasecashReference = FirebaseDatabase.getInstance().getReference().child("cashoption").child("status");
             databasecashReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                     if (dataSnapshot.getValue() != null) {
                         String status = dataSnapshot.getValue().toString();
                         if (status != null) {
-
                             if (status.matches("off")) {
-
                                 cashView.setVisibility(View.GONE);
-
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    cashImage.setImageDrawable(getResources().getDrawable(R.drawable.ub__payment_type_cash_no, getApplicationContext().getTheme()));
-                                } else {
-                                    cashImage.setImageDrawable(getResources().getDrawable(R.drawable.ub__payment_type_cash_no));
-                                }
-
                             } else if (status.matches("on")) {
-
                                 cashView.setVisibility(View.VISIBLE);
 
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -194,7 +181,6 @@ public class PaymentSelectActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             });
 
