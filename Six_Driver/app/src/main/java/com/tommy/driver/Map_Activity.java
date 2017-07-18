@@ -205,12 +205,12 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     Location mCurrentLocation, lStart, lEnd;
     static double distance = 0;
     double speed;
-    Double routeLat,routeLng;
+    Double routeLat, routeLng;
     static long startTime, endTime;
-    ImageView mute,volon;
+    ImageView mute, volon;
     static int p = 1;
     int previousToll = 0;
-    double k,surgeaddamount;
+    double k, surgeaddamount;
     String strDistanceBegin, currentDateTimeString, endAddress, endLat, endLng;
     FlexibleRatingBar flexibleRatingBar;
     String ratingInt;
@@ -220,20 +220,20 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     TextToSpeech textToSpeech;
     List<Step> step;
     Drawable tickDrawable;
-    double airportamt=0.0;
+    double airportamt = 0.0;
     Bitmap mapBitmap;
     ArrayList<LatLng> MarkerPoints;
     ObjectAnimator animY;
     DatabaseReference requestReference;
-    DatabaseReference tripReference,ridercanceltripreference;
+    DatabaseReference tripReference, ridercanceltripreference;
     DatabaseReference proofstatusref;
     static DatabaseReference tollfeereference;
     DatabaseReference faretoolreference;
-    int waypointcount=0;
+    int waypointcount = 0;
     //Smart location
     final Handler handler = new Handler();
     final Handler ttsHandler = new Handler();
-    float previousBearing=0;
+    float previousBearing = 0;
 
     List<LatLng> latlngs;
 
@@ -250,19 +250,19 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
      * than this value.
      */
     SharedPreferences.Editor editor, getState;
-    SharedPreferences state,prefs;
+    SharedPreferences state, prefs;
     Dialog d, dialogTripSummary, dialog;
     RelativeLayout onlineLay, toolbarLayout;
     public static boolean excecuteonce = false;
     public static boolean excecutecancelonce = false;
     String driverId = null, drivername;
-    static String strTotalDistance="0";
+    static String strTotalDistance = "0";
     FirebaseApp app;
     GeoFire geoFire;
-    DatabaseReference ratingReference, ratingRef, checkAccepRef, checkTripCancelRef, rideridreference,droplocationRef,
-            pickupTerminalRef,tripsdataRef,multidestref;
-    ValueEventListener listener, tripListener, ratingListener, canceltripslistener,statusListener,droplocationlistener,
-            pickupTerminalListen,tripsdataListen,multidestlis;
+    DatabaseReference ratingReference, ratingRef, checkAccepRef, checkTripCancelRef, rideridreference, droplocationRef,
+            pickupTerminalRef, tripsdataRef, multidestref;
+    ValueEventListener listener, tripListener, ratingListener, canceltripslistener, statusListener, droplocationlistener,
+            pickupTerminalListen, tripsdataListen, multidestlis;
     public String riderFirstName, riderLastName, status, message, ridermobile, riderFirstNameService;
     BottomBar bottomBar;
     CardView navcard;
@@ -270,27 +270,27 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     //EasyTimer audioTimer= new EasyTimer(3000);
 
     RelativeLayout startTripLayout, arriveNowLayout, endTripLayout, destinationLayout;
-    TextView onlineTxt, txtRiderName, txtRiderDestination, txtRiderName_Begin, txtEndTrip, toll_pay,navTxt;
+    TextView onlineTxt, txtRiderName, txtRiderDestination, txtRiderName_Begin, txtEndTrip, toll_pay, navTxt;
     Button btnArriveNow, btnEndTrip;
-    TextView pickuploc,droploc,progeta,progDistance,progestfare;
+    TextView pickuploc, droploc, progeta, progDistance, progestfare;
     // location accuracy settings
 
-    Marker currentLocMarker,pickUPrDropMarker;
-    Polyline routePolyline,mulPoly;
-    LatLng destLocation, orginLocation,navigationLatLng;
+    Marker currentLocMarker, pickUPrDropMarker;
+    Polyline routePolyline, mulPoly;
+    LatLng destLocation, orginLocation, navigationLatLng;
 
-    ImageButton riderinfo, riderinfoinarrived,riderinfoinarrived1;
+    ImageButton riderinfo, riderinfoinarrived, riderinfoinarrived1;
 
     Button btnStartTrip;
-    String reqID, tripID, strLat, strLng, tripIDWithName,pickLatLng;
+    String reqID, tripID, strLat, strLng, tripIDWithName, pickLatLng;
     String strsetValue, tripStatus, strTotalPrice;
 
-    RelativeLayout progressLayout1, progresslayout, FAB,routeNavigate;
+    RelativeLayout progressLayout1, progresslayout, FAB, routeNavigate;
     ProgressWheel pwOne;
     ImageView requestMapView;
     View mapView;
     String tollfee, totalprice;
-    String riderID, strsetdestination, strRiderProfile, strCategory,strPickupAddress;
+    String riderID, strsetdestination, strRiderProfile, strCategory, strPickupAddress;
 
     ArrayList<String> tripIDs = new ArrayList<>();
     ArrayList<String> tollfrees = new ArrayList<>();
@@ -306,17 +306,17 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     boolean doubleBackToExitPressedOnce = false;
     ProgressDialog progressDialog;
 
-    String strWebCategory, strWebprice_km, strwebpricepermin, strwebmaxsize, strwebpricefare, strCacnelStatus,strbookfee,strairportfee,
-            strtaxpercentage,strDropPrice;
+    String strWebCategory, strWebprice_km, strwebpricepermin, strwebmaxsize, strwebpricefare, strCacnelStatus, strbookfee, strairportfee,
+            strtaxpercentage, strDropPrice;
 
-    TextView trip_rider_name, txtTotalDistance, txtTripAmount, txtTripdate,companyname,companyfee;
+    TextView trip_rider_name, txtTotalDistance, txtTripAmount, txtTripdate, companyname, companyfee;
     ImageView imgRiderProfile;
 
     LinearLayout dynamic, dynamic1, dynamic2;
     TextView current_rider, current_rider1, current_rider2;
 
     BitmapDescriptor mapCarIcon;
-    LatLng latLng,removingMarkerPoint;
+    LatLng latLng, removingMarkerPoint;
 
     LatLng prevLatLng = new LatLng(0, 0);
 
@@ -324,10 +324,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     MediaPlayer requstingTone = new MediaPlayer();
 
-    String surgePrice,driverCompanyName,driverCompanyFee;
+    String surgePrice, driverCompanyName, driverCompanyFee;
 
     Ringtone r;
-    boolean volume=false;
+    boolean volume = false;
 
     public Map<LatLng, Marker> tollMarkersMap;
 
@@ -335,7 +335,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final int CUSTOM_OVERLAY_PERMISSION_REQUEST_CODE = 101;
 
-    Date startDate,endDate;
+    Date startDate, endDate;
     long onlineDuration;
 
     int n = 5;//Total Category
@@ -346,7 +346,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     public Map<LatLng, Marker> wayPaintsMarker;
     public Map<Integer, Polyline> wayPaintsPolyline;
 
-    int ERP_SKIP_COUNT=0;
+    int ERP_SKIP_COUNT = 0;
 
     @SuppressLint("UseSparseArrays")
     @Override
@@ -394,7 +394,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         System.out.println("Tripstate" + tripState);
         Constants.MAP_ISSHOWING = true;
 
-        startService(new Intent(getBaseContext(),Services.class).setPackage(this.getPackageName()));
+        startService(new Intent(getBaseContext(), Services.class).setPackage(this.getPackageName()));
         //Getting Google API Key
         getKeys();
         loadTollJSONFromAsset();
@@ -417,8 +417,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         riderinfo = (ImageButton) findViewById(R.id.riderinfo);
         riderinfoinarrived = (ImageButton) findViewById(R.id.riderinfoinarrived);
         riderinfoinarrived1 = (ImageButton) findViewById(R.id.riderinfoinarrived1);
-        mute=(ImageView)findViewById(R.id.voloff);
-        volon=(ImageView)findViewById(R.id.volon);
+        mute = (ImageView) findViewById(R.id.voloff);
+        volon = (ImageView) findViewById(R.id.volon);
 
         dynamic = (LinearLayout) findViewById(R.id.dynamic);
         dynamic1 = (LinearLayout) findViewById(R.id.dynamic1);
@@ -449,13 +449,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         //getOnlineStatus(onlinecheck);
 
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        bottomBar.getCurrentTab().setPadding(0,5,0,0);
+        bottomBar.getCurrentTab().setPadding(0, 5, 0, 0);
         bottomBar.setInActiveTabColor(Color.BLACK);
 
 
         // setup GeoFire with category
         if (strCategory != null && !strCategory.isEmpty()) {
-            strCategory=strCategory.replaceAll("%20"," ");
+            strCategory = strCategory.replaceAll("%20", " ");
             geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference().child("drivers_location").child(strCategory));
         } else {
             geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference().child("drivers_location"));
@@ -568,10 +568,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
                     float zoomPosition;
-                    if (tripState == null||tripState.matches("endClicked")||tripState.matches("btnendClicked"))
-                        zoomPosition=Constants.MAP_ZOOM_SIZE;
+                    if (tripState == null || tripState.matches("endClicked") || tripState.matches("btnendClicked"))
+                        zoomPosition = Constants.MAP_ZOOM_SIZE;
                     else
-                        zoomPosition=Constants.MAP_ZOOM_SIZE_ONTRIP;
+                        zoomPosition = Constants.MAP_ZOOM_SIZE_ONTRIP;
 
                     CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(latLng)                              // Sets the center of the map to current location
@@ -592,7 +592,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 mute.setVisibility(View.VISIBLE);
                 initializeTTS();
 
-                editor.putBoolean("getvolume",true);
+                editor.putBoolean("getvolume", true);
                 editor.apply();
             }
         });
@@ -603,7 +603,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 mute.setVisibility(View.GONE);
                 volon.setVisibility(View.VISIBLE);
                 stopTTS();
-                editor.putBoolean("getvolume",false);
+                editor.putBoolean("getvolume", false);
                 editor.apply();
             }
         });
@@ -763,10 +763,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 destinationLayout.setVisibility(View.VISIBLE);
 
                 getState.putString("tripstate", "startClicked");
-                getState.putString("starttime",getCurrentTime());
+                getState.putString("starttime", getCurrentTime());
                 getState.apply();
 
-                tripState="startClicked";
+                tripState = "startClicked";
 
                 DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID);
                 Map<String, Object> taskMap = new HashMap<>();
@@ -781,7 +781,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     String Tripid = tripidArray[0];
                     if (Tripid != null) {
                         tollfrees.add(Tripid);
-                        saveArray(tollfrees,"tolltripidarray",getApplicationContext());
+                        saveArray(tollfrees, "tolltripidarray", getApplicationContext());
                     }
                     //DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId).child("accept");
 
@@ -812,7 +812,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Map_Activity.p = 1;
 
-                editor.putBoolean("getvolume",false);
+                editor.putBoolean("getvolume", false);
                 editor.apply();
 
                 DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID);
@@ -849,7 +849,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 .build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                        if(currentLocMarker==null){
+                        if (currentLocMarker == null) {
 
                             currentLocMarker = mMap.addMarker(new MarkerOptions()
                                     .icon(mapCarIcon)
@@ -857,16 +857,16 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                     .flat(true)
                                     .anchor(0.5f, 0.5f)
                                     .rotation(mCurrentLocation.getBearing()));
-                        }else {
+                        } else {
 
                             currentLocMarker.setPosition(latLng);
                         }
                     }
                     //surgepricing
-                    String starttime=state.getString("starttime",null);
-                    String endtime=getCurrentTime();
-                    Integer i=0;
-                    DateFormat format= new SimpleDateFormat("HH:mm");//24 Hour Format
+                    String starttime = state.getString("starttime", null);
+                    String endtime = getCurrentTime();
+                    Integer i = 0;
+                    DateFormat format = new SimpleDateFormat("HH:mm");//24 Hour Format
 
                     Date d1;
                     Date d2;
@@ -881,14 +881,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         i = (int) (long) diffMinutes;
 
-                        System.out.println("THe time difference"+diffMinutes);
+                        System.out.println("THe time difference" + diffMinutes);
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    if(starttime!=null)
-                        getSurgePricingPercentage(starttime,i);
+                    if (starttime != null)
+                        getSurgePricingPercentage(starttime, i);
 
                     //Add fee to firebase to notify rider
                 /*if(tripIDs.size()==0){
@@ -949,7 +949,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        System.out.println("trip status or state in oncreate====>"+tripState);
+        System.out.println("trip status or state in oncreate====>" + tripState);
 
         if (tripState.matches("requestAccept")) { //1
             tripID = state.getString("tripID", null);
@@ -1046,7 +1046,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setMultipleDestListener(String riderid) {
         try {
-            multidestref= FirebaseDatabase.getInstance().getReference().child("riders_location").child(riderid).child("DestinationWaypoints");
+            multidestref = FirebaseDatabase.getInstance().getReference().child("riders_location").child(riderid).child("DestinationWaypoints");
             multidestlis = multidestref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1056,10 +1056,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             mulPoly.remove();
                         }
 
-                        if(points!=null)
+                        if (points != null)
                             points.clear();
 
-                        collectWaypoints((Map<String,Object>) dataSnapshot.getValue());
+                        collectWaypoints((Map<String, Object>) dataSnapshot.getValue());
                     }
                 }
 
@@ -1082,58 +1082,58 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             Map singleUser = (Map) entry.getValue();
 
             //phoneNumbers.add((String) singleUser.get("driverid"));
-            System.out.println("Coordinates====>" +  singleUser.get("Coordinates"));
+            System.out.println("Coordinates====>" + singleUser.get("Coordinates"));
 
             //String Coordinates = String.valueOf(singleUser.get("Coordinates")).trim();
-            ArrayList Coordinates= (ArrayList) singleUser.get("Coordinates");
+            ArrayList Coordinates = (ArrayList) singleUser.get("Coordinates");
 
-            if (Coordinates != null ) {
+            if (Coordinates != null) {
 
-                if(Coordinates.size()>=2)
-                    if(Coordinates.get(0)!=null & Coordinates.get(1)!=null){
+                if (Coordinates.size() >= 2)
+                    if (Coordinates.get(0) != null & Coordinates.get(1) != null) {
 
                         //Get phone field and append to list
                         String lat = String.valueOf(Coordinates.get(0)).trim();
                         String lng = String.valueOf(Coordinates.get(1)).trim();
                         Double latdouble = Double.parseDouble(lat);
-                        Double lngdouble= Double.parseDouble(lng);
+                        Double lngdouble = Double.parseDouble(lng);
 
                         if (latdouble > 0) {
-                            LatLng latlng=new LatLng(latdouble,lngdouble);
+                            LatLng latlng = new LatLng(latdouble, lngdouble);
                             latlngs.add(latlng);
                         }
                     }
             }
         }
-             getRoute(orginLocation);
+        getRoute(orginLocation);
 
     }
 
-    public void getRoute(LatLng orginLocation){
+    public void getRoute(LatLng orginLocation) {
 
         LatLng previousPoints;
 
-        if(latlngs!=null)
-            if(orginLocation!=null){
+        if (latlngs != null)
+            if (orginLocation != null) {
 
                 if (destLocation != null) {
                     latlngs.add(destLocation);
                 }
 
-                previousPoints=orginLocation;
+                previousPoints = orginLocation;
 
-                System.out.println("size of the lat and long==>"+latlngs.size());
-                System.out.println("value of the lat and long==>"+latlngs);
+                System.out.println("size of the lat and long==>" + latlngs.size());
+                System.out.println("value of the lat and long==>" + latlngs);
 
-                for(LatLng position: latlngs){
+                for (LatLng position : latlngs) {
 
-                    getRoutePoints(previousPoints,position);
+                    getRoutePoints(previousPoints, position);
 
-                    previousPoints =position;
+                    previousPoints = position;
                 }
             }
 
-        System.out.println("collected routs are ====>"+points);
+        System.out.println("collected routs are ====>" + points);
     }
 
     public void tollFee() {
@@ -1214,25 +1214,25 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         int j = 0;
         double strTotal;
 
-        System.out.println("Toll Fees in the add toll==>"+tollfee);
+        System.out.println("Toll Fees in the add toll==>" + tollfee);
 
         if (tollfrees != null) {
-            System.out.println("Toll Fees in the add toll if==>"+tollfee);
+            System.out.println("Toll Fees in the add toll if==>" + tollfee);
 
-            if(isDouble(tollAmount)){
+            if (isDouble(tollAmount)) {
 
                 strTotal = Double.valueOf(tollAmount);
 
-            }else {
+            } else {
 
                 strTotal = Integer.valueOf(tollAmount);
             }
 
             strTotal = Double.parseDouble(convertToDecimal(strTotal));
-            System.out.println("double (UP)++ : " +strTotal); //output 20.30
+            System.out.println("double (UP)++ : " + strTotal); //output 20.30
 
             for (String temp : tollfrees) {
-                System.out.println("Toll Fees in the add toll foreach==>"+tollfee);
+                System.out.println("Toll Fees in the add toll foreach==>" + tollfee);
                 updatedfirebase(temp, strTotal);
                 System.out.println(temp + "trips ids in looping" + j++);
             }
@@ -1385,10 +1385,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         state = getSharedPreferences(Constants.MY_STATE_KEY, MODE_PRIVATE);
         tripState = state.getString("tripstate", null);
 
-        if(tripState!=null)
-            if(tripState.matches("startClicked")){
+        if (tripState != null)
+            if (tripState.matches("startClicked")) {
                 cancellay.setVisibility(View.GONE);
-            }else
+            } else
                 cancellay.setVisibility(View.VISIBLE);
 
         if (strCategory != null && !strCategory.isEmpty()) {
@@ -1772,16 +1772,15 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void getDrawable(String category) {
 
-        int categoryPosition=0,count=0;
+        int categoryPosition = 0, count = 0;
 
-        if(strCategoryName!=null)
-            for (String forCategory:strCategoryName) {
-                if(forCategory!=null)
-                    if(forCategory.matches(category)){
-                        categoryPosition=count;
+        if (strCategoryName != null)
+            for (String forCategory : strCategoryName) {
+                if (forCategory != null)
+                    if (forCategory.matches(category)) {
+                        categoryPosition = count;
                         break;
-                    }
-                    else
+                    } else
                         count++;
             }
 
@@ -1818,7 +1817,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
 
-        if(currentLocMarker!=null)
+        if (currentLocMarker != null)
             currentLocMarker.setIcon(mapCarIcon);
     }
 
@@ -1870,7 +1869,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 updates.put("riderid", riderID);
                 updates.put("test_riderid", riderID);
                 updates.put("driverid", driverId);
-                updates.put("req_id",reqID);
+                updates.put("req_id", reqID);
                 updates.put("Distance", "0");
                 updates.put("status", "1");
                 updates.put("Price", "0");
@@ -1939,15 +1938,15 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         .build();
                 mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                if(currentLocMarker==null){
+                if (currentLocMarker == null) {
 
-                    currentLocMarker =mMap.addMarker(new MarkerOptions()
+                    currentLocMarker = mMap.addMarker(new MarkerOptions()
                             .icon(mapCarIcon)
                             .position(latLng)
                             .flat(true)
                             .anchor(0.5f, 0.5f)
                             .rotation(mCurrentLocation.getBearing()));
-                }else {
+                } else {
 
                     currentLocMarker.setPosition(latLng);
                 }
@@ -2140,7 +2139,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 strsetValue = "coming_start";
                                 setDropListener(riderID);
                                 setMultipleDestListener(riderID);
-                                pickLatLng=strLat+","+strLng;
+                                pickLatLng = strLat + "," + strLng;
                                 PlaceType(pickLatLng);
                                 //check the drop listener has lat lng
                                 try {
@@ -2156,10 +2155,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                         if (mCurrentLocation != null)
                                             orginLocation = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-                                        if(orginLocation!=null && destLocation!=null){
-                                            if(latlngs!=null){
+                                        if (orginLocation != null && destLocation != null) {
+                                            if (latlngs != null) {
 
-                                                System.out.println("The latlngs are"+latlngs);
+                                                System.out.println("The latlngs are" + latlngs);
                                                 GoogleDirection.withServerKey(google_api_key)
                                                         .from(orginLocation)
                                                         .to(destLocation)
@@ -2167,8 +2166,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                                         .waypoints(latlngs)
                                                         .transportMode(TransportMode.DRIVING)
                                                         .execute(Map_Activity.this);
-                                            }
-                                            else{
+                                            } else {
                                                 GoogleDirection.withServerKey(google_api_key)
                                                         .from(orginLocation)
                                                         .to(destLocation)
@@ -2293,8 +2291,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         AppController.getInstance().addToRequestQueue(movieReq);
     }
 
-    private void upDateRequest(Double lat, Double lng)
-    {
+    private void upDateRequest(Double lat, Double lng) {
         String url = Constants.LIVEURL_REQUEST + "updateRequest/request_id/" + reqID + "/driver_id/" + driverId + "/request_status/accept/" + "lat/" + lat + "/long/" + lng;
         System.out.println(" ONLINE URL is " + url);
 
@@ -2319,7 +2316,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 //check the drop listener has lat lng
                                 try {
-                                    if(!haslatlng){
+                                    if (!haslatlng) {
                                         double double_lat = Double.parseDouble(strLat);
                                         double double_lng = Double.parseDouble(strLng);
 
@@ -2549,11 +2546,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         pwOne = (ProgressWheel) d.findViewById(R.id.progressBarTwo);
         progresslayout = (RelativeLayout) d.findViewById(R.id.progresslayout);
         requestMapView = (ImageView) d.findViewById(R.id.map_view);
-        pickuploc=(TextView)d.findViewById(R.id.pick_location);
-        droploc=(TextView)d.findViewById(R.id.drop_location);
-        progeta=(TextView)d.findViewById(R.id.eta);
-        progDistance=(TextView)d.findViewById(R.id.distance);
-        progestfare=(TextView)d.findViewById(R.id.fare);
+        pickuploc = (TextView) d.findViewById(R.id.pick_location);
+        droploc = (TextView) d.findViewById(R.id.drop_location);
+        progeta = (TextView) d.findViewById(R.id.eta);
+        progDistance = (TextView) d.findViewById(R.id.distance);
+        progestfare = (TextView) d.findViewById(R.id.fare);
         pwOne.setBarWidth(10);
         pwOne.setRimWidth(10);
         pwOne.setRimColor(Color.WHITE);
@@ -2597,7 +2594,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     .build();
 
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            if(currentLocMarker==null){
+            if (currentLocMarker == null) {
 
                 currentLocMarker = mMap.addMarker(new MarkerOptions()
                         .icon(mapCarIcon)
@@ -2605,7 +2602,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         .flat(true)
                         .anchor(0.5f, 0.5f)
                         .rotation(mCurrentLocation.getBearing()));
-            }else {
+            } else {
 
                 currentLocMarker.setPosition(latLng);
             }
@@ -2631,18 +2628,16 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void clickOnline(View v) {
-
         if (!isOnlineButtunClicked()) {
-
             String strStartDate = getDateTime();
-            editor.putString("onlineStartDate",strStartDate);
+            editor.putString("onlineStartDate", strStartDate);
 
             getProofStatus();
 
         } else {
             //goOffline();
-            editor.putString("onlineStartDate",null);
-            setonline("0",String.valueOf(getDuration()));
+            editor.putString("onlineStartDate", null);
+            setonline("0", String.valueOf(getDuration()));
             //goOfflineFB();
         }
         editor.apply();
@@ -2650,35 +2645,35 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void getOnlineStatusFB() {
 
-        if(driverId!=null) {
+        if (driverId != null) {
 
             //Get datasnapshot at your "users" root node
             proofstatusref = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId);
-            proofstatusref.addListenerForSingleValueEvent( new ValueEventListener() {
+            proofstatusref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     //Get map of users in datasnapshot
-                    if(dataSnapshot.getValue()!=null) {
+                    if (dataSnapshot.getValue() != null) {
 
-                        System.out.println("response ===>"+dataSnapshot.toString());
+                        System.out.println("response ===>" + dataSnapshot.toString());
 
                         Object onlineStatusObj = dataSnapshot.child("online_status").getValue();
                         Object proofStatusObj = dataSnapshot.child("proof_status").getValue();
-                        String  onlineStatus,proofStatus;
+                        String onlineStatus, proofStatus;
 
-                        System.out.println("response onlineStatus===>"+onlineStatusObj);
-                        System.out.println("response proofStatus===>"+proofStatusObj);
+                        System.out.println("response onlineStatus===>" + onlineStatusObj);
+                        System.out.println("response proofStatus===>" + proofStatusObj);
 
 
-                        if(proofStatusObj!=null){
+                        if (proofStatusObj != null) {
 
-                            proofStatus= String.valueOf(proofStatusObj);
+                            proofStatus = String.valueOf(proofStatusObj);
 
                             if (proofStatus.matches("Accepted")) {
 
-                                if(onlineStatusObj!=null){
+                                if (onlineStatusObj != null) {
 
-                                    onlineStatus= String.valueOf(onlineStatusObj);
+                                    onlineStatus = String.valueOf(onlineStatusObj);
 
                                     if (onlineStatus.matches("1")) {
 
@@ -2688,18 +2683,18 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                             onLocationReceived(mCurrentLocation);
                                         getRequestStatus();
 
-                                    }else {
+                                    } else {
 
                                         setOnlineButtunStatus(false);
                                         onlineTxt.setText(R.string.go_online);
                                         if (mCurrentLocation != null)
                                             onLocationReceived(mCurrentLocation);
                                     }
-                                }else {
+                                } else {
                                     insertFBdriverStatus("online_status");
                                 }
 
-                            }else {
+                            } else {
                                 setOnlineButtunStatus(false);
 
                                 onlineTxt.setText(R.string.go_online);
@@ -2707,7 +2702,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 if (mCurrentLocation != null)
                                     onLocationReceived(mCurrentLocation);
 
-                                setonline("0",String.valueOf(getDuration()));
+                                setonline("0", String.valueOf(getDuration()));
 
 
                                 if (proofStatus.matches("Rejected")) {
@@ -2721,13 +2716,12 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 }
                             }
 
-                        }else {
+                        } else {
 
                             insertFBdriverStatus("proof_status");
                         }
 
-                    }
-                    else {
+                    } else {
                         saveInFirebase();
                     }
                 }
@@ -2743,51 +2737,50 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void listenOnlineStatusFB() {
 
-        if(driverId!=null) {
+        if (driverId != null) {
             //Get datasnapshot at your "users" root node
             proofstatusref = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId);
-            statusListener = proofstatusref.addValueEventListener( new ValueEventListener() {
+            statusListener = proofstatusref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     //Get map of users in datasnapshot
-                    if(dataSnapshot.getValue()!=null) {
+                    if (dataSnapshot.getValue() != null) {
 
-                        System.out.println("response ===>"+dataSnapshot.toString());
+                        System.out.println("response ===>" + dataSnapshot.toString());
 
                         Object onlineStatusObj = dataSnapshot.child("online_status").getValue();
                         Object proofStatusObj = dataSnapshot.child("proof_status").getValue();
-                        String  onlineStatus,proofStatus;
+                        String onlineStatus, proofStatus;
 
-                        System.out.println("response onlineStatus===>"+onlineStatusObj);
-                        System.out.println("response proofStatus===>"+proofStatusObj);
+                        System.out.println("response onlineStatus===>" + onlineStatusObj);
+                        System.out.println("response proofStatus===>" + proofStatusObj);
 
 
-                        if(proofStatusObj!=null){
+                        if (proofStatusObj != null) {
 
-                            proofStatus= String.valueOf(proofStatusObj);
+                            proofStatus = String.valueOf(proofStatusObj);
 
                             if (proofStatus.matches("Accepted")) {
 
-                                if(onlineStatusObj!=null){
+                                if (onlineStatusObj != null) {
 
-                                    onlineStatus= String.valueOf(onlineStatusObj);
+                                    onlineStatus = String.valueOf(onlineStatusObj);
 
                                     if (onlineStatus.matches("1")) {
 
-                                        if(!onlineTxt.getText().toString().matches("GO OFFLINE")){
+                                        if (!onlineTxt.getText().toString().matches("GO OFFLINE")) {
                                             goOnlineFB();
                                         }
-                                    }else {
+                                    } else {
 
-                                        if(onlineTxt.getText().toString().matches("GO OFFLINE")){
+                                        if (onlineTxt.getText().toString().matches("GO OFFLINE")) {
 
                                             goOfflineFB();
                                         }
                                     }
                                 }
 
-                            }
-                            else {
+                            } else {
 
                                 setOnlineButtunStatus(false);
 
@@ -2814,9 +2807,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void goOfflineFB() {
+        Log.i("wow", "clicked online 3");
         setOnlineButtunStatus(false);
         onlineTxt.setText(R.string.go_online);
-        stopService(new Intent(getBaseContext(),Services.class).setPackage(this.getPackageName()));
+        stopService(new Intent(getBaseContext(), Services.class).setPackage(this.getPackageName()));
         //setonline("0");
         TSnackbar snackbar = TSnackbar.make(findViewById(android.R.id.content), getResources().getString(R.string.you_are_now_offline), TSnackbar.LENGTH_LONG);
         snackbar.setActionTextColor(Color.RED);
@@ -2834,9 +2828,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void goOnlineFB() {
+        Log.i("wow", "clicked online 4");
         setOnlineButtunStatus(true);
         onlineTxt.setText(R.string.go_offline);
-        startService(new Intent(getBaseContext(),Services.class).setPackage(this.getPackageName()));
+        startService(new Intent(getBaseContext(), Services.class).setPackage(this.getPackageName()));
         //setonline("1");
         TSnackbar snackbar = TSnackbar.make(findViewById(android.R.id.content), getResources().getString(R.string.you_are_now_online), TSnackbar.LENGTH_LONG);
         snackbar.setActionTextColor(Color.GREEN);
@@ -2859,13 +2854,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         onlineTxt.setText(R.string.go_online);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        if(key.matches("online_status"))
+        if (key.matches("online_status"))
             ref.child("drivers_data").child(driverId).child("online_status").setValue("0");
-        else{
+        else {
             ref.child("drivers_data").child(driverId).child("proof_status").setValue("0");
             ref.child("drivers_data").child(driverId).child("online_status").setValue("0");
         }
-        setonline("0",String.valueOf(getDuration()));
+        setonline("0", String.valueOf(getDuration()));
     }
 
     public void getProofStatus() {
@@ -2883,7 +2878,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 //online_method();
                                 //goOnlineFB();
-                                setonline("1",String.valueOf(0));
+                                setonline("1", String.valueOf(0));
                             } else if (proofstatus.matches("Rejected")) {
 
                                 showdialog((getResources().getString(R.string.proof_rejected)));
@@ -2903,7 +2898,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
-                    System.out.print("error==>"+String.valueOf(databaseError));
+                    System.out.print("error==>" + String.valueOf(databaseError));
                 }
             });
         } catch (Exception e) {
@@ -2957,11 +2952,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         snackbar.show();
     }
 
-    public void setonline(final String online,String duration) {
+    public void setonline(final String online, String duration) {
 
         onlineLay.setEnabled(false);
 
-        String url = Constants.LIVEURL + "updateOnlineStatus/userid/" + driverId + "/online_status/" + online+"/online_duration/"+duration;
+        String url = Constants.LIVEURL + "updateOnlineStatus/userid/" + driverId + "/online_status/" + online + "/online_duration/" + duration;
         System.out.println(" ONLINE URL is " + url);
 
         // Creating volley request obj
@@ -2983,7 +2978,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                     if (online.matches("1")) {
 
                                         setOnlineButtunStatus(true);
-                                    }else {
+                                    } else {
 
                                         setOnlineButtunStatus(false);
                                     }
@@ -3021,8 +3016,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         AppController.getInstance().addToRequestQueue(movieReq);
     }
 
+    private DatabaseReference keyRef;
+
     public void getRequestStatus() {
-        DatabaseReference keyRef = new GeoFire(FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId + "/request")).getDatabaseReference();
+        if (keyRef != null) {
+            keyRef.removeEventListener(this);
+            keyRef = null;
+        }
+        keyRef = new GeoFire(FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId + "/request")).getDatabaseReference();
         keyRef.addValueEventListener(this);
     }
 
@@ -3132,7 +3133,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         float curPosBearing;
 
         if (mCurrentLocation != null) {
-            System.out.println("ONLOCATIOn CHANGE bearing"+mCurrentLocation.getBearing());
+            System.out.println("ONLOCATIOn CHANGE bearing" + mCurrentLocation.getBearing());
             curPos = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             curPosBearing = mCurrentLocation.getBearing();
 
@@ -3175,9 +3176,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         mMap.clear();
                 } else {
                     //GoogleDirection.withServerKey(getString(R.string.direction_api_key))
-                    if(latlngs!=null){
+                    if (latlngs != null) {
 
-                        System.out.println("The latlngs cordinates are"+latlngs);
+                        System.out.println("The latlngs cordinates are" + latlngs);
                         GoogleDirection.withServerKey(google_api_key)
                                 .from(new LatLng(location.getLatitude(), location.getLongitude()))
                                 .to(destLocation)
@@ -3185,8 +3186,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 .unit(Unit.METRIC)
                                 .transportMode(TransportMode.DRIVING)
                                 .execute(this);
-                    }
-                    else{
+                    } else {
                         GoogleDirection.withServerKey(google_api_key)
                                 .from(new LatLng(location.getLatitude(), location.getLongitude()))
                                 .to(destLocation)
@@ -3204,7 +3204,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         zoomCameraToPosition(curPos);
 
-                        if(currentLocMarker==null){
+                        if (currentLocMarker == null) {
 
 
                             currentLocMarker = mMap.addMarker(new MarkerOptions()
@@ -3215,11 +3215,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             currentLocMarker.setRotation(curPosBearing);
 
                             //currentLocMarker.remove();
-                        }else {
-                            if(mCurrentLocation.getBearing()!=0.0)
-                                previousBearing=mCurrentLocation.getBearing();
+                        } else {
+                            if (mCurrentLocation.getBearing() != 0.0)
+                                previousBearing = mCurrentLocation.getBearing();
 
-                            if(prevLatLng!= new LatLng(0, 0)){
+                            if (prevLatLng != new LatLng(0, 0)) {
 
                                 if (!(curPos.equals(prevLatLng))) {
 
@@ -3230,19 +3230,19 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                     System.out.println("Start location===>" + startValues[0] + "  " + startValues[1]);
                                     System.out.println("end location===>" + endValues[0] + "  " + endValues[1]);
 
-                                    System.out.println("inside locationchange bearing"+mCurrentLocation.getBearing());
+                                    System.out.println("inside locationchange bearing" + mCurrentLocation.getBearing());
 
                                     animateMarkerTo(currentLocMarker, startValues, endValues, mCurrentLocation.getBearing());
 
                                 } else {
-                                    System.out.println("outside locationchange bearing"+mCurrentLocation.getBearing());
-                                    if(mCurrentLocation.getBearing()==0.0)
+                                    System.out.println("outside locationchange bearing" + mCurrentLocation.getBearing());
+                                    if (mCurrentLocation.getBearing() == 0.0)
                                         currentLocMarker.setRotation(previousBearing);
                                     else
                                         currentLocMarker.setRotation(mCurrentLocation.getBearing());
                                     // currentLocMarker.setRotation(mCurrentLocation.getBearing());
                                 }
-                            }else {
+                            } else {
                                 currentLocMarker.setPosition(curPos);
                                 currentLocMarker.setRotation(mCurrentLocation.getBearing());
                             }
@@ -3281,10 +3281,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(animatedValue[0],animatedValue[1]),17.0f));
 
             float zoomPosition;
-            if (tripState == null||tripState.matches("endClicked")||tripState.matches("btnendClicked"))
-                zoomPosition=Constants.MAP_ZOOM_SIZE;
+            if (tripState == null || tripState.matches("endClicked") || tripState.matches("btnendClicked"))
+                zoomPosition = Constants.MAP_ZOOM_SIZE;
             else
-                zoomPosition=Constants.MAP_ZOOM_SIZE_ONTRIP;
+                zoomPosition = Constants.MAP_ZOOM_SIZE_ONTRIP;
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(curPos)                              // Sets the center of the map to current location
@@ -3316,7 +3316,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         float rotate = getRotate(new LatLng(startValues[0], startValues[1]), new LatLng(endValues[0], endValues[1]));
         System.out.println("Rotate===>" + rotate);
         //marker.setRotation(360 - rotate + myMap.getCameraPosition().bearing);
-        if(mCurrentLocation.getBearing()==0.0)
+        if (mCurrentLocation.getBearing() == 0.0)
             marker.setRotation(previousBearing);
         else
             marker.setRotation(mCurrentLocation.getBearing());
@@ -3349,15 +3349,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             lStart = lEnd;
-            if(distance>0){
+            if (distance > 0) {
 
                 strTotalDistance = new DecimalFormat("0.0##").format(distance);
                 System.out.println("TOTAL DISTANCE+++>" + strTotalDistance);
                 //SavePref.saveInt(context,"TotalDistance", strDistance);
                 System.out.println("Distance in shared preference==>in mappppp" + strTotalDistance);
-            }
-            else {
-                strTotalDistance=String.valueOf(distance);
+            } else {
+                strTotalDistance = String.valueOf(distance);
             }
         }
     }
@@ -3421,7 +3420,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         if (tripID != null) {
             //Listener to get Total Price from Firebase
             requestReference = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID);
-            listener= requestReference.addValueEventListener(new ValueEventListener() {
+            listener = requestReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -3429,7 +3428,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         Object requestID = dataSnapshot.child("req_id").getValue();
 
-                        reqID=String.valueOf(requestID);
+                        reqID = String.valueOf(requestID);
 
                         System.out.println("Request ID: request ID from firebase==>" + reqID);
                         regID();
@@ -3482,10 +3481,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 tripIDWithName = dataSnapshot.getValue().toString();
                                 String[] tripidArray = tripIDWithName.split(":");
                                 String Tripid = tripidArray[0];
-                                riderFirstName = tripidArray[1].replaceAll("%20"," ");
+                                riderFirstName = tripidArray[1].replaceAll("%20", " ");
 
                                 tripID = Tripid;
-
 
 
                                 System.out.println("Trips List Firebase before" + tripIDs + "SIZE" + tripIDs.size());
@@ -3528,7 +3526,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 /*Collections.reverse(tripIDs);*/
                                 System.out.println("after Trips List" + tripIDs);
 
-    //                        System.out.println("Trips List Firebase cleared" + tripIDs.get(0));
+                                //                        System.out.println("Trips List Firebase cleared" + tripIDs.get(0));
 
                                 newMap.put(riderFirstName, tripID);
                                 System.out.println("Trips List" + tripIDs);
@@ -3562,7 +3560,6 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 }
             });
-            //tripReference.removeEventListener(tripListener);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3573,11 +3570,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         Object reqStatusObj = dataSnapshot.child("status").getValue();
 
-        System.out.println("Request status response ===>"+reqStatusObj);
-        String reqStatus="0";
+        System.out.println("Request status response ===>" + reqStatusObj);
+        String reqStatus = "0";
 
-        if(reqStatusObj!=null)
-            reqStatus=String.valueOf(reqStatusObj);
+        if (reqStatusObj != null)
+            reqStatus = String.valueOf(reqStatusObj);
 
 
         if (driverId != null) {
@@ -3599,7 +3596,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 if (reqStatus.equals("0")) {
                     excecuteonce = false;
                     try {
-                        if (d != null){
+                        if (d != null) {
 
                             d.dismiss();
                             stopPlaying();
@@ -3645,15 +3642,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     //  Toast.makeText(Map_Activity.this, "ARRIVE", Toast.LENGTH_SHORT).show();
 
                     txtRiderDestination.setText(strReturnedAddress.toString());
-                    navigationLatLng= new LatLng(LATITUDE,LONGITUDE);
-                    strPickupAddress=strReturnedAddress.toString();
+                    navigationLatLng = new LatLng(LATITUDE, LONGITUDE);
+                    strPickupAddress = strReturnedAddress.toString();
                     getTerminal(riderID);
 
                 } else if (strsetValue.matches("coming_start")) {
                     txtRiderDestination.setText(strReturnedAddress.toString());
-                    navigationLatLng= new LatLng(LATITUDE,LONGITUDE);
+                    navigationLatLng = new LatLng(LATITUDE, LONGITUDE);
                 }
-
 
 
             } else {
@@ -3679,7 +3675,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         txtTotalDistance = (TextView) dialogTripSummary.findViewById(R.id.text_trip_completed);
         txtTripAmount = (TextView) dialogTripSummary.findViewById(R.id.trip_amount);
         imgRiderProfile = (ImageView) dialogTripSummary.findViewById(R.id.trip_end_profile);
-        companyname= (TextView) dialogTripSummary.findViewById(R.id.compname);
+        companyname = (TextView) dialogTripSummary.findViewById(R.id.compname);
         companyfee = (TextView) dialogTripSummary.findViewById(R.id.compfee);
         txtTripdate = (TextView) dialogTripSummary.findViewById(R.id.trip_date);
         final ImageView driverEmoji = (ImageView) dialogTripSummary.findViewById(R.id.driver_emoji);
@@ -3695,16 +3691,16 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         txtTripdate.setText(currentDateTimeString);
 
         String Tripid = null;
-        if (tempTripWithName!=null) {
+        if (tempTripWithName != null) {
             String[] tripidArray = tempTripWithName.split(":");
             Tripid = tripidArray[0];
             System.out.println("strtoolfee" + Tripid + "tripsids" + tripID);
             tollfrees.remove(Tripid);
-            saveArray(tollfrees,"tolltripidarray",getApplicationContext());
+            saveArray(tollfrees, "tolltripidarray", getApplicationContext());
         }
 
 
-        if (Tripid!=null) {
+        if (Tripid != null) {
             faretoolreference = FirebaseDatabase.getInstance().getReference().child("trips_data").child(Tripid).child("tollfee");
             faretoolreference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -3749,8 +3745,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         System.out.println("rating of driver app" + rating);
                         updateDriverRating(rating);
                         int ratingInt = Math.round(rateValue);
-                        switch(ratingInt)
-                        {
+                        switch (ratingInt) {
                             case 1:
                                 driverEmoji.setBackgroundResource(R.drawable.one);
                                 break;
@@ -3794,7 +3789,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 ratingcheck = "notupdate";
                 driverRatingBar.setRating(0);
 
-                surgePrice=null;
+                surgePrice = null;
 
                 tripIDs.remove(tempTripWithName);
                 System.out.println("Trip with Name" + tempTripWithName);
@@ -3838,13 +3833,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     //  removeRatingListener();
                     mMap.clear();
 
-                    if(latlngs!=null)
+                    if (latlngs != null)
                         latlngs.clear();
 
-                    if(points!=null)
+                    if (points != null)
                         points.clear();
 
-                    if(wayPaintsMarker!=null)
+                    if (wayPaintsMarker != null)
                         wayPaintsMarker.clear();
 
                     for (Polyline mulPoly : Map_Activity.this.wayPaintsPolyline.values()) {
@@ -3862,7 +3857,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 .tilt(0)                                     // Sets the tilt of the camera to 0 degrees
                                 .build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                        if(currentLocMarker==null){
+                        if (currentLocMarker == null) {
 
                             currentLocMarker = mMap.addMarker(new MarkerOptions()
                                     .icon(mapCarIcon)
@@ -3870,7 +3865,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                     .flat(true)
                                     .anchor(0.5f, 0.5f)
                                     .rotation(mCurrentLocation.getBearing()));
-                        }else {
+                        } else {
 
                             currentLocMarker.setPosition(latLng);
                         }
@@ -3891,7 +3886,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 if (tripIDs.size() == 1) {
                     String[] tripidArray = tripIDs.get(0).split(":");
                     String Tripid = tripidArray[0];
-                    String userName = tripidArray[1].replaceAll("%20"," ");
+                    String userName = tripidArray[1].replaceAll("%20", " ");
                     System.out.println("INSIDE TRIP 1" + Tripid + userName);
 
                     tripID = Tripid;
@@ -3923,7 +3918,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void getFareCalculation(String surgeprice,int totalminutes) {
+    private void getFareCalculation(String surgeprice, int totalminutes) {
         double strWebprice;
 
         if (strCategory != null) {
@@ -3942,8 +3937,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     double intWebPriceFare, intWebPricePerMin, web_price_fare;
 
-                    System.out.println("after par web price fare ===>" + strwebpricefare );
-                    System.out.println("after par web price min===>" + strwebpricepermin );
+                    System.out.println("after par web price fare ===>" + strwebpricefare);
+                    System.out.println("after par web price min===>" + strwebpricepermin);
 
                     if (isDouble(strwebpricefare)) {
 
@@ -3964,13 +3959,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     web_price_fare = intWebPriceFare + intWebPricePerMin;
 
-                    System.out.println("after par web price fare ===>" + intWebPriceFare );
-                    System.out.println("after par web price min===>" + intWebPricePerMin );
-                    System.out.println("without round ===>" + web_price_fare );
+                    System.out.println("after par web price fare ===>" + intWebPriceFare);
+                    System.out.println("after par web price min===>" + intWebPricePerMin);
+                    System.out.println("without round ===>" + web_price_fare);
 
                     DecimalFormat df2 = new DecimalFormat("0.00");
                     //df2.setRoundingMode(RoundingMode.UP);
-                    System.out.println("after round ===>" + df2.format(web_price_fare) );
+                    System.out.println("after round ===>" + df2.format(web_price_fare));
 
 
                     web_price_fare = Double.parseDouble(df2.format(web_price_fare));
@@ -4006,69 +4001,67 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     System.out.println("tool fee added" + getToll());
 
                     if (getToll() != null && !getToll().isEmpty()) {
-                        totalAmount = (tolDistance * strWebprice) + Float.parseFloat(String.valueOf(strwebpricefare)) + Double.parseDouble(getToll())+Double.parseDouble(strbookfee);
-                    }
-                    else
-                    {
-                        totalAmount = (tolDistance * strWebprice) + Float.parseFloat(String.valueOf(strwebpricefare))+Double.parseDouble(strbookfee);
+                        totalAmount = (tolDistance * strWebprice) + Float.parseFloat(String.valueOf(strwebpricefare)) + Double.parseDouble(getToll()) + Double.parseDouble(strbookfee);
+                    } else {
+                        totalAmount = (tolDistance * strWebprice) + Float.parseFloat(String.valueOf(strwebpricefare)) + Double.parseDouble(strbookfee);
                     }
 
                     //totalAmount=totalAmount+Integer.parseInt(getToll());
                     System.out.println("Before adding totalminute TTTTTTTTTTTTTTTTTTT" + totalAmount);
-                    totalAmount = totalAmount + totalminutes*Float.parseFloat(String.valueOf(strwebpricepermin));
+                    totalAmount = totalAmount + totalminutes * Float.parseFloat(String.valueOf(strwebpricepermin));
                     System.out.println("TTTTTTTTTTTTTTTTTTT" + totalAmount);
                     System.out.println("TTTTTTTTTTTTTTTTTTT" + Float.parseFloat(String.valueOf(strwebpricepermin)));
 
                     System.out.println("Calcu distanve" + tolDistance);
                     System.out.println("calculated total price" + strWebprice);
 
-                    if(airportamt!=0.0){
-                        totalAmount=totalAmount+airportamt;
+                    if (airportamt != 0.0) {
+                        totalAmount = totalAmount + airportamt;
                     }
-                    double taxpercent,taxaddamount;
+                    double taxpercent, taxaddamount;
 
                     try {
-                        taxpercent = (totalAmount*(Double.parseDouble(strtaxpercentage)/100.0f));
-                        taxaddamount=totalAmount+taxpercent ;
-                        System.out.println("After adding tax percentage of"+taxpercent+"to"+taxaddamount);
-                        totalAmount=taxaddamount;
+                        taxpercent = (totalAmount * (Double.parseDouble(strtaxpercentage) / 100.0f));
+                        taxaddamount = totalAmount + taxpercent;
+                        System.out.println("After adding tax percentage of" + taxpercent + "to" + taxaddamount);
+                        totalAmount = taxaddamount;
                     } catch (Exception e) {
-                        taxpercent=0.0;
-                        taxaddamount=totalAmount+taxpercent;
-                        totalAmount=taxaddamount;
+                        taxpercent = 0.0;
+                        taxaddamount = totalAmount + taxpercent;
+                        totalAmount = taxaddamount;
                         e.printStackTrace();
                     }
 
                     //surge price
-                    if(!surgeprice.equals("0")){
+                    if (!surgeprice.equals("0")) {
                         try {
-                            k = (totalAmount*(Double.parseDouble(surgeprice)/100.0f));
-                            surgeaddamount=totalAmount+k;
+                            k = (totalAmount * (Double.parseDouble(surgeprice) / 100.0f));
+                            surgeaddamount = totalAmount + k;
                             // Toast.makeText(Map_Activity.this, "Surge price percentage of "+surgeprice+" was added", Toast.LENGTH_SHORT).show();
-                            System.out.println("After adding surge price of"+k+"to"+surgeaddamount);
-                            totalAmount=surgeaddamount;
+                            System.out.println("After adding surge price of" + k + "to" + surgeaddamount);
+                            totalAmount = surgeaddamount;
                         } catch (Exception e) {
                             // Toast.makeText(Map_Activity.this, "Surge added failed"+e, Toast.LENGTH_SHORT).show();
-                            k=0.0;
-                            surgeaddamount=totalAmount+k;
-                            totalAmount=surgeaddamount;
+                            k = 0.0;
+                            surgeaddamount = totalAmount + k;
+                            totalAmount = surgeaddamount;
                             e.printStackTrace();
                         }
                     }
 
-                    if(strDropPrice==null)
-                        strDropPrice="0";
+                    if (strDropPrice == null)
+                        strDropPrice = "0";
 
                     double dropPrice;
 
-                    if(isDouble(strDropPrice))
-                        dropPrice= Double.parseDouble(convertToDecimal(Double.parseDouble(strDropPrice)));
+                    if (isDouble(strDropPrice))
+                        dropPrice = Double.parseDouble(convertToDecimal(Double.parseDouble(strDropPrice)));
                     else
-                        dropPrice= Double.parseDouble(convertToDecimal((double) Integer.parseInt(strDropPrice)));
+                        dropPrice = Double.parseDouble(convertToDecimal((double) Integer.parseInt(strDropPrice)));
 
-                    totalAmount=totalAmount+getWaypointTotal()*dropPrice;
+                    totalAmount = totalAmount + getWaypointTotal() * dropPrice;
 
-                    System.out.println("The total amount inside waypoint"+getWaypointTotal()*dropPrice);
+                    System.out.println("The total amount inside waypoint" + getWaypointTotal() * dropPrice);
 
                     System.out.println("Total Amount too be displayed" + totalAmount);
                     System.out.println("Price Fare in fare" + strwebpricefare);
@@ -4090,17 +4083,17 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public String convertToDecimal(Double amount){
+    public String convertToDecimal(Double amount) {
 
-        if(amount>0){
+        if (amount > 0) {
             System.out.println("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
             //df2.setRoundingMode(RoundingMode.UP);
             return new DecimalFormat("0.00").format(amount);
-        }
-        else {
+        } else {
             return String.valueOf(0);
         }
     }
+
     boolean isDouble(String str) {
         try {
 
@@ -4113,8 +4106,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
-    public void checkWaypointCount(final String surge,final int minutes) {
+    public void checkWaypointCount(final String surge, final int minutes) {
 
         //checkAccepRef = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId + "/accept/status");
         //  Toast.makeText(Map_Activity.this, "the waypoint is"+waypointcount, Toast.LENGTH_SHORT).show();
@@ -4129,12 +4121,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         setWaypointcount(Integer.parseInt(dataSnapshot.getValue().toString()));
                         // Toast.makeText(Map_Activity.this, "the waypoint is"+waypointcount, Toast.LENGTH_SHORT).show();
-                        getFareCalculation(surge,minutes);
+                        getFareCalculation(surge, minutes);
                         updatewaycount();
-                    }
-                    else {
+                    } else {
 
-                        getFareCalculation(surge,minutes);
+                        getFareCalculation(surge, minutes);
                     }
 
                 }
@@ -4143,7 +4134,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onCancelled(DatabaseError databaseError) {
                     // Toast.makeText(Map_Activity.this, "the waypoint is"+waypointcount+databaseError, Toast.LENGTH_SHORT).show();
 
-                    getFareCalculation(surge,minutes);
+                    getFareCalculation(surge, minutes);
                 }
             });
         } catch (Exception e) {
@@ -4154,7 +4145,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     private void updatewaycount() {
         Map<String, Object> wayPointsCount = new HashMap<>();
         DatabaseReference wayPointcountRef = FirebaseDatabase.getInstance().getReference().child("riders_location").child(riderID);
-        wayPointsCount.put("WayPointCount",0);
+        wayPointsCount.put("WayPointCount", 0);
         wayPointcountRef.updateChildren(wayPointsCount);
     }
 
@@ -4310,15 +4301,15 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-            if(dataSnapshot.getValue()!=null){
+                if (dataSnapshot.getValue() != null) {
 
-                String riderid  = dataSnapshot.getValue().toString();
+                    String riderid = dataSnapshot.getValue().toString();
 
-                if(!riderid.equals("0") & !riderid.equals("")){
+                    if (!riderid.equals("0") & !riderid.equals("")) {
 
-                    ridercancel(riderid);
+                        ridercancel(riderid);
+                    }
                 }
-            }
 
             }
 
@@ -4351,18 +4342,18 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     Object pickupAddress = dataSnapshot.child("pickupAddress").getValue();
                     Object estFare = dataSnapshot.child("estFare").getValue();
 
-                    System.out.println("distance response ===>"+distance);
-                    System.out.println("dropAddress response ===>"+dropAddress);
-                    System.out.println("ETA response ===>"+ETA);
-                    System.out.println("pickupAddress response ===>"+pickupAddress);
+                    System.out.println("distance response ===>" + distance);
+                    System.out.println("dropAddress response ===>" + dropAddress);
+                    System.out.println("ETA response ===>" + ETA);
+                    System.out.println("pickupAddress response ===>" + pickupAddress);
 
                     //set views
                     try {
                         pickuploc.setText(String.valueOf(pickupAddress));
                         droploc.setText(String.valueOf(dropAddress));
-                        progeta.setText("ETA: "+String.valueOf(ETA));
-                        progDistance.setText("Distance: "+String.valueOf(distance));
-                        progestfare.setText("Estimated Fare: $"+String.valueOf(estFare));
+                        progeta.setText("ETA: " + String.valueOf(ETA));
+                        progDistance.setText("Distance: " + String.valueOf(distance));
+                        progestfare.setText("Estimated Fare: $" + String.valueOf(estFare));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -4400,7 +4391,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                             //databaseReference2.updateChildren(taskMap);
                             //progressLayout.setVisibility(View.GONE);
-                            if(d!=null){
+                            if (d != null) {
                                 d.dismiss();
 
                             }
@@ -4486,7 +4477,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     public void getAcceptState() {
         //getRequestID();
         getReqIDFromFB();
-        if (d != null){
+        if (d != null) {
             d.dismiss();
             stopPlaying();
         }
@@ -4600,7 +4591,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         builder.setContentTitle(title);
         builder.setContentText(message);
         builder.setLights(Color.RED, 3000, 3000);
-        if(!message.equals("New Request Arrived")) {
+        if (!message.equals("New Request Arrived")) {
             builder.setSound(uri);
         }
         builder.setAutoCancel(true);
@@ -4617,13 +4608,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void run() {
 
-                if(message.contains("Toll Detected:")){
+                if (message.contains("Toll Detected:")) {
 
-                    if(removingMarkerPoint!=null){
+                    if (removingMarkerPoint != null) {
 
                         tollMarkersMap.remove(removingMarkerPoint);
                         System.out.println("Lis of postion!!!!!" + tollMarkersMap);
-                        removingMarkerPoint=null;
+                        removingMarkerPoint = null;
                     }
                 }
 
@@ -4636,8 +4627,17 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
-
         if (doubleBackToExitPressedOnce) {
+            if (isOnlineButtunClicked()) {
+                editor.putString("onlineStartDate", null);
+                setonline("0", String.valueOf(getDuration()));
+                editor.apply();
+            }
+            stopService(new Intent(getBaseContext(), Services.class).setPackage(this.getPackageName()));
+            if (keyRef != null) {
+                keyRef.removeEventListener(this);
+                keyRef = null;
+            }
             super.onBackPressed();
             this.finishAffinity();
             int pid = android.os.Process.myPid();
@@ -4677,7 +4677,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         updateLocationFDBrMongoDB(mCurrentLocation);
     }
 
-    public void updateLocationFDBrMongoDB(Location location){
+    public void updateLocationFDBrMongoDB(Location location) {
 
         if (driverId != null && !driverId.isEmpty() && !driverId.trim().matches("")) {
 
@@ -4686,9 +4686,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             if (isOnlineButtunClicked()) {
                 //Update current location in Firebase
                 updateLocationToFirebase(location);
-                if (tripState.matches("endClicked"))
-                {
-                    System.out.println("trip state in update location==>"+tripState);
+                if (tripState.matches("endClicked")) {
+                    System.out.println("trip state in update location==>" + tripState);
                     getUpdateLocation(location.getLatitude(), location.getLongitude());
                 }
                 //Updating the current location to Database
@@ -4697,9 +4696,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             } else {
 
-                if (tripState.matches("endClicked"))
-                {
-                    getUpdateLocation(0.0,0.0);
+                if (tripState.matches("endClicked")) {
+                    getUpdateLocation(0.0, 0.0);
                 }
                 //getUpdateLocation(0.0, 0.0);
             }
@@ -4710,7 +4708,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         mCurrentLocation = location;
 
-        if(mCurrentLocation!=null){
+        if (mCurrentLocation != null) {
 
             if (driverId != null && !driverId.isEmpty() && !driverId.trim().matches("")) {
 
@@ -4718,7 +4716,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     //Updating the current location to Database
                     //getUpdateLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                     //new getUpdateLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()).execute();
-                    System.out.println("location which is updated in==>"+mCurrentLocation.getLatitude()+"<====>"+ mCurrentLocation.getLongitude());
+                    System.out.println("location which is updated in==>" + mCurrentLocation.getLatitude() + "<====>" + mCurrentLocation.getLongitude());
                     this.geoFire.setLocation(driverId, new GeoLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), previousBearing, new GeoFire.CompletionListener() {
                         //this.geoFire.offlineLocation(driverId, new GeoLocation(0.0, 0.0), new GeoFire.CompletionListener() {
                         @Override
@@ -4778,42 +4776,42 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         System.out.println("DIRECTION " + t);
     }
 
-    public void onDirectionSuccessMarkerPlacing(Direction direction){
+    public void onDirectionSuccessMarkerPlacing(Direction direction) {
 
         /// LatLng prevLatLng = new LatLng(0, 0);
         LatLng curPos = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-        if(curPos.latitude!=0 && curPos.longitude!=0) {
+        if (curPos.latitude != 0 && curPos.longitude != 0) {
 
             zoomCameraToPosition(curPos);
         }
 
-        if(currentLocMarker==null){
+        if (currentLocMarker == null) {
 
             //mMap.clear();
             currentLocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).icon(mapCarIcon));
             currentLocMarker.setAnchor(0.5f, 0.5f);
             currentLocMarker.setFlat(true);
-            if(mCurrentLocation.getBearing()==0.0)
+            if (mCurrentLocation.getBearing() == 0.0)
                 currentLocMarker.setRotation(previousBearing);
             else
                 currentLocMarker.setRotation(mCurrentLocation.getBearing());
             //currentLocMarker.setRotation(mCurrentLocation.getBearing());
 
             //currentLocMarker.remove();
-        }else {
+        } else {
 
-            if(mCurrentLocation.getBearing()!=0.0)
-                previousBearing=mCurrentLocation.getBearing();
+            if (mCurrentLocation.getBearing() != 0.0)
+                previousBearing = mCurrentLocation.getBearing();
 
             currentLocMarker.setPosition(curPos);
-            if(mCurrentLocation.getBearing()==0.0)
+            if (mCurrentLocation.getBearing() == 0.0)
                 currentLocMarker.setRotation(previousBearing);
             else
                 currentLocMarker.setRotation(mCurrentLocation.getBearing());
             // currentLocMarker.setRotation(mCurrentLocation.getBearing());
 
-            if(prevLatLng!= new LatLng(0, 0)){
+            if (prevLatLng != new LatLng(0, 0)) {
 
                 if (!(curPos.equals(prevLatLng))) {
 
@@ -4828,16 +4826,15 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     animateMarkerTo(currentLocMarker, startValues, endValues, mCurrentLocation.getBearing());
 
                 } else {
-                    if(mCurrentLocation.getBearing()==0.0)
+                    if (mCurrentLocation.getBearing() == 0.0)
                         currentLocMarker.setRotation(previousBearing);
                     else
                         currentLocMarker.setRotation(mCurrentLocation.getBearing());
                     //currentLocMarker.setRotation(mCurrentLocation.getBearing());
                 }
-            }
-            else {
+            } else {
                 currentLocMarker.setPosition(curPos);
-                if(mCurrentLocation.getBearing()==0.0)
+                if (mCurrentLocation.getBearing() == 0.0)
                     currentLocMarker.setRotation(previousBearing);
                 else
                     currentLocMarker.setRotation(mCurrentLocation.getBearing());
@@ -4846,8 +4843,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             prevLatLng = new LatLng(curPos.latitude, curPos.longitude);
 
-            System.out.println("direction list===>"+direction);
-            List <Leg> leg = direction.getRouteList().get(0).getLegList();
+            System.out.println("direction list===>" + direction);
+            List<Leg> leg = direction.getRouteList().get(0).getLegList();
             step = leg.get(0).getStepList();
 
             String final_instruct = getStringfromhtml(step.get(0).getHtmlInstruction());
@@ -4891,9 +4888,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             previous_final_instruct = final_instruct;
         }
 
-        if (currentLocMarker.getPosition()!=null) {
-            if(currentLocMarker.getPosition().latitude!=0 && currentLocMarker.getPosition().longitude!=0){
-                if(mCurrentLocation.getBearing()!=0.0){
+        if (currentLocMarker.getPosition() != null) {
+            if (currentLocMarker.getPosition().latitude != 0 && currentLocMarker.getPosition().longitude != 0) {
+                if (mCurrentLocation.getBearing() != 0.0) {
                     final CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(currentLocMarker.getPosition())      // Sets the center of the map to Mountain View
                             //.zoom(Constants.MAP_ZOOM_SIZE_ONTRIP)      // Sets the zoom
@@ -4904,8 +4901,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     CameraUpdate center = CameraUpdateFactory.newLatLng(curPos);
                     mMap.animateCamera(center, 400, null);
-                }
-                else{
+                } else {
                     final CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(currentLocMarker.getPosition())      // Sets the center of the map to Mountain View
                             //.zoom(Constants.MAP_ZOOM_SIZE_ONTRIP)      // Sets the zoom
@@ -4924,21 +4920,21 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             if (strsetValue.matches("coming_start")) {
 
 
-                if(pickUPrDropMarker!=null)
+                if (pickUPrDropMarker != null)
                     pickUPrDropMarker.remove();
 
                 // before loop:
-                System.out.println("destLocation location ===>"+destLocation);
+                System.out.println("destLocation location ===>" + destLocation);
                 pickUPrDropMarker = mMap.addMarker(new MarkerOptions().position(destLocation).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_dropoff)));
 
 
             } else {
 
-                if(pickUPrDropMarker!=null)
+                if (pickUPrDropMarker != null)
                     pickUPrDropMarker.remove();
 
-                System.out.println("destLocation location ===>"+destLocation);
-                pickUPrDropMarker =  mMap.addMarker(new MarkerOptions().position(destLocation).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_pickup)));
+                System.out.println("destLocation location ===>" + destLocation);
+                pickUPrDropMarker = mMap.addMarker(new MarkerOptions().position(destLocation).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_pickup)));
 
             }
         } catch (Exception e) {
@@ -4949,18 +4945,18 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
 
 
-        if(routePolyline!=null){
+        if (routePolyline != null) {
             routePolyline.setPoints(directionPositionList);
 
-        }else {
+        } else {
             routePolyline = mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.BLUE));
         }
 
-        if(jsonTollObject!=null)
-            new getTollDeatilsAsycn(directionPositionList,tollMarkersMap,Map_Activity.this,jsonTollObject).execute();
+        if (jsonTollObject != null)
+            new getTollDeatilsAsycn(directionPositionList, tollMarkersMap, Map_Activity.this, jsonTollObject).execute();
     }
 
-    private String getStringfromhtml(String htmlstring){
+    private String getStringfromhtml(String htmlstring) {
         return Html.fromHtml(htmlstring).toString().trim();
     }
 
@@ -5037,7 +5033,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         AppIndex.AppIndexApi.end(client, viewAction);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        if(navcard.isShown())
+        if (navcard.isShown())
             navcard.setVisibility(View.GONE);
     }
 
@@ -5065,7 +5061,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             locationManager.removeUpdates(this);
         }
 
-        if(navcard.isShown())
+        if (navcard.isShown())
             navcard.setVisibility(View.GONE);
     }
 
@@ -5076,7 +5072,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         //handler.removeCallbacksAndMessages(null);
         // Stop location updates to save battery, but don't disconnect the GoogleApiClient object.
 
-        if(navcard.isShown())
+        if (navcard.isShown())
             navcard.setVisibility(View.GONE);
     }
 
@@ -5107,13 +5103,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         for (Marker marker : this.wayPaintsMarker.values()) {
             marker.remove();
         }
-        if(wayPaintsMarker!=null)
+        if (wayPaintsMarker != null)
             wayPaintsMarker.clear();
 
 
         String[] tripidArray = tempTripWithName.split(":");
         String Tripid = tripidArray[0];
-        String userName = tripidArray[1].replaceAll("%20"," ");
+        String userName = tripidArray[1].replaceAll("%20", " ");
 
         current_rider.setText(userName);
         current_rider1.setText(userName);
@@ -5185,7 +5181,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 case "3":
 
                                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                                    if(riderID!=null)
+                                    if (riderID != null)
                                         ref.child("riders_location").child(riderID).child("pickup_terminal").setValue("None");
                                     tripID = temptripID;
                                     System.out.println("start clicked trip id in status 3 ===>" + tripID);
@@ -5197,7 +5193,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 case "4":
 
                                     System.out.print("end trip");
-                                    if(tripsdataListen!=null)
+                                    if (tripsdataListen != null)
                                         tripsdataRef.removeEventListener(tripsdataListen);
 
                                     showTripSummaryDialog();
@@ -5266,7 +5262,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             String[] tripidArray = tempTirpid.split(":");
             String Tripid = tripidArray[0];
-            String userName = tripidArray[1].replaceAll("%20"," ");
+            String userName = tripidArray[1].replaceAll("%20", " ");
 
             System.out.println("TripID Split" + Tripid);
             System.out.println("Username Split" + userName);
@@ -5306,7 +5302,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             String[] tripidArray = tempTirpid.split(":");
             String Tripid = tripidArray[0];
-            String userName = tripidArray[1].replaceAll("%20"," ");
+            String userName = tripidArray[1].replaceAll("%20", " ");
 
             System.out.println("TripID Split" + Tripid);
             System.out.println("Username Split" + userName);
@@ -5341,7 +5337,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             String[] tripidArray = tempTirpid.split(":");
             String Tripid = tripidArray[0];
-            String userName = tripidArray[1].replaceAll("%20"," ");
+            String userName = tripidArray[1].replaceAll("%20", " ");
 
             System.out.println("TripID Split" + Tripid);
             System.out.println("Username Split" + userName);
@@ -5401,7 +5397,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             //  getRetrofitArray(riderid);
                             //setDropListener(riderID);
                             getRiderDetailsOnMultipleTrips(riderID);
-                            if(multidestref!=null){
+                            if (multidestref != null) {
                                 multidestref.removeEventListener(multidestlis);
                             }
                             setMultipleDestListener(riderID);
@@ -5579,15 +5575,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     String tollspre = dataSnapshot.getValue().toString();
 
-                    if(Double.parseDouble(tollspre)>0){
+                    if (Double.parseDouble(tollspre) > 0) {
 
                         sumofamount = String.valueOf(values + Double.parseDouble(tollspre));
 
                         sumofamount = convertToDecimal(Double.parseDouble(sumofamount));
 
-                        System.out.println("two values==>" + String.format( "Value of a: %.2f", Double.parseDouble(sumofamount)));
-                    }
-                    else {
+                        System.out.println("two values==>" + String.format("Value of a: %.2f", Double.parseDouble(sumofamount)));
+                    } else {
 
                         sumofamount = convertToDecimal(values + Double.parseDouble(tollspre));
                     }
@@ -5615,11 +5610,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
-                    if (dataSnapshot.getValue()!= null) {
+                    if (dataSnapshot.getValue() != null) {
                         String status = dataSnapshot.getValue().toString();
                         if (status.equals("6")) {
 
-                            if(d!=null){
+                            if (d != null) {
                                 d.dismiss();
                                 stopPlaying();
                             }
@@ -5678,7 +5673,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }, Constants.updateLocationToFBHandlerTime);
     }
 
-    protected void getUpdateLocation(Double lat,Double lng) {
+    protected void getUpdateLocation(Double lat, Double lng) {
 
         String url = Constants.LIVEURL + "updateLocation/userid/" + driverId + "/lat/" + lat + "/long/" + lng;
         System.out.println(" ONLINE URL is " + url);
@@ -5759,12 +5754,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         Map<LatLng, Marker> tollMarkersMap;
         JSONObject jsonTollObject;
 
-        private getTollDeatilsAsycn(ArrayList<LatLng> directionPositionList,Map<LatLng, Marker> tollMarkersMap,Context context,JSONObject jsonTollObject)
-        {
-            this.directionPositionList=directionPositionList;
-            this.tollMarkersMap=tollMarkersMap;
-            this.context=context;
-            this.jsonTollObject=jsonTollObject;
+        private getTollDeatilsAsycn(ArrayList<LatLng> directionPositionList, Map<LatLng, Marker> tollMarkersMap, Context context, JSONObject jsonTollObject) {
+            this.directionPositionList = directionPositionList;
+            this.tollMarkersMap = tollMarkersMap;
+            this.context = context;
+            this.jsonTollObject = jsonTollObject;
         }
 
         // Download Music File from Internet
@@ -5794,16 +5788,16 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         final String ZoneID = properties.optString("ZoneID");
 
                         Marker tempmarkertoll = this.tollMarkersMap.get(tollposOG);
-                        System.out.println("Testing Location: "+tempmarkertoll);
+                        System.out.println("Testing Location: " + tempmarkertoll);
 
-                        if(tempmarkertoll==null){
+                        if (tempmarkertoll == null) {
 
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
                                     Log.d("UI thread", "I am the UI thread");
 
-                                    drawMarkerWithCircle(tollposOG,Name,ZoneID);
+                                    drawMarkerWithCircle(tollposOG, Name, ZoneID);
                                 }
                             });
                         }
@@ -5825,11 +5819,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void checkTolls(Location location){
+    public void checkTolls(Location location) {
 
 
-        if(tollMarkersMap!=null){
-            try{
+        if (tollMarkersMap != null) {
+            try {
                 System.out.println("Lis of postion!!" + tollMarkersMap);
                 //for (LatLng point : listOfTollPos) {
                 for (LatLng point : tollMarkersMap.keySet()) {
@@ -5838,8 +5832,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         System.out.println("Bingoooo!!" + point.latitude + " " + point.longitude);
                         Marker m = tollMarkersMap.get(point);
-                        String name="None",ZoneID="None",previousZoneID="None";
-                        if(m!=null) {
+                        String name = "None", ZoneID = "None", previousZoneID = "None";
+                        if (m != null) {
 
                             name = m.getTitle();
                             ZoneID = String.valueOf(m.getTag());
@@ -5853,14 +5847,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
 
-    private void drawMarkerWithCircle(LatLng position ,String Name,String ZoneID){
+    private void drawMarkerWithCircle(LatLng position, String Name, String ZoneID) {
 /*        double radiusInMeters = 5;
         int strokeColor = 0xffff0000; //red outline
         int shadeColor = 0x44ff0000; //opaque red fill
@@ -5871,8 +5865,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         //tollMarker = this.tollMarkersMap.get(Name);
 
-        System.out.println("toll marker length====>"+tollMarkersMap.size());
-        System.out.println("toll marker length====>"+tollMarkersMap);
+        System.out.println("toll marker length====>" + tollMarkersMap.size());
+        System.out.println("toll marker length====>" + tollMarkersMap);
 
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_erp))
@@ -5892,7 +5886,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         String localTime = date.format(currentLocalTime);
 
-        return localTime.replaceAll(" ","%20");
+        return localTime.replaceAll(" ", "%20");
     }
 
     private void getSurgePricingPercentage(String starttime, final int minutes) {
@@ -5903,53 +5897,50 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 .build();
 
         RetrofitArrayAPI service = retrofit.create(RetrofitArrayAPI.class);
-        Call<List<Contributor>> call = service.repoContributors(starttime,getCurrentTime(),driverId);
+        Call<List<Contributor>> call = service.repoContributors(starttime, getCurrentTime(), driverId);
         call.enqueue(new Callback<List<Contributor>>() {
             @Override
             public void onResponse(@NonNull Call<List<Contributor>> call, @NonNull retrofit2.Response<List<Contributor>> response) {
                 try {
                     List<Contributor> RequestData = response.body();
-                    System.out.println("Response "+RequestData);
+                    System.out.println("Response " + RequestData);
                     if (RequestData != null) {
-                        System.out.println("Response Size"+RequestData.size());
+                        System.out.println("Response Size" + RequestData.size());
                     }
                     if (RequestData != null) {
                         for (int i = 0; i < RequestData.size(); i++) {
-                            status=RequestData.get(i).getStatus();
-                            if(status.equals("Success"))
-                            {
-                                surgePrice= RequestData.get(i).getPercentage();
-                                driverCompanyName= RequestData.get(i).getCompanyName();
-                                System.out.println("The Price was"+surgePrice);
-                                System.out.println("Company name was"+driverCompanyName);
-                                if(!driverCompanyName.matches("None")){
+                            status = RequestData.get(i).getStatus();
+                            if (status.equals("Success")) {
+                                surgePrice = RequestData.get(i).getPercentage();
+                                driverCompanyName = RequestData.get(i).getCompanyName();
+                                System.out.println("The Price was" + surgePrice);
+                                System.out.println("Company name was" + driverCompanyName);
+                                if (!driverCompanyName.matches("None")) {
                                     driverCompanyFee = RequestData.get(i).getCompanyFee();
-                                }else{
-                                    driverCompanyFee="0";
+                                } else {
+                                    driverCompanyFee = "0";
                                 }
-                                System.out.println("Company Fee is"+driverCompanyFee);
+                                System.out.println("Company Fee is" + driverCompanyFee);
 
-                                checkWaypointCount(surgePrice,minutes);
+                                checkWaypointCount(surgePrice, minutes);
 
-                            }
-                            else{
-                                k=0.0;
+                            } else {
+                                k = 0.0;
 
-                                driverCompanyName= RequestData.get(i).getCompanyName();
-                                System.out.println("Company name was"+driverCompanyName);
-                                if(!driverCompanyName.matches("None")){
+                                driverCompanyName = RequestData.get(i).getCompanyName();
+                                System.out.println("Company name was" + driverCompanyName);
+                                if (!driverCompanyName.matches("None")) {
                                     driverCompanyFee = RequestData.get(i).getCompanyFee();
-                                }else{
-                                    driverCompanyFee="0";
+                                } else {
+                                    driverCompanyFee = "0";
                                 }
-                                System.out.println("Company Fee is"+driverCompanyFee);
+                                System.out.println("Company Fee is" + driverCompanyFee);
 
-                                checkWaypointCount("0",minutes);
+                                checkWaypointCount("0", minutes);
                             }
 
 
-
-                            System.out.println("the driver company"+driverCompanyName+driverCompanyFee);
+                            System.out.println("the driver company" + driverCompanyName + driverCompanyFee);
                             /*if(driverCompanyFee!=null && driverCompanyName!=null){
 
                                 if(!driverCompanyFee.equals("0")){
@@ -5972,8 +5963,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onFailure(@NonNull Call<List<Contributor>> call, @NonNull Throwable t) {
-                k=0.0;
-                checkWaypointCount("0",minutes);
+                k = 0.0;
+                checkWaypointCount("0", minutes);
             }
         });
     }
@@ -5992,14 +5983,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        System.out.println("Location Provoider:"+" Fused Location");
+        System.out.println("Location Provoider:" + " Fused Location");
 
-        if(mCurrentLocation==null){
+        if (mCurrentLocation == null) {
 
-            locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-            System.out.println("Location Provoider:"+" Fused Location Fail: GPS Location");
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            System.out.println("Location Provoider:" + " Fused Location Fail: GPS Location");
 
-            if(locationManager!=null){
+            if (locationManager != null) {
 
                 //To avoid duplicate listener
                 try {
@@ -6017,14 +6008,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 mCurrentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                if(mCurrentLocation==null){
+                if (mCurrentLocation == null) {
 
-                    System.out.println("Location Provoider:"+" GPS Location Fail: Network Location");
+                    System.out.println("Location Provoider:" + " GPS Location Fail: Network Location");
 
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             Constants.MIN_TIME_BW_UPDATES,
-                            Constants.MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
+                            Constants.MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
                     mCurrentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 }
@@ -6043,15 +6034,15 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             navTxt.setText(description.trim());
 
             //textToSpeech.addSpeech(description,dsfa,dfa);
-            volume=prefs.getBoolean("getvolume", false);
-            if(volume)
+            volume = prefs.getBoolean("getvolume", false);
+            if (volume)
                 readText(description.trim());
 
             //hide the Navigation card view in 10 secconds
             ttsHandler.postDelayed(new Runnable() {
                 public void run() {
                     // Actions to do after 10 seconds
-                    if(navcard.isShown())
+                    if (navcard.isShown())
                         navcard.setVisibility(View.GONE);
                 }
             }, 10000);
@@ -6120,7 +6111,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     case Activity.RESULT_OK:
                         // All required changes were successfully made
                         Toast.makeText(Map_Activity.this, "Enabling Location please wait...", Toast.LENGTH_SHORT).show();
-                        mCurrentLocation=getFusedLocation();
+                        mCurrentLocation = getFusedLocation();
 
                         new Handler().postDelayed(new Runnable() {
 
@@ -6133,7 +6124,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             public void run() {
                                 // This method will be executed once the timer is over
                                 if (mCurrentLocation != null) {
-                                    zoomCameraToPosition(new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()));
+                                    zoomCameraToPosition(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                                 }
 
                             }
@@ -6163,13 +6154,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void playRequestTone(){
+    public void playRequestTone() {
 
         String requestTone = "android.resource://" + getPackageName() + "/" + R.raw.requesting_tone;
 
         try {
             requstingTone = new MediaPlayer();
-            requstingTone.setDataSource(this,Uri.parse(requestTone));
+            requstingTone.setDataSource(this, Uri.parse(requestTone));
             requstingTone.prepare();
             requstingTone.setLooping(true);
             requstingTone.start();
@@ -6182,7 +6173,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         System.out.println("Am stoping function");
 
-        if(requstingTone.isPlaying()){
+        if (requstingTone.isPlaying()) {
             System.out.println("Am stoped");
             requstingTone.stop();
             requstingTone.reset();
@@ -6190,11 +6181,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //set listener for drop
-    public void setDropListener(String riderId){
+    public void setDropListener(String riderId) {
         //Listener to get driver rating from Firebase
         try {
-            droplocationRef= FirebaseDatabase.getInstance().getReference().child("riders_location").child(riderId).child("Updatelocation");
-            droplocationlistener=droplocationRef.addValueEventListener(new ValueEventListener() {
+            droplocationRef = FirebaseDatabase.getInstance().getReference().child("riders_location").child(riderId).child("Updatelocation");
+            droplocationlistener = droplocationRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -6216,17 +6207,16 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 Double laat = Double.parseDouble(latreplace);
                                 Double lngg = Double.parseDouble(longreplace);
 
-                                if(!latreplace.equals("0")&&!longreplace.equals("0")){
-                                    destLocation = new LatLng(laat,lngg);
-                                    navigationLatLng=new LatLng(laat,lngg);
-                                    haslatlng=true;
-                                    strLat=latreplace;
-                                    strLng=longreplace;
+                                if (!latreplace.equals("0") && !longreplace.equals("0")) {
+                                    destLocation = new LatLng(laat, lngg);
+                                    navigationLatLng = new LatLng(laat, lngg);
+                                    haslatlng = true;
+                                    strLat = latreplace;
+                                    strLng = longreplace;
                                     updateEndLocation(destLocation);
-                                    new getUpdateAddress(destLocation.latitude,destLocation.longitude).execute();
-                                }
-                                else{
-                                    haslatlng=false;
+                                    new getUpdateAddress(destLocation.latitude, destLocation.longitude).execute();
+                                } else {
+                                    haslatlng = false;
                                 }
                             }
                         }
@@ -6262,16 +6252,17 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         int ASYNC_ERP_SKIP_COUNT;
-        String ASYNC_ZONEID,ASYNC_VEHICLETYPE;
+        String ASYNC_ZONEID, ASYNC_VEHICLETYPE;
 
         getTollAmount(int ASYNC_ERP_SKIP_COUNT, String ASYNC_ZONEID, String ASYNC_VEHICLETYPE) {
 
-            this.ASYNC_ERP_SKIP_COUNT=ASYNC_ERP_SKIP_COUNT;
-            this.ASYNC_ZONEID=ASYNC_ZONEID;
-            this.ASYNC_VEHICLETYPE=ASYNC_VEHICLETYPE;
+            this.ASYNC_ERP_SKIP_COUNT = ASYNC_ERP_SKIP_COUNT;
+            this.ASYNC_ZONEID = ASYNC_ZONEID;
+            this.ASYNC_VEHICLETYPE = ASYNC_VEHICLETYPE;
 
         }
-        protected void onPreExecute(){
+
+        protected void onPreExecute() {
 
 
         }
@@ -6282,7 +6273,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             HttpURLConnection urlConnection = null;
             try {
                 //url = new URL("http://54.172.2.238/driver/checkEmailPhone/email/praveen@gmail.com/mobile/9629888596");
-                url = new URL("http://datamall2.mytransport.sg/ltaodataservice/ERPRates?$skip="+String.valueOf(ASYNC_ERP_SKIP_COUNT));
+                url = new URL("http://datamall2.mytransport.sg/ltaodataservice/ERPRates?$skip=" + String.valueOf(ASYNC_ERP_SKIP_COUNT));
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setReadTimeout(20000 /* milliseconds */);
@@ -6317,28 +6308,28 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(String result) {
 
-            fetchERPDeatils(result,ASYNC_ZONEID,ASYNC_VEHICLETYPE);
+            fetchERPDeatils(result, ASYNC_ZONEID, ASYNC_VEHICLETYPE);
 
         }
     }
 
     private class getUpdateAddress extends AsyncTask<String, Void, String> {
 
-        Double updatelat,updatlng;
+        Double updatelat, updatlng;
 
-        private getUpdateAddress( Double lat,Double lng)
-        {
-            this.updatelat=lat;
-            this.updatlng=lng;
+        private getUpdateAddress(Double lat, Double lng) {
+            this.updatelat = lat;
+            this.updatlng = lng;
         }
 
 
-        protected void onPreExecute(){}
+        protected void onPreExecute() {
+        }
 
         protected String doInBackground(String... arg0) {
             try {
 
-                getCompleteAddressString(updatelat,updatlng);
+                getCompleteAddressString(updatelat, updatlng);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -6351,14 +6342,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         protected void onPostExecute(String result) {
 
             String strDesLoc = txtRiderDestination.getText().toString();
-            if(strDesLoc.matches("null")&strDesLoc.matches(""))
+            if (strDesLoc.matches("null") & strDesLoc.matches(""))
                 strDesLoc = "Destination Location Updated by Rider.";
 
-            generateNotification(getApplicationContext(),"Destination Location Updated: "+strDesLoc);
+            generateNotification(getApplicationContext(), "Destination Location Updated: " + strDesLoc);
         }
     }
 
-    public void checkOverlayPermission(){
+    public void checkOverlayPermission() {
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
 
@@ -6370,7 +6361,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             startWidgetService();
         }
         //Display overlay permissions
-        else{
+        else {
 
             android.support.v7.app.AlertDialog.Builder builder =
                     new android.support.v7.app.AlertDialog.Builder(Map_Activity.this, R.style.AppCompatAlertDialogStyle);
@@ -6408,28 +6399,28 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void startWidgetService(){
+    public void startWidgetService() {
 
         startService(new Intent(getApplication(), WidgetService.class));
         openRouteNavigator();
     }
 
-    public void openRouteNavigator(){
+    public void openRouteNavigator() {
 
         try {
-            routeLat=navigationLatLng.latitude;
-            routeLng= navigationLatLng.longitude;
+            routeLat = navigationLatLng.latitude;
+            routeLng = navigationLatLng.longitude;
         } catch (Exception e) {
             e.printStackTrace();
-            routeLat=0.0;
-            routeLng=0.0;
+            routeLat = 0.0;
+            routeLng = 0.0;
         }
 
-        selectedDrawable=prefs.getString("navigationMode",null);
+        selectedDrawable = prefs.getString("navigationMode", null);
 
-        System.out.println("Lat and Lng"+routeLat+","+routeLng);
+        System.out.println("Lat and Lng" + routeLat + "," + routeLng);
 
-        if(selectedDrawable!=null) {
+        if (selectedDrawable != null) {
 
             switch (selectedDrawable) {
                 case "googleMap":
@@ -6485,13 +6476,12 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     break;
             }
-        }
-        else{
+        } else {
 
             try {
 
-                String uri = "waze://?ll="+routeLat+", "+routeLng+"=yes";
-                Intent waze =new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                String uri = "waze://?ll=" + routeLat + ", " + routeLng + "=yes";
+                Intent waze = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 waze.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(waze);
             } catch (ActivityNotFoundException e) {
@@ -6506,25 +6496,25 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 Intent intent =
-                                        new Intent( Intent.ACTION_VIEW, Uri.parse( "market://details?id=com.waze" ) );
+                                        new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.waze"));
                                 startActivity(intent);
                             }
                         });
                 builder.show();
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
     //set listener for Terminal
-    public void getTerminal(String riderId){
+    public void getTerminal(String riderId) {
         //Listener to get driver rating from Firebase
 
-        if(riderId!=null){
+        if (riderId != null) {
 
-            pickupTerminalRef= FirebaseDatabase.getInstance().getReference().child("riders_location").child(riderId).child("pickup_terminal");
-            pickupTerminalListen=pickupTerminalRef.addValueEventListener(new ValueEventListener() {
+            pickupTerminalRef = FirebaseDatabase.getInstance().getReference().child("riders_location").child(riderId).child("pickup_terminal");
+            pickupTerminalListen = pickupTerminalRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -6533,9 +6523,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         if (status != null) {
                             System.out.println("The drop lat lng from listener" + status);
 
-                            if(!status.matches("None")){
+                            if (!status.matches("None")) {
 
-                                String appndAdd = status+" | "+strPickupAddress;
+                                String appndAdd = status + " | " + strPickupAddress;
 
                                 txtRiderDestination.setText(appndAdd);
                             }
@@ -6551,7 +6541,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private String getDateTime(){
+    private String getDateTime() {
 
         try {
             TimeZone GMT = TimeZone.getTimeZone("GMT");
@@ -6566,7 +6556,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
             System.out.println("Date: " + dateFormat.format(CurrentDateTime));
             System.out.println("Time: " + timeFormat.format(CurrentDateTime));
-            System.out.println("Date and Time: " + dateFormat.format(CurrentDateTime)+ " " + timeFormat.format(CurrentDateTime));
+            System.out.println("Date and Time: " + dateFormat.format(CurrentDateTime) + " " + timeFormat.format(CurrentDateTime));
 
             return strCurrentDateTime;
 
@@ -6576,11 +6566,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public long getDuration(){
+    public long getDuration() {
 
-        String tmpStartDate=prefs.getString("onlineStartDate",null);
+        String tmpStartDate = prefs.getString("onlineStartDate", null);
 
-        if(tmpStartDate!=null){
+        if (tmpStartDate != null) {
 
             String strEndDate = getDateTime();
 
@@ -6594,30 +6584,30 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 endDate = dateEndTimefarmat.parse(strEndDate);//end_date
                 startDate = dateStartTimefarmat.parse(tmpStartDate);//start_date
 
-                if(startDate!=null & endDate !=null){
+                if (startDate != null & endDate != null) {
 
                     onlineDuration = endDate.getTime() - startDate.getTime();
 
                     System.out.println("startDate : " + startDate);
-                    System.out.println("endDate : "+ endDate);
+                    System.out.println("endDate : " + endDate);
                     System.out.println("different : " + onlineDuration);
 
                     return onlineDuration;
 
-                }else {
+                } else {
                     return 0;
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
                 return 0;
             }
-        }else {
+        } else {
 
             return 0;
         }
     }
 
-    public String getTimeFromDiffernce(long different){
+    public String getTimeFromDiffernce(long different) {
 
         //1 minute = 60 seconds
         //1 hour = 60 x 60 = 3600
@@ -6641,28 +6631,28 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         //System.out.printf("%d days, %d hours, %d minutes, %d seconds%n", elapsedDays,elapsedHours, elapsedMinutes, elapsedSeconds);
 
-        if(elapsedHours==0 & elapsedMinutes==0 & elapsedSeconds==0)
-            return elapsedSeconds+" seconds ";
-        else if(elapsedHours==0 & elapsedMinutes==0)
-            return elapsedSeconds+" seconds ";
-        else if(elapsedHours==0)
-            return elapsedMinutes+" minutes "+elapsedSeconds+" seconds ";
+        if (elapsedHours == 0 & elapsedMinutes == 0 & elapsedSeconds == 0)
+            return elapsedSeconds + " seconds ";
+        else if (elapsedHours == 0 & elapsedMinutes == 0)
+            return elapsedSeconds + " seconds ";
+        else if (elapsedHours == 0)
+            return elapsedMinutes + " minutes " + elapsedSeconds + " seconds ";
         else
-            return elapsedHours+" hours "+elapsedMinutes+" minutes "+elapsedSeconds+" seconds ";
+            return elapsedHours + " hours " + elapsedMinutes + " minutes " + elapsedSeconds + " seconds ";
     }
 
-    public int getWaypointTotal(){
+    public int getWaypointTotal() {
         return waypointcount;
     }
 
-    public void setWaypointcount(int count){
-        waypointcount=count;
+    public void setWaypointcount(int count) {
+        waypointcount = count;
     }
 
 
-    public void getRoutePoints(LatLng origin,LatLng dest){
+    public void getRoutePoints(LatLng origin, LatLng dest) {
 
-        System.out.println("origin route==>"+origin+" dest route==>"+dest);
+        System.out.println("origin route==>" + origin + " dest route==>" + dest);
 
         // Getting URL to the Google Directions API
         String url = getDirectionsUrl(origin, dest);
@@ -6675,32 +6665,35 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private String getDirectionsUrl(LatLng origin,LatLng dest){
+    private String getDirectionsUrl(LatLng origin, LatLng dest) {
 
         // Origin of route
-        if(origin!=null && dest!=null){
-            String str_origin = "origin="+origin.latitude+","+origin.longitude;
+        if (origin != null && dest != null) {
+            String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
 
             // Destination of route
-            String str_dest = "destination="+dest.latitude+","+dest.longitude;
+            String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
 
             // Sensor enabled
             String sensor = "sensor=false";
 
             // Building the parameters to the web service
-            String parameters = str_origin+"&"+str_dest+"&"+sensor;
+            String parameters = str_origin + "&" + str_dest + "&" + sensor;
 
             // Output format
             String output = "json";
 
             // Building the url to the web service
 
-            return "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+            return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         }
         return "";
     }
-    /** A method to download json data from url */
-    private String downloadUrl(String strUrl) throws IOException{
+
+    /**
+     * A method to download json data from url
+     */
+    private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         HttpURLConnection urlConnection;
         URL url = new URL(strUrl);
@@ -6735,7 +6728,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     // Fetches data from url passed
-    private class DownloadTask extends AsyncTask<String, Void, String>{
+    private class DownloadTask extends AsyncTask<String, Void, String> {
 
         // Downloading data in non-ui thread
         @Override
@@ -6744,11 +6737,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             // For storing data from web service
             String data = "";
 
-            try{
+            try {
                 // Fetching the data from web service
                 data = downloadUrl(url[0]);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
             }
             return data;
         }
@@ -6766,8 +6759,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
+    /**
+     * A class to parse the Google Places in JSON format
+     */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         // Parsing the data in non-ui thread
         @Override
@@ -6776,13 +6771,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
 
-            try{
+            try {
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();
 
                 // Starts parsing data
                 routes = parser.parse(jObject);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return routes;
@@ -6794,7 +6789,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             PolylineOptions lineOptions;
             // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
+            for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<>();
                 lineOptions = new PolylineOptions();
 
@@ -6802,8 +6797,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
-                    HashMap<String,String> point = path.get(j);
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
 
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
@@ -6812,7 +6807,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     points.add(position);
 
                 }
-                System.out.println("collected routs are in back ====>"+points);
+                System.out.println("collected routs are in back ====>" + points);
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(5);
@@ -6827,34 +6822,34 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public void placeMultiDestMarkerPolyline(){
+    public void placeMultiDestMarkerPolyline() {
 
-        if(points!=null){
+        if (points != null) {
 
             for (Marker marker : this.wayPaintsMarker.values()) {
                 marker.remove();
             }
-            if(wayPaintsMarker!=null)
+            if (wayPaintsMarker != null)
                 wayPaintsMarker.clear();
 
-            if(routePolyline!=null)
+            if (routePolyline != null)
                 routePolyline.remove();
             View countMarker = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
             int count = 0;
-            if (latlngs!=null) {
+            if (latlngs != null) {
 
-                for(LatLng position: latlngs){
+                for (LatLng position : latlngs) {
 
                     if (position != null) {
 
                         count++;
-                        Marker waypointmarker= mMap.addMarker(new MarkerOptions().position(position));
+                        Marker waypointmarker = mMap.addMarker(new MarkerOptions().position(position));
 
-                        if(position.equals(destLocation)){
-                            System.out.println("am here..."+position);
+                        if (position.equals(destLocation)) {
+                            System.out.println("am here..." + position);
                             waypointmarker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_dropoff));
-                        }else {
-                            waypointmarker.setIcon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this,countMarker,String.valueOf(count))));
+                        } else {
+                            waypointmarker.setIcon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, countMarker, String.valueOf(count))));
                         }
 
                         this.wayPaintsMarker.put(position, waypointmarker);
@@ -6864,18 +6859,18 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             mulPoly = mMap.addPolyline(DirectionConverter.createPolyline(this, points, 5, Color.BLUE));
 
-            int i =0;
+            int i = 0;
 
-            this.wayPaintsPolyline.put(i++,mulPoly);
+            this.wayPaintsPolyline.put(i++, mulPoly);
 
-            System.out.println("final points are===>"+points);
+            System.out.println("final points are===>" + points);
         }
     }
 
     // Convert a view to bitmap
-    public static Bitmap createDrawableFromView(Context context, View view,String markerCount) {
+    public static Bitmap createDrawableFromView(Context context, View view, String markerCount) {
 
-        TextView markerCountTxt= (TextView) view.findViewById(R.id.num_txt);
+        TextView markerCountTxt = (TextView) view.findViewById(R.id.num_txt);
         markerCountTxt.setText(markerCount);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -6894,7 +6889,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void PlaceType(String latlng) {
-        final String url="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+latlng+"&radius=1000&types=airport&key="+google_api_key;
+        final String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latlng + "&radius=1000&types=airport&key=" + google_api_key;
 
         System.out.println(" ONLINE URL is " + url);
 
@@ -6920,13 +6915,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 JSONArray types = zerothPostion.optJSONArray("types");
 
-                                String placeType =types.optString(0);
+                                String placeType = types.optString(0);
 
                                 System.out.println("Airport PlaceType==>" + placeType);
 
-                                if(placeType.matches("airport")){
+                                if (placeType.matches("airport")) {
 
-                                    airportamt= Double.parseDouble(strairportfee);
+                                    airportamt = Double.parseDouble(strairportfee);
 
                                 }
 
@@ -6935,13 +6930,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 String error_msg = response.getString("error_message");
 
-                                System.out.println("The Error message in invalidreq"+error_msg);
+                                System.out.println("The Error message in invalidreq" + error_msg);
 
                             } else if (status.matches("REQUEST_DENIED")) {
 
                                 String error_msg = response.getString("error_message");
 
-                                System.out.println("The Error message in reqdenied"+error_msg);
+                                System.out.println("The Error message in reqdenied" + error_msg);
 
                             } else {
 
@@ -6972,13 +6967,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         AppController.getInstance().addToRequestQueue(movieReq);
     }
 
-    public void fetchERPDeatils(String ERPresponse,String curZoneID,String curVehiType){
+    public void fetchERPDeatils(String ERPresponse, String curZoneID, String curVehiType) {
 
-        System.out.println("Response for ERP in Post Exe ===>"+ERPresponse);
-        System.out.println("Current Zone ID===>"+curZoneID);
-        System.out.println("Current vehicle Type===>"+curVehiType);
+        System.out.println("Response for ERP in Post Exe ===>" + ERPresponse);
+        System.out.println("Current Zone ID===>" + curZoneID);
+        System.out.println("Current vehicle Type===>" + curVehiType);
 
-        if(ERPresponse!=null){
+        if (ERPresponse != null) {
             // Parsing json
             try {
 
@@ -6986,11 +6981,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 JSONArray valueArray = response.getJSONArray("value");
 
-                System.out.println("length of the value array==>"+valueArray.length());
+                System.out.println("length of the value array==>" + valueArray.length());
 
                 int lenthOfArray = valueArray.length();
 
-                String dayOfTheWeek=null,currentTime=null;
+                String dayOfTheWeek = null, currentTime = null;
 
                 try {
                     TimeZone GMT = TimeZone.getTimeZone("GMT");
@@ -7004,10 +6999,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     SimpleDateFormat dayOfTheWeekFormat = new SimpleDateFormat("EEEE");
                     dayOfTheWeek = dayOfTheWeekFormat.format(CurrentDateTime);
 
-                    if(!dayOfTheWeek.matches("Saturday"))
-                        dayOfTheWeek="Weekdays";
+                    if (!dayOfTheWeek.matches("Saturday"))
+                        dayOfTheWeek = "Weekdays";
 
-                    currentTime=timeFormat.format(CurrentDateTime);
+                    currentTime = timeFormat.format(CurrentDateTime);
 
                     System.out.println("Date: " + dayOfTheWeek);
                     System.out.println("Time: " + timeFormat.format(CurrentDateTime));
@@ -7027,47 +7022,50 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     String EndTime = itemsObjects.getString("EndTime");
                     String VehicleType = itemsObjects.getString("VehicleType");
 
-                    if(dayOfTheWeek!=null & currentTime!=null)
-                        if(DayType.matches(dayOfTheWeek) & curZoneID.matches(ZoneID) & VehicleType.matches(curVehiType)){
+                    if (dayOfTheWeek != null & currentTime != null)
+                        if (DayType.matches(dayOfTheWeek) & curZoneID.matches(ZoneID) & VehicleType.matches(curVehiType)) {
                             System.out.println("inside zone id");
 
-                            if(isTimeLiesBetweenTwotimes(StartTime,EndTime,currentTime)){
+                            if (isTimeLiesBetweenTwotimes(StartTime, EndTime, currentTime)) {
 
-                                System.out.println("Response for items Objects===>"+itemsObjects);
-                                System.out.println("Current Time===>"+currentTime);
+                                System.out.println("Response for items Objects===>" + itemsObjects);
+                                System.out.println("Current Time===>" + currentTime);
 
                                 String tollChargeAmount = itemsObjects.getString("ChargeAmount");
 
-                                System.out.println("Charge Amount===>"+tollChargeAmount);
+                                System.out.println("Charge Amount===>" + tollChargeAmount);
 
                                 Toast.makeText(Map_Activity.this, tollChargeAmount, Toast.LENGTH_SHORT).show();
 
-                                if(tollChargeAmount!=null)
-                                    if(!tollChargeAmount.matches("0"))
-                                        try{addTollAmount(tollChargeAmount);}catch (Exception e){e.printStackTrace();}
+                                if (tollChargeAmount != null)
+                                    if (!tollChargeAmount.matches("0"))
+                                        try {
+                                            addTollAmount(tollChargeAmount);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
 
-                                lenthOfArray=-77;
+                                lenthOfArray = -77;
 
                                 break;
                             }
                         }
                 }
 
-                if(lenthOfArray>0){
+                if (lenthOfArray > 0) {
 
                     ERP_SKIP_COUNT = ERP_SKIP_COUNT + 50;
 
-                    new getTollAmount(ERP_SKIP_COUNT,curZoneID,curVehiType).execute();
+                    new getTollAmount(ERP_SKIP_COUNT, curZoneID, curVehiType).execute();
 
-                }else if(lenthOfArray==-77){
+                } else if (lenthOfArray == -77) {
 
-                    ERP_SKIP_COUNT=0;
-                }
-                else {
+                    ERP_SKIP_COUNT = 0;
+                } else {
 
                     System.out.print("lenthOfArray" + lenthOfArray);
                     Toast.makeText(Map_Activity.this, "Nothing Found", Toast.LENGTH_SHORT).show();
-                    ERP_SKIP_COUNT=0;
+                    ERP_SKIP_COUNT = 0;
                 }
 
             } catch (JSONException e) {
@@ -7077,7 +7075,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public boolean isTimeLiesBetweenTwotimes(String startTime,String endTime,String curTime){
+    public boolean isTimeLiesBetweenTwotimes(String startTime, String endTime, String curTime) {
 
         try {
             String string1 = startTime; //"08:35"
@@ -7089,24 +7087,22 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             Date time2 = new SimpleDateFormat("HH:mm").parse(string2);
             Calendar calendar2 = Calendar.getInstance();
             calendar2.setTime(time2);
-            calendar2.add(Calendar.DATE,0);
+            calendar2.add(Calendar.DATE, 0);
 
             String someRandomTime = curTime; //"08:54";
             Date d = new SimpleDateFormat("HH:mm").parse(someRandomTime);
             Calendar calendar3 = Calendar.getInstance();
             calendar3.setTime(d);
-            calendar3.add(Calendar.DATE,0);
+            calendar3.add(Calendar.DATE, 0);
 
             Date x = calendar3.getTime();
 
             if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
                 //checkes whether the current time is between 14:49:00 and 20:11:13.
                 return true;
-            }
-            else if(x.equals(calendar1.getTime()) | x.equals(calendar2.getTime())){
+            } else if (x.equals(calendar1.getTime()) | x.equals(calendar2.getTime())) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         } catch (ParseException e) {
@@ -7115,14 +7111,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void initializeTTS(){
+    public void initializeTTS() {
 
         //Initializing TextToSpeech
         textToSpeech = new TextToSpeech(Map_Activity.this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                System.out.println("text to speach status====>"+status);
-                if(status != TextToSpeech.ERROR) {
+                System.out.println("text to speach status====>" + status);
+                if (status != TextToSpeech.ERROR) {
                     try {
                         textToSpeech.setLanguage(Locale.US);
                     } catch (Exception e) {
@@ -7137,10 +7133,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                     }
 
-                    if(navcard.isShown()){
-                        volume=prefs.getBoolean("getvolume", false);
-                        if(navTxt.getText()!=null)
-                            if(volume)
+                    if (navcard.isShown()) {
+                        volume = prefs.getBoolean("getvolume", false);
+                        if (navTxt.getText() != null)
+                            if (volume)
                                 readText(navTxt.getText().toString().trim());
                     }
                 }
@@ -7148,43 +7144,42 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    public void stopTTS(){
+    public void stopTTS() {
 
-        if(textToSpeech!=null){
+        if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
         }
     }
 
-    public void enableDisableVoiceNavButt(){
+    public void enableDisableVoiceNavButt() {
 
-        volume=prefs.getBoolean("getvolume", false);
+        volume = prefs.getBoolean("getvolume", false);
 
-        if(volume){
+        if (volume) {
             mute.setVisibility(View.VISIBLE);
             volon.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             volon.setVisibility(View.VISIBLE);
             mute.setVisibility(View.GONE);
         }
     }
 
-    public void readText(String textToRead){
+    public void readText(String textToRead) {
 
-        if(!textToSpeech.isSpeaking())
+        if (!textToSpeech.isSpeaking())
             textToSpeech.speak(textToRead, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    public void setOnlineButtunStatus(boolean value){
+    public void setOnlineButtunStatus(boolean value) {
 
-        System.out.println("Last Status in boolean===>"+value);
-        editor.putBoolean("goOnline",value);
+        System.out.println("Last Status in boolean===>" + value);
+        editor.putBoolean("goOnline", value);
         editor.apply();
 
     }
 
-    public boolean isOnlineButtunClicked(){
-        return prefs.getBoolean("goOnline",false);
+    public boolean isOnlineButtunClicked() {
+        return prefs.getBoolean("goOnline", false);
     }
 }

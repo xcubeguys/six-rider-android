@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,7 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.tommy.driver.Map_Activity;
 
 public class Services extends Service {
-    public static final String MY_SERVICE=".adapter.Services";
+    public static final String MY_SERVICE = ".adapter.Services";
 
     DatabaseReference requstStatus;
 
@@ -31,7 +32,7 @@ public class Services extends Service {
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         driverId = prefs.getString("driverid", null);
-        System.out.println("Driver ID in service class===>" +driverId);
+        System.out.println("Driver ID in service class===>" + driverId);
 
         listenListStatus();
     }
@@ -45,16 +46,20 @@ public class Services extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.print("my six service is destroyed");
+        if (requstStatus != null && handler != null) {
+            requstStatus.removeEventListener(handler);
+        }
     }
 
-    private void listenListStatus(){
+    private ValueEventListener handler;
 
-        if(driverId!=null){
+    private void listenListStatus() {
+
+        if (driverId != null) {
 
             requstStatus = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId).child("request").child("status");
 
-            ValueEventListener handler = new ValueEventListener() {
+            handler = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -64,13 +69,13 @@ public class Services extends Service {
                         if (Status.matches("1")) {
 
                             System.out.println("IS MAPSHOWING?===>" + Constants.MAP_ISSHOWING);
-                            System.out.println("Driver ID===>" +driverId);
+                            System.out.println("Driver ID===>" + driverId);
 
                             if (!Constants.MAP_ISSHOWING) {
 
-                                if(driverId!=null){
+                                if (driverId != null) {
 
-                                    System.out.println("<===== activity started =====> "+driverId);
+                                    System.out.println("<===== activity started =====> " + driverId);
                                     Intent intent = new Intent(Services.this, Map_Activity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
