@@ -3,6 +3,8 @@ package com.tommy.rider;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
@@ -35,21 +37,21 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-@EActivity (R.layout.activity_referral)
+@EActivity(R.layout.activity_referral)
 public class ReferralActivity extends MyBaseActivity implements Validator.ValidationListener {
 
-    public String firstName,lastName,referral,referralStatus,nickName,email,passWord;
+    public String firstName, lastName, referral, referralStatus, nickName, email, passWord;
     Validator validator;
     ProgressDialog progressDialog;
 
-    @NotEmpty (message = "Enter Referral Code")
-    @ViewById (R.id.view)
+    @NotEmpty(message = "Enter Referral Code")
+    @ViewById(R.id.referral_et)
     MaterialEditText inputReferral;
 
-    @ViewById (R.id.rounded_arrow)
+    @ViewById(R.id.rounded_arrow)
     RelativeLayout next_button;
 
-    @ViewById (R.id.skip)
+    @ViewById(R.id.skip)
     TextView Skip_button;
 
     @AfterViews
@@ -67,49 +69,75 @@ public class ReferralActivity extends MyBaseActivity implements Validator.Valida
         nickName = i.getStringExtra("nickname");
         email = i.getStringExtra("email");
         passWord = i.getStringExtra("password");
-        inputReferral.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().trim().length() > 0) {
-                    next_button.setVisibility(View.VISIBLE);
-                    Skip_button.setVisibility(View.GONE);
-                } else {
-                    next_button.setVisibility(View.GONE);
-                    Skip_button.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        inputReferral.setFilters(new InputFilter[]{new ExcludeEmojiFilter()});
+        inputReferral.addTextChangedListener(textWatcher);
     }
 
-    @Click({R.id.imageButton3,R.id.imageButton2})
+    private class ExcludeEmojiFilter implements InputFilter {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            for (int i = start; i < end; i++) {
+                int type = Character.getType(source.charAt(i));
+                if (type == Character.SURROGATE || type == Character.OTHER_SYMBOL) {
+                    return "";
+                }
+            }
+            return null;
+        }
+    }
+
+    private final TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.toString().trim().length() > 0) {
+                next_button.setVisibility(View.VISIBLE);
+                Skip_button.setVisibility(View.GONE);
+            } else {
+                next_button.setVisibility(View.GONE);
+                Skip_button.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (inputReferral != null) {
+            inputReferral.removeTextChangedListener(textWatcher);
+        }
+    }
+
+    @Click({R.id.imageButton3, R.id.imageButton2})
     void toSignUpName() {
         validator.validate();
     }
 
-    @Click (R.id.backButton)
+    @Click(R.id.backButton)
     public void goBack() {
         super.onBackPressed();
     }
 
-    @Click (R.id.skip)
+    @Click(R.id.skip)
     public void goSkip() {
 
-        Intent intent = new Intent(ReferralActivity.this,SignupMobile_.class);
-        intent.putExtra("firstname",firstName);
-        intent.putExtra("lastname",lastName);
-        intent.putExtra("email",email);
-        intent.putExtra("password",passWord);
-        intent.putExtra("nickname",nickName);
+        Intent intent = new Intent(ReferralActivity.this, SignupMobile_.class);
+        intent.putExtra("firstname", firstName);
+        intent.putExtra("lastname", lastName);
+        intent.putExtra("email", email);
+        intent.putExtra("password", passWord);
+        intent.putExtra("nickname", nickName);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -123,7 +151,7 @@ public class ReferralActivity extends MyBaseActivity implements Validator.Valida
         try {
             byte[] encoded = Base64.encode(referral.getBytes("UTF-8"), Base64.DEFAULT);
             referral = new String(encoded, "UTF-8");
-            referral = referral.replaceAll("=","").trim();
+            referral = referral.replaceAll("=", "").trim();
             System.out.println("Encoding UTF" + referral);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -131,46 +159,46 @@ public class ReferralActivity extends MyBaseActivity implements Validator.Valida
 
         showDialog();
 
-        final String url = Constants.LIVE_URL + "refrel_code/code/"+referral;
-        System.out.println("RefrelCode Check URL==>"+url);
+        final String url = Constants.LIVE_URL + "refrel_code/code/" + referral;
+        System.out.println("RefrelCode Check URL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    dismissDialog();
-                    for (int i=0;i<response.length();i++){
-                        try {
-                            JSONObject jsonObject = response.getJSONObject(i);
-                            referralStatus = jsonObject.optString("status");
+            @Override
+            public void onResponse(JSONArray response) {
+                dismissDialog();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        referralStatus = jsonObject.optString("status");
 
-                            if(referralStatus.equals("Success")){
-                                Intent intent = new Intent(ReferralActivity.this,SignupMobile_.class);
-                                intent.putExtra("firstname",firstName);
-                                intent.putExtra("lastname",lastName);
-                                intent.putExtra("email",email);
-                                intent.putExtra("password",passWord);
-                                intent.putExtra("nickname",nickName);
-                                intent.putExtra("referral",referral);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                            } else {
-                                inputReferral.setError(getResources().getString(R.string.referral_invalid));
-                            }
-                        } catch (JSONException | NullPointerException e) {
-                            e.printStackTrace();
+                        if (referralStatus.equals("Success")) {
+                            Intent intent = new Intent(ReferralActivity.this, SignupMobile_.class);
+                            intent.putExtra("firstname", firstName);
+                            intent.putExtra("lastname", lastName);
+                            intent.putExtra("email", email);
+                            intent.putExtra("password", passWord);
+                            intent.putExtra("nickname", nickName);
+                            intent.putExtra("referral", referral);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        } else {
+                            inputReferral.setError(getResources().getString(R.string.referral_invalid));
                         }
+                    } catch (JSONException | NullPointerException e) {
+                        e.printStackTrace();
                     }
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    dismissDialog();
-                    if (volleyError instanceof NoConnectionError){
-                        Toast.makeText(getApplicationContext(), R.string.no_internet_connection,Toast.LENGTH_SHORT).show();
-                    }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                dismissDialog();
+                if (volleyError instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
+        });
 
-        signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(signUpReq);
     }
 
@@ -189,8 +217,8 @@ public class ReferralActivity extends MyBaseActivity implements Validator.Valida
         }
     }
 
-    public void showDialog(){
-        progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -198,9 +226,9 @@ public class ReferralActivity extends MyBaseActivity implements Validator.Valida
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing()) {
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
