@@ -291,7 +291,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     ImageView requestMapView;
     View mapView;
     String tollfee, totalprice;
-    String riderID, strsetdestination, strRiderProfile, strCategory, strCategoryId, strPickupAddress;
+    String riderID, strsetdestination, strRiderProfile, strCategory, strPickupAddress;
 
     ArrayList<String> tripIDs = new ArrayList<>();
     ArrayList<String> tollfrees = new ArrayList<>();
@@ -1257,7 +1257,6 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject signIn_jsonobj = response.getJSONObject(i);
-                                strCategoryId = signIn_jsonobj.optString("categoryId");
                                 String strWebCategory = signIn_jsonobj.optString("categoryname");
                                 strCategoryName[i] = signIn_jsonobj.optString("categoryname");
                                 LogUtils.i("Current category" + strCategory);
@@ -1977,7 +1976,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID);
                 Map<String, Object> updates = new HashMap<>();
                 updates.put("Distance", strTotalDistance);
-                updates.put("Price", strTotalPrice);
+                //updates.put("Price", strTotalPrice);
+                updates.put("Price", getTotalPrice());
                 LogUtils.i("Total price" + strTotalPrice);
 
                 ref.updateChildren(updates); //change
@@ -2067,7 +2067,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         String Tripid = tripidArray[0];
         System.out.println(tripID + "trips ids" + Tripid);
         LogUtils.i("trips idsamount" + getTotalPrice());
-        String url = Constants.LIVEURL_REQUEST + "updateTrips/trip_id/" + Tripid + "/trip_status/end/accept_status/4/distance/" + strTotalDistance + "/categoryId/" + strCategoryId + "/user_id/" + driverId + "/drop_address/" + endAddress + "/end_lat/" + endLat + "/end_long/" + endLng;
+        String url = Constants.LIVEURL_REQUEST + "updateTrips/trip_id/" + Tripid + "/trip_status/end/accept_status/4/distance/" + strTotalDistance + "/user_id/" + driverId + "/drop_address/" + endAddress + "/end_lat/" + endLat + "/end_long/" + endLng;
         LogUtils.i(" ONLINE URL is " + url);
         LogUtils.i("end trip url formed = " + url);
         // Creating volley request obj
@@ -2082,6 +2082,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 JSONObject signIn_jsonobj = response.getJSONObject(i);
                                 riderID = signIn_jsonobj.getString("rider_id");
+                                setTotalPrice(signIn_jsonobj.getString("total_price"));
+                                txtTripAmount.setText("$" + convertToDecimal(Double.parseDouble(getTotalPrice())));
+                                //save to firebase
+                                updateDistanceFireBase();
                                 String strDestination = signIn_jsonobj.getString("destination");
                                 JSONObject jsonArray = new JSONObject(strDestination);
                                 strLat = jsonArray.getString("lat");
@@ -3988,9 +3992,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 strTotalPrice = convertToDecimal(Double.parseDouble(strTotalPrice));
 
                 txtTotalDistance.setText("Total Distance : " + strTotalDistance + " KM");
-                txtTripAmount.setText("$" + strTotalPrice);
+                //txtTripAmount.setText("$" + strTotalPrice);
                 setTotalPrice(strTotalPrice);
-                updateDistanceFireBase();
+                //updateDistanceFireBase();
                 //getRating();
                 endUpdateTrip();
 
@@ -4079,10 +4083,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     double d = Double.parseDouble(String.valueOf(strCalculatedDistance));
                     strTotalPrice = convertToDecimal(d);
                     txtTotalDistance.setText("Total Distance : " + strTotalDistance + " KM");
-                    txtTripAmount.setText("$" + convertToDecimal(d));
+                    //txtTripAmount.setText("$" + convertToDecimal(d));
                     setTotalPrice(strTotalPrice);
                     //save to firebase
-                    updateDistanceFireBase();
+                    //updateDistanceFireBase();
                     //getRating();
                     endUpdateTrip();
                 } catch (Exception e) {
@@ -4731,7 +4735,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         @Override
                         public void onComplete(String key, DatabaseError error) {
                             if (error != null) {
-                                System.err.println("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+                                LogUtils.i("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                             } else {
                                 LogUtils.i("Online Location saved on server successfully!");
                             }
@@ -4745,7 +4749,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         @Override
                         public void onComplete(String key, DatabaseError error) {
                             if (error != null) {
-                                System.err.println("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+                                LogUtils.i("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                             } else {
                                 LogUtils.i("Offline Location saved on server successfully!");
                             }
@@ -4757,7 +4761,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onComplete(String key, DatabaseError error) {
                         if (error != null) {
-                            System.err.println("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+                            LogUtils.i("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                         } else {
                             LogUtils.i("Offline Location saved on server successfully!");
                         }
