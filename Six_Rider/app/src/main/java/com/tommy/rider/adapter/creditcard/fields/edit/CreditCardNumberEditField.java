@@ -14,6 +14,7 @@ import com.tommy.rider.R;
 import com.tommy.rider.adapter.creditcard.CreditCardUtilities;
 import com.tommy.rider.adapter.creditcard.animation.drawable.AnimatedScaleDrawable;
 import com.tommy.rider.adapter.creditcard.filter.CreditCardInputFilter;
+import com.tommy.rider.utils.LogUtils;
 
 
 /**
@@ -70,10 +71,8 @@ public class CreditCardNumberEditField extends MaterialEditText {
                     null,
                     null);
             addTextChangedListener(new CreditCardNumberTextWatcher());
-        }
-        catch (Exception e)
-        {
-            System.out.println("Exception"+e);
+        } catch (Exception e) {
+            LogUtils.i("Exception" + e);
         }
 
     }
@@ -128,8 +127,7 @@ public class CreditCardNumberEditField extends MaterialEditText {
     public void setErrorState(int errorMessageResId) {
         if (mContext != null && errorMessageResId != CreditCardUtilities.NO_RES_ID) {
             setErrorState(mContext.getString(errorMessageResId));
-        }
-        else {
+        } else {
             setErrorState(null);
         }
     }
@@ -154,7 +152,7 @@ public class CreditCardNumberEditField extends MaterialEditText {
      * Normally called from the controller when a card type has changed. Updates the card type image, and applies
      * the proper InputFilter for that card type.
      *
-     * @param cardIssuer which card issues (eg. Visa, MasterCard, etc).
+     * @param cardIssuer    which card issues (eg. Visa, MasterCard, etc).
      * @param shouldAnimate boolean that determines if the animation between card types should take place.
      */
     public void updateCardType(CreditCardUtilities.CardIssuer cardIssuer, boolean shouldAnimate) {
@@ -166,8 +164,7 @@ public class CreditCardNumberEditField extends MaterialEditText {
         int resCardResId = cardIssuer.getIconResourceId();
         if (shouldAnimate) {
             setCardTypeForField(resCardResId);
-        }
-        else {
+        } else {
             setCardTypeImageResource(resCardResId);
         }
     }

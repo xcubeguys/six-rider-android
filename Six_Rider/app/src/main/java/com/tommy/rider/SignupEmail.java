@@ -20,6 +20,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -31,17 +32,17 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-@EActivity (R.layout.activity_signup_email)
+@EActivity(R.layout.activity_signup_email)
 public class SignupEmail extends MyBaseActivity implements Validator.ValidationListener {
 
-    public String firstName,lastName,email,emailStatus,nickName;
+    public String firstName, lastName, email, emailStatus, nickName;
     Validator validator;
     ProgressDialog progressDialog;
 
 
-    @NotEmpty (message = "")
-    @Email (message = "Enter Valid Email")
-    @ViewById (R.id.view)
+    @NotEmpty(message = "")
+    @Email(message = "Enter Valid Email")
+    @ViewById(R.id.view)
     MaterialEditText inputEmail;
 
 
@@ -59,12 +60,12 @@ public class SignupEmail extends MyBaseActivity implements Validator.ValidationL
         nickName = i.getStringExtra("nickname");
     }
 
-    @Click({R.id.imageButton3,R.id.imageButton2})
+    @Click({R.id.imageButton3, R.id.imageButton2})
     void toSignUpName() {
         validator.validate();
     }
 
-    @Click (R.id.backButton)
+    @Click(R.id.backButton)
     public void goBack() {
         super.onBackPressed();
     }
@@ -73,26 +74,26 @@ public class SignupEmail extends MyBaseActivity implements Validator.ValidationL
     public void onValidationSucceeded() {
 
         email = inputEmail.getText().toString().toLowerCase().trim();
-        if(!TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             showDialog();
 
-            final String url = Constants.LIVE_URL + "emailExist/email/"+email;
-            System.out.println("EmailExistURL==>"+url);
+            final String url = Constants.LIVE_URL + "emailExist/email/" + email;
+            LogUtils.i("EmailExistURL==>" + url);
             final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     dismissDialog();
-                    for (int i=0;i<response.length();i++){
+                    for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject jsonObject = response.getJSONObject(i);
                             emailStatus = jsonObject.optString("status");
 
-                            if(emailStatus.equals("Success")){
-                                Intent intent = new Intent(SignupEmail.this,SignupPassword_.class);
-                                intent.putExtra("firstname",firstName);
-                                intent.putExtra("lastname",lastName);
-                                intent.putExtra("nickname",nickName);
-                                intent.putExtra("email",email);
+                            if (emailStatus.equals("Success")) {
+                                Intent intent = new Intent(SignupEmail.this, SignupPassword_.class);
+                                intent.putExtra("firstname", firstName);
+                                intent.putExtra("lastname", lastName);
+                                intent.putExtra("nickname", nickName);
+                                intent.putExtra("email", email);
 
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
@@ -108,13 +109,13 @@ public class SignupEmail extends MyBaseActivity implements Validator.ValidationL
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
                     dismissDialog();
-                    if (volleyError instanceof NoConnectionError){
-                        Toast.makeText(getApplicationContext(), R.string.no_internet_connection,Toast.LENGTH_SHORT).show();
+                    if (volleyError instanceof NoConnectionError) {
+                        Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
-            signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(signUpReq);
         } else {
             inputEmail.setError(getString(R.string.invalid_email_address));
@@ -136,8 +137,8 @@ public class SignupEmail extends MyBaseActivity implements Validator.ValidationL
         }
     }
 
-    public void showDialog(){
-        progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -145,9 +146,9 @@ public class SignupEmail extends MyBaseActivity implements Validator.ValidationL
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing()) {
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }

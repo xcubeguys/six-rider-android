@@ -19,6 +19,7 @@ import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -30,120 +31,120 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-@EActivity (R.layout.activity_forgot_password)
+@EActivity(R.layout.activity_forgot_password)
 public class ForgotPasswordActivity extends AppCompatActivity implements Validator.ValidationListener {
 
-  Validator validator;
-  String strEmail;
-  ProgressDialog progressDialog;
-  @NotEmpty (message = "")
-  @Email (message = "Enter Valid Email")
-  @ViewById (R.id.edtForgotEmail)
-  EditText inputEmail;
-  String signInStatus,signInMessage;
+    Validator validator;
+    String strEmail;
+    ProgressDialog progressDialog;
+    @NotEmpty(message = "")
+    @Email(message = "Enter Valid Email")
+    @ViewById(R.id.edtForgotEmail)
+    EditText inputEmail;
+    String signInStatus, signInMessage;
 
-  @AfterViews
-  void forgotPasswordActivity(){
-    FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(),getString(R.string.app_font));
-    fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
+    @AfterViews
+    void forgotPasswordActivity() {
+        FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
+        fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
 
-    //Validation Listener
-    validator = new Validator(this);
-    validator.setValidationListener(this);
-  }
+        //Validation Listener
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+    }
 
-  @Click (R.id.back)
-    void getBack(){
-      Intent intent=new Intent(this,SigninActivity_.class);
-      startActivity(intent);
-    finish();
-  }
+    @Click(R.id.back)
+    void getBack() {
+        Intent intent = new Intent(this, SigninActivity_.class);
+        startActivity(intent);
+        finish();
+    }
 
-  @Click(R.id.btnResetPassword)
-  void resetPassword(){
-    validator.validate();
-  }
+    @Click(R.id.btnResetPassword)
+    void resetPassword() {
+        validator.validate();
+    }
 
-  @Override
-  public void onValidationSucceeded() {
-    strEmail = inputEmail.getText().toString().toLowerCase().trim();
-    callForgotPassword();
-  }
+    @Override
+    public void onValidationSucceeded() {
+        strEmail = inputEmail.getText().toString().toLowerCase().trim();
+        callForgotPassword();
+    }
 
-  private void callForgotPassword() {
+    private void callForgotPassword() {
 
-    showDialog();
-    final String url = Constants.LIVE_URL + "forgotPassword/email/"+strEmail;
-    System.out.println("ForgotPasswordURL==>"+url);
-    final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-      @Override
-      public void onResponse(JSONArray response) {
-          dismissDialog();
-        for (int i=0;i<response.length();i++){
-          try {
-            JSONObject jsonObject = response.getJSONObject(i);
-            signInStatus = jsonObject.optString("status");
-            signInMessage = jsonObject.optString("message");
+        showDialog();
+        final String url = Constants.LIVE_URL + "forgotPassword/email/" + strEmail;
+        LogUtils.i("ForgotPasswordURL==>" + url);
+        final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                dismissDialog();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        signInStatus = jsonObject.optString("status");
+                        signInMessage = jsonObject.optString("message");
 
-            if(signInStatus.equals("Success")){
-              Intent intent = new Intent(ForgotPasswordActivity.this,LaunchActivity_.class);
-              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-              Toast.makeText(getApplicationContext(), R.string.password_reset_sent_to_your_mail,Toast.LENGTH_SHORT).show();
-              startActivity(intent);
-              finish();
-            } else {
-              Toast.makeText(getApplicationContext(),"Your email does not exist",Toast.LENGTH_SHORT).show();
+                        if (signInStatus.equals("Success")) {
+                            Intent intent = new Intent(ForgotPasswordActivity.this, LaunchActivity_.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            Toast.makeText(getApplicationContext(), R.string.password_reset_sent_to_your_mail, Toast.LENGTH_SHORT).show();
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Your email does not exist", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException | NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-          } catch (JSONException | NullPointerException e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    }, new Response.ErrorListener() {
-      @Override
-      public void onErrorResponse(VolleyError volleyError) {
-        dismissDialog();
-        if (volleyError instanceof NoConnectionError){
-          Toast.makeText(getApplicationContext(), R.string.no_internet_connection,Toast.LENGTH_SHORT).show();
-        }
-      }
-    });
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                dismissDialog();
+                if (volleyError instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
-    signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 1,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-    AppController.getInstance().addToRequestQueue(signUpReq);
-  }
-
-  @Override
-  public void onValidationFailed(List<ValidationError> errors) {
-    for (ValidationError error : errors) {
-      View view = error.getView();
-      String message = error.getCollatedErrorMessage(this);
-
-      // Display error messages ;)
-      if (view instanceof EditText) {
-        ((EditText) view).setError(message);
-      } else {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-      }
+        signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(signUpReq);
     }
-  }
 
-  public void showDialog(){
-    progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
-    progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
-    progressDialog.setIndeterminate(false);
-    progressDialog.setCancelable(false);
-    progressDialog.setMessage("Loading...");
-    progressDialog.show();
-  }
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
 
-  public void dismissDialog(){
-    if(progressDialog!=null && progressDialog.isShowing()){
-      if(!isFinishing()) {
-        progressDialog.dismiss();
-        progressDialog = null;
-      }
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
-  }
+
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
+        progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+    }
+
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        }
+    }
 
 }

@@ -44,6 +44,7 @@ import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -90,7 +91,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
 
     boolean paymentMade = false, paymentCorporate = false;
     protected static final String TAG = "PaymentSelectActivity";
-    String corpid,Test_ApiKey,Live_ApiKey,is_live_stripe="";
+    String corpid, Test_ApiKey, Live_ApiKey, is_live_stripe = "";
     String status, c_id;
 
     @AfterViews
@@ -98,7 +99,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("userid", null);
-        System.out.println("UserID in Map" + userID);
+        LogUtils.i("UserID in Map" + userID);
 
         FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
         fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
@@ -157,32 +158,32 @@ public class PaymentSelectActivity extends AppCompatActivity {
     }
 
     private void getPaymentReference() {
-            DatabaseReference databasecashReference = FirebaseDatabase.getInstance().getReference().child("cashoption").child("status");
-            databasecashReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null) {
-                        String status = dataSnapshot.getValue().toString();
-                        if (status != null) {
-                            if (status.matches("off")) {
-                                cashView.setVisibility(View.GONE);
-                            } else if (status.matches("on")) {
-                                cashView.setVisibility(View.VISIBLE);
+        DatabaseReference databasecashReference = FirebaseDatabase.getInstance().getReference().child("cashoption").child("status");
+        databasecashReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    String status = dataSnapshot.getValue().toString();
+                    if (status != null) {
+                        if (status.matches("off")) {
+                            cashView.setVisibility(View.GONE);
+                        } else if (status.matches("on")) {
+                            cashView.setVisibility(View.VISIBLE);
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    cashImage.setImageDrawable(getResources().getDrawable(R.drawable.ub__payment_type_cash, getApplicationContext().getTheme()));
-                                } else {
-                                    cashImage.setImageDrawable(getResources().getDrawable(R.drawable.ub__payment_type_cash));
-                                }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                cashImage.setImageDrawable(getResources().getDrawable(R.drawable.ub__payment_type_cash, getApplicationContext().getTheme()));
+                            } else {
+                                cashImage.setImageDrawable(getResources().getDrawable(R.drawable.ub__payment_type_cash));
                             }
                         }
                     }
                 }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
         if (userID != null) {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("riders_location").child(userID).child("Paymenttype");
@@ -229,7 +230,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
     //get Details of Rider
     private void getRiderDetails() {
         final String url = Constants.LIVE_URL + "editProfile/user_id/" + userID;
-        System.out.println("Rider Profile in Map==>" + url);
+        LogUtils.i("Rider Profile in Map==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -258,7 +259,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 if (volleyError instanceof NoConnectionError) {
-                    System.out.print("No Internet");
+                    LogUtils.i("No Internet");
                 }
             }
         });
@@ -309,13 +310,13 @@ public class PaymentSelectActivity extends AppCompatActivity {
 
                 boolean DEBUG;
 
-                if(is_live_stripe.matches("0"))
+                if (is_live_stripe.matches("0"))
                     DEBUG = Boolean.parseBoolean("true");
                 else
                     DEBUG = Boolean.parseBoolean("false");
 
                 // TODO: replace with your own test key
-                final String publishableApiKey = DEBUG ? Test_ApiKey :Live_ApiKey;
+                final String publishableApiKey = DEBUG ? Test_ApiKey : Live_ApiKey;
 
                 Card card = new Card((result.cardNumber),
                         result.expiryMonth,
@@ -367,7 +368,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
         }
 
         final String url = Constants.LIVE_URL + "updateStripeToken/userid/" + userID + "/token/" + stripeTokenID + "/card_number/" + creditCardNumber;
-        System.out.println("SignUpURL==>" + url);
+        LogUtils.i("SignUpURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -564,7 +565,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
 
         //http://demo.cogzideltemplates.com/tommy/settings/getdetails
         String url = Constants.CATEGORY_LIVE_URL + "settings/getdetails";
-        System.out.println(" CATEGOR URL is " + url);
+        LogUtils.i(" CATEGOR URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -580,7 +581,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
                                 Live_ApiKey = signIn_jsonobj.optString("Live_ApiKey");
                                 is_live_stripe = signIn_jsonobj.optString("is_live_stripe");
 
-                                System.out.println("strip live==>"+Live_ApiKey+"test==>"+Test_ApiKey);
+                                LogUtils.i("strip live==>" + Live_ApiKey + "test==>" + Test_ApiKey);
 
                             } catch (JSONException e) {
                                 //stopAnim();
@@ -593,7 +594,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.print("No Internet");
+                    LogUtils.i("No Internet");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
@@ -610,7 +611,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
     private void checkCorporateID() {
 
         final String url = Constants.LIVE_URL + "corporateid/userid/" + userID + "/cid/" + corpid;
-        System.out.println("SosUpURL==>" + url);
+        LogUtils.i("SosUpURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -651,7 +652,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
     private void callCorporateID() {
 
         final String url = Constants.LIVE_URL + "get_corporateid/user_id/" + userID;
-        System.out.println("SosUpURL==>" + url);
+        LogUtils.i("SosUpURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {

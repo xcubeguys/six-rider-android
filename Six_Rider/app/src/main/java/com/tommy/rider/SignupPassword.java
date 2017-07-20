@@ -20,20 +20,20 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
-@EActivity (R.layout.activity_signup_password)
+@EActivity(R.layout.activity_signup_password)
 public class SignupPassword extends MyBaseActivity implements Validator.ValidationListener {
 
-    public String firstName,lastName,email,passWord,conform_passWord,nickName;
+    public String firstName, lastName, email, passWord, conform_passWord, nickName;
     Validator validator;
 
-    @NotEmpty (message = "")
+    @NotEmpty(message = "")
     @Password(min = 8, message = "Enter a Minimimum of 8 characters")
-    @ViewById (R.id.view)
+    @ViewById(R.id.view)
     MaterialEditText inputPassword;
 
-    @NotEmpty (message = "")
+    @NotEmpty(message = "")
     @Password(min = 8, message = "Enter a Minimimum of 8 characters")
-    @ViewById (R.id.view2)
+    @ViewById(R.id.view2)
     MaterialEditText inputConfirmPassword;
 
     @AfterViews
@@ -51,12 +51,12 @@ public class SignupPassword extends MyBaseActivity implements Validator.Validati
 
     }
 
-    @Click({R.id.imageButton3,R.id.imageButton2})
+    @Click({R.id.imageButton3, R.id.imageButton2})
     void toSignUpMobile() {
         validator.validate();
     }
 
-    @Click (R.id.backButton)
+    @Click(R.id.backButton)
     public void goBack() {
         finish();
     }
@@ -65,26 +65,26 @@ public class SignupPassword extends MyBaseActivity implements Validator.Validati
     public void onValidationSucceeded() {
         passWord = inputPassword.getText().toString();
         conform_passWord = inputConfirmPassword.getText().toString();
-        passWord=passWord.replaceAll(" ","%20");
-        conform_passWord=conform_passWord.replaceAll(" ","%20");
+        passWord = passWord.replaceAll(" ", "%20");
+        conform_passWord = conform_passWord.replaceAll(" ", "%20");
 
-        if(passWord.equals(conform_passWord)){
+        if (passWord.equals(conform_passWord)) {
             /*try {
                 byte[] encoded = Base64.encode(passWord.getBytes("UTF-8"), Base64.DEFAULT);
                 passWord = new String(encoded, "UTF-8");
-                System.out.println("Encoding UTF"+passWord);
+                LogUtils.i("Encoding UTF"+passWord);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }*/
-            Intent i = new Intent(SignupPassword.this,ReferralActivity_.class);
-            i.putExtra("firstname",firstName);
-            i.putExtra("lastname",lastName);
-            i.putExtra("email",email);
-            i.putExtra("password",passWord);
-            i.putExtra("nickname",nickName);
+            Intent i = new Intent(SignupPassword.this, ReferralActivity_.class);
+            i.putExtra("firstname", firstName);
+            i.putExtra("lastname", lastName);
+            i.putExtra("email", email);
+            i.putExtra("password", passWord);
+            i.putExtra("nickname", nickName);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
-        } else{
+        } else {
             inputConfirmPassword.setError("Confirm Password does not match");
         }
     }

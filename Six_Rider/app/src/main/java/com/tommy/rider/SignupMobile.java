@@ -37,6 +37,7 @@ import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.CountryCodeDialog;
 import com.tommy.rider.adapter.CountryCodePicker;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
@@ -51,10 +52,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-@EActivity (R.layout.activity_signup_mobile)
+@EActivity(R.layout.activity_signup_mobile)
 public class SignupMobile extends MyBaseActivity implements CountryCodePicker.OnCountryChangeListener {
 
-    public String firstName,lastName,email,passWord,mobileNumber,countrycode,registerID,signUpStatus,signUpMessage,nickName, content;
+    public String firstName, lastName, email, passWord, mobileNumber, countrycode, registerID, signUpStatus, signUpMessage, nickName, content;
     ProgressDialog progressDialog;
     Dialog dialog;
 
@@ -70,11 +71,11 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
     @ViewById(R.id.ccp)
     CountryCodePicker ccp;
 
-    @NotEmpty (message = "")
+    @NotEmpty(message = "")
     @ViewById(R.id.countryCode)
     MaterialEditText inputCountryCode;
 
-    @NotEmpty (message = "Enter Mobile Number")
+    @NotEmpty(message = "Enter Mobile Number")
     @ViewById(R.id.mobileNumber)
     MaterialEditText inputMobileNumber;
 
@@ -83,9 +84,9 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
 
     SharedPreferences.Editor editor;
 
-    String userID,userFirstName,userLastName,userEmail,userMobile,userNickName,referral;
+    String userID, userFirstName, userLastName, userEmail, userMobile, userNickName, referral;
 
-    int count=0;
+    int count = 0;
 
     @AfterViews
     void signUpMobile() {
@@ -99,7 +100,7 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
 
         getTermsCondition();
 
-        editor = getSharedPreferences(Constants.MY_PREFS_NAME,getApplicationContext().MODE_PRIVATE).edit();
+        editor = getSharedPreferences(Constants.MY_PREFS_NAME, getApplicationContext().MODE_PRIVATE).edit();
 
         Intent i = getIntent();
         firstName = i.getStringExtra("firstname");
@@ -111,7 +112,7 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
 
     }
 
-    @Click({R.id.imageButton3,R.id.imageButton2})
+    @Click({R.id.imageButton3, R.id.imageButton2})
     void toSignUpMobile() {
 
         if (!validateCountryCode()) {
@@ -121,26 +122,23 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
 
         } else if (!validateUsing_libphonenumber()) {
             inputMobileNumber.setError(getString(R.string.invalid_mobile_number));
-        }
-        else if(!tandc.isChecked()){
+        } else if (!tandc.isChecked()) {
             Toast.makeText(SignupMobile.this, "Agree terms and conditions", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             submitArrow.setEnabled(false);
             submitCircle.setEnabled(false);
-                callSignUp();
+            callSignUp();
         }
     }
 
     @CheckedChange(R.id.termsandconditions)
-    public void terms(boolean isChecked){
-        if(isChecked){
+    public void terms(boolean isChecked) {
+        if (isChecked) {
             getTermsCondition();
             showTermsDialog();
-        }
-        else{
-            if(dialog!=null)
-            dialog.dismiss();
+        } else {
+            if (dialog != null)
+                dialog.dismiss();
         }
     }
 
@@ -151,16 +149,16 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
         dialog.setCancelable(false);
 
         //layouts
-        Button ok=(Button)dialog.findViewById(R.id.iagree);
-        TextView titletxt=(TextView)dialog.findViewById(R.id.termscontent);
+        Button ok = (Button) dialog.findViewById(R.id.iagree);
+        TextView titletxt = (TextView) dialog.findViewById(R.id.termscontent);
         titletxt.setTypeface(Typeface.createFromAsset(getAssets(), getString(R.string.app_font)));
 
-        CharSequence bulletedList = BulletTextUtil.makeBulletListFromStringArrayResource(10,getApplicationContext(),getResources().getIdentifier("termscontent", "array", getPackageName()));
+        CharSequence bulletedList = BulletTextUtil.makeBulletListFromStringArrayResource(10, getApplicationContext(), getResources().getIdentifier("termscontent", "array", getPackageName()));
 
 
-        if(content!=null){
-            content=content.replaceAll("%20"," ").replace("&rsquo;", "'").replaceAll("&amp;","&");
-            content=content.replaceAll("%40","\n");
+        if (content != null) {
+            content = content.replaceAll("%20", " ").replace("&rsquo;", "'").replaceAll("&amp;", "&");
+            content = content.replaceAll("%40", "\n");
             titletxt.setText(content);
         }
 
@@ -184,61 +182,61 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
         CountryCodeDialog.openCountryCodeDialog(ccp);//Open country code dialog
     }
 
-    @Click (R.id.backButton)
+    @Click(R.id.backButton)
     public void goBack() {
         super.onBackPressed();
     }
 
-    public void callSignUp(){
+    public void callSignUp() {
 
         showDialog();
-        firstName=firstName.replaceAll(" ","%20");
-        lastName=lastName.replaceAll(" ","%20");
-        nickName=nickName.replaceAll(" ","%20");
-        if(count==0) {//Encrypt Password only for first time
+        firstName = firstName.replaceAll(" ", "%20");
+        lastName = lastName.replaceAll(" ", "%20");
+        nickName = nickName.replaceAll(" ", "%20");
+        if (count == 0) {//Encrypt Password only for first time
             try {
                 byte[] encoded = Base64.encode(passWord.getBytes("UTF-8"), Base64.DEFAULT);
                 passWord = new String(encoded, "UTF-8");
                 passWord = passWord.replaceAll("=", "").trim();
-                System.out.println("Encoding UTF" + passWord);
+                LogUtils.i("Encoding UTF" + passWord);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
 
-        String url = Constants.LIVE_URL + "signUp/regid/"+registerID+"/first_name/"+firstName+"/last_name/"+lastName+"/nick_name/"+nickName+"/mobile/"+mobileNumber+"/country_code/"+countrycode+"/password/"+passWord+"/city/"+"null"+"/email/"+email;
+        String url = Constants.LIVE_URL + "signUp/regid/" + registerID + "/first_name/" + firstName + "/last_name/" + lastName + "/nick_name/" + nickName + "/mobile/" + mobileNumber + "/country_code/" + countrycode + "/password/" + passWord + "/city/" + "null" + "/email/" + email;
 
-        if(referral != null){
-            url=url+"/referral_code/"+referral;
+        if (referral != null) {
+            url = url + "/referral_code/" + referral;
         }
-        System.out.println("SignUpURL==>"+url);
+        LogUtils.i("SignUpURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 dismissDialog();
-                for (int i=0;i<response.length();i++){
+                for (int i = 0; i < response.length(); i++) {
                     try {
-                        count=1;
+                        count = 1;
                         JSONObject jsonObject = response.getJSONObject(i);
                         signUpStatus = jsonObject.optString("status");
                         signUpMessage = jsonObject.optString("message");
 
-                        if(signUpStatus.equals("Success")){
-                            userID=jsonObject.optString("userid");
-                            userFirstName=jsonObject.optString("first_name");
-                            userLastName=jsonObject.optString("last_name");
-                            userEmail=jsonObject.optString("email");
-                            userMobile=jsonObject.optString("mobile");
-                            userNickName=jsonObject.optString("nick_name");
+                        if (signUpStatus.equals("Success")) {
+                            userID = jsonObject.optString("userid");
+                            userFirstName = jsonObject.optString("first_name");
+                            userLastName = jsonObject.optString("last_name");
+                            userEmail = jsonObject.optString("email");
+                            userMobile = jsonObject.optString("mobile");
+                            userNickName = jsonObject.optString("nick_name");
                             savepreferences();
-                            Toast.makeText(getApplicationContext(), R.string.successfully_registered,Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(SignupMobile.this,MapActivity.class);
-                            intent.putExtra("userid",userID);
+                            Toast.makeText(getApplicationContext(), R.string.successfully_registered, Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(SignupMobile.this, MapActivity.class);
+                            intent.putExtra("userid", userID);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
-                        } else if(signUpStatus.equals("Fail")){
-                           inputMobileNumber.setError(getResources().getString(R.string.mobile_number_already_exisits));
+                        } else if (signUpStatus.equals("Fail")) {
+                            inputMobileNumber.setError(getResources().getString(R.string.mobile_number_already_exisits));
                             submitArrow.setEnabled(true);
                             submitCircle.setEnabled(true);
                         } else {
@@ -246,7 +244,7 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
                             submitCircle.setEnabled(true);
                         }
                     } catch (JSONException | NullPointerException e) {
-                        count=1;
+                        count = 1;
                         submitArrow.setEnabled(true);
                         submitCircle.setEnabled(true);
                         e.printStackTrace();
@@ -257,20 +255,20 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 dismissDialog();
-                count=1;
-                if (volleyError instanceof NoConnectionError){
-                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection,Toast.LENGTH_SHORT).show();
+                count = 1;
+                if (volleyError instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                     submitArrow.setEnabled(true);
                     submitCircle.setEnabled(true);
-                } else if(volleyError instanceof NetworkError){
-                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection,Toast.LENGTH_SHORT).show();
+                } else if (volleyError instanceof NetworkError) {
+                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                     submitArrow.setEnabled(true);
                     submitCircle.setEnabled(true);
                 }
             }
         });
 
-        signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 1,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(signUpReq);
     }
 
@@ -291,16 +289,12 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
     }
 
     private boolean validatePhone() {
-        if(inputMobileNumber.getText().toString().trim().isEmpty()) {
+        if (inputMobileNumber.getText().toString().trim().isEmpty()) {
             inputMobileNumber.setError(getString(R.string.enter_mobile_number));
             return false;
-        }
-        else if (inputCountryCode.getText().toString().trim().isEmpty())
-        {
+        } else if (inputCountryCode.getText().toString().trim().isEmpty()) {
             return false;
-        }
-        else  if (!inputMobileNumber.getText().toString().trim().isEmpty())
-        {
+        } else if (!inputMobileNumber.getText().toString().trim().isEmpty()) {
             if (inputMobileNumber.getText().toString().substring(0, 1).matches("0")) {
                 inputMobileNumber.setError("Enter a valid number");
                 return false;
@@ -316,20 +310,19 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
     }
 
     private boolean validateUsing_libphonenumber() {
-        if(inputMobileNumber.getText().toString().length()<=1){
+        if (inputMobileNumber.getText().toString().length() <= 1) {
             return false;
-        }
-        else{
+        } else {
             countrycode = inputCountryCode.getText().toString();
             mobileNumber = inputMobileNumber.getText().toString();
             if (validatePhone() && validateCountryCode()) {
-                System.out.println("CountryCode==>" + countrycode);
+                LogUtils.i("CountryCode==>" + countrycode);
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     countrycode = countrycode.replace("+", "");
                 }
-                System.out.println("SDK_VERSION==>" + Build.VERSION.SDK_INT);
-                System.out.println("SDK_VERSION_RELEASE" + Build.VERSION.RELEASE);
-                System.out.println("CountryCode1==>" + countrycode);
+                LogUtils.i("SDK_VERSION==>" + Build.VERSION.SDK_INT);
+                LogUtils.i("SDK_VERSION_RELEASE" + Build.VERSION.RELEASE);
+                LogUtils.i("CountryCode1==>" + countrycode);
                 PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
                 String isoCode = phoneNumberUtil.getRegionCodeForCountryCode(Integer.parseInt(countrycode));
                 Phonenumber.PhoneNumber phoneNumber = null;
@@ -361,8 +354,8 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
         inputMobileNumber.setError(null);
     }
 
-    public void showDialog(){
-        progressDialog= new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setMessage("Loading...");
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -370,18 +363,16 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing())
-            {
-            progressDialog.dismiss();
-            progressDialog=null;
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
+                progressDialog.dismiss();
+                progressDialog = null;
             }
         }
     }
 
-    public void savepreferences()
-    {
+    public void savepreferences() {
 
         stopDisconnectTimer();
         editor.putString("userid", userID);
@@ -392,21 +383,22 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
         //Saving to Firebase
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("riders_location").child(userID);
         Map<String, Object> updates = new HashMap<String, Object>();
-        updates.put("Paymenttype","cash");
+        updates.put("Paymenttype", "cash");
 
         ref.setValue(updates, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                System.out.println("DATA SAVED SUCCESSFULLY");
-                if(databaseError!=null){
-                    System.out.println("DATA SAVED SUCCESSFULLY");
+                LogUtils.i("DATA SAVED SUCCESSFULLY");
+                if (databaseError != null) {
+                    LogUtils.i("DATA SAVED SUCCESSFULLY");
                 }
             }
         });
     }
+
     private void getTermsCondition() {
         final String url = Constants.CATEGORY_LIVE_URL + "Settings/termsconditions";
-        System.out.println("GetTermsURL==>" + url);
+        LogUtils.i("GetTermsURL==>" + url);
         final JsonArrayRequest infoReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -415,7 +407,7 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        System.out.println("Response from GetTerms==>" + jsonObject);
+                        LogUtils.i("Response from GetTerms==>" + jsonObject);
                         content = jsonObject.optString("value");
 
                     } catch (JSONException | NullPointerException | ArrayIndexOutOfBoundsException e) {
@@ -426,7 +418,7 @@ public class SignupMobile extends MyBaseActivity implements CountryCodePicker.On
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                System.out.println("The ERror in url"+volleyError);
+                LogUtils.i("The ERror in url" + volleyError);
                 Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 if (volleyError instanceof NoConnectionError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();

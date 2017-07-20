@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tommy.rider.R;
+import com.tommy.rider.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,20 +71,17 @@ public class FragmentDrawer extends Fragment {
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         FontChangeCrawler fontChanger = new FontChangeCrawler(getActivity().getAssets(), getActivity().getString(R.string.app_font));
-        fontChanger.replaceFonts((ViewGroup)layout);
+        fontChanger.replaceFonts((ViewGroup) layout);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
-        userName= (TextView) layout.findViewById(R.id.userName);
+        userName = (TextView) layout.findViewById(R.id.userName);
 
         SharedPreferences prefs = getContext().getSharedPreferences(Constants.MY_PREFS_NAME, getContext().MODE_PRIVATE);
-        setUserName= prefs.getString("username", null);
-        System.out.println("userName" + setUserName);
-        if(setUserName!=null) {
-            setUserName=setUserName.replaceAll("%20"," ");
+        setUserName = prefs.getString("username", null);
+        LogUtils.i("userName" + setUserName);
+        if (setUserName != null) {
+            setUserName = setUserName.replaceAll("%20", " ");
             userName.setText(setUserName);
         }
-
-
-
 
         adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
@@ -94,7 +92,7 @@ public class FragmentDrawer extends Fragment {
                 try {
                     drawerListener.onDrawerItemSelected(view, position);
                     mDrawerLayout.closeDrawer(containerView);
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }

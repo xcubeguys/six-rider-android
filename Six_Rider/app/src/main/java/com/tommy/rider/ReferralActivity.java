@@ -25,6 +25,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -152,7 +153,7 @@ public class ReferralActivity extends MyBaseActivity implements Validator.Valida
             byte[] encoded = Base64.encode(referral.getBytes("UTF-8"), Base64.DEFAULT);
             referral = new String(encoded, "UTF-8");
             referral = referral.replaceAll("=", "").trim();
-            System.out.println("Encoding UTF" + referral);
+            LogUtils.i("Encoding UTF" + referral);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -160,7 +161,7 @@ public class ReferralActivity extends MyBaseActivity implements Validator.Valida
         showDialog();
 
         final String url = Constants.LIVE_URL + "refrel_code/code/" + referral;
-        System.out.println("RefrelCode Check URL==>" + url);
+        LogUtils.i("RefrelCode Check URL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {

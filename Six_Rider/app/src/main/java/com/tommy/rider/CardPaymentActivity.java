@@ -27,6 +27,7 @@ import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.creditcard.fields.CreditCardModule;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -46,7 +47,7 @@ public class CardPaymentActivity extends AppCompatActivity {
     CreditCardModule creditCardModule;
     TextView header;
     Button payButton;
-    String userID, creditCardNumber, creditCardMonth, creditCardYear, creditCardCvv, stripeTokenID, status, message,page,Test_ApiKey,Live_ApiKey,is_live_stripe = "" ;
+    String userID, creditCardNumber, creditCardMonth, creditCardYear, creditCardCvv, stripeTokenID, status, message, page, Test_ApiKey, Live_ApiKey, is_live_stripe = "";
     ProgressDialog progressDialog;
 
     @AfterViews
@@ -58,15 +59,15 @@ public class CardPaymentActivity extends AppCompatActivity {
         //UserID from Shared preferences
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("userid", null);
-        System.out.println("UserID in Cardpayments" + userID);
+        LogUtils.i("UserID in Cardpayments" + userID);
 
-        Intent i=getIntent();
-        page=i.getStringExtra("page");
+        Intent i = getIntent();
+        page = i.getStringExtra("page");
 
         //get Stripe live and test key
         getKeys();
 
-        if(page.matches("wallet")){
+        if (page.matches("wallet")) {
 
             header.setText("Add Amount to Wallet");
         }
@@ -80,7 +81,7 @@ public class CardPaymentActivity extends AppCompatActivity {
             if (isNetworkAvailable()) {
                 submitCard();
             } else
-                Toast.makeText(this, R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Sorry, Invalid Card", Toast.LENGTH_SHORT).show();
         }
@@ -110,13 +111,13 @@ public class CardPaymentActivity extends AppCompatActivity {
 
         boolean DEBUG;
 
-        if(is_live_stripe.matches("0"))
+        if (is_live_stripe.matches("0"))
             DEBUG = Boolean.parseBoolean("true");
         else
             DEBUG = Boolean.parseBoolean("false");
 
         // TODO: replace with your own test key
-        final String publishableApiKey = DEBUG ? Test_ApiKey :Live_ApiKey;
+        final String publishableApiKey = DEBUG ? Test_ApiKey : Live_ApiKey;
 
         Card card = new Card((creditCardNumber),
                 Integer.valueOf(creditCardMonth),
@@ -129,18 +130,18 @@ public class CardPaymentActivity extends AppCompatActivity {
             public void onSuccess(Token token) {
                 // TODO: Send Token information to your backend to initiate a charge
                 stripeTokenID = token.getId();
-                System.out.println("TokenID==>" + token.getId());
+                LogUtils.i("TokenID==>" + token.getId());
 
                 dismissDialog();
 
-                if(page.matches("wallet")){
+                if (page.matches("wallet")) {
 
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("Token",stripeTokenID);
-                    setResult(Activity.RESULT_OK,returnIntent);
+                    returnIntent.putExtra("Token", stripeTokenID);
+                    setResult(Activity.RESULT_OK, returnIntent);
                     finish();
 
-                }else {
+                } else {
 
                     updatePayment(stripeTokenID, creditCardNumber);
                 }
@@ -157,19 +158,19 @@ public class CardPaymentActivity extends AppCompatActivity {
     @Click(R.id.backButton)
     void goBack() {
 
-       finish();
+        finish();
     }
 
     private void updatePayment(String stripeTokenID, String creditCardNumber) {
         showDialog();
         final String url = Constants.LIVE_URL + "updateStripeToken/userid/" + userID + "/token/" + stripeTokenID + "/card_number/" + creditCardNumber;
-        System.out.println("SignUpURL==>" + url);
-        final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener < JSONArray > () {
+        LogUtils.i("SignUpURL==>" + url);
+        final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 
                 dismissDialog();
-                System.out.println("SignUpURL==>" + response.toString());
+                LogUtils.i("SignUpURL==>" + response.toString());
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -188,7 +189,7 @@ public class CardPaymentActivity extends AppCompatActivity {
                                 break;
                             default:
                                 String value = jsonObject.optString("message");
-                                System.out.println("error==>" + value);
+                                LogUtils.i("error==>" + value);
                                 Toast.makeText(getApplicationContext(), R.string.error_while_adding_your_car, Toast.LENGTH_SHORT).show();
                                 break;
                         }
@@ -244,7 +245,7 @@ public class CardPaymentActivity extends AppCompatActivity {
 
     public void dismissDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
-            if(!isFinishing()) {
+            if (!isFinishing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
@@ -255,7 +256,7 @@ public class CardPaymentActivity extends AppCompatActivity {
 
         //http://demo.cogzideltemplates.com/tommy/settings/getdetails
         String url = Constants.CATEGORY_LIVE_URL + "settings/getdetails";
-        System.out.println(" CATEGOR URL is " + url);
+        LogUtils.i(" CATEGOR URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -271,7 +272,7 @@ public class CardPaymentActivity extends AppCompatActivity {
                                 Live_ApiKey = signIn_jsonobj.optString("Live_ApiKey");
                                 is_live_stripe = signIn_jsonobj.optString("is_live_stripe");
 
-                                System.out.println("strip live==>"+Live_ApiKey+"test==>"+Test_ApiKey);
+                                LogUtils.i("strip live==>" + Live_ApiKey + "test==>" + Test_ApiKey);
 
                             } catch (JSONException e) {
                                 //stopAnim();
@@ -284,7 +285,7 @@ public class CardPaymentActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("NoConnectionError");
+                    LogUtils.i("NoConnectionError");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();

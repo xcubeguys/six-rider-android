@@ -32,6 +32,7 @@ import com.tommy.rider.SocialShare.SocialShare;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.CountryCodePicker;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -43,10 +44,10 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
-@EActivity (R.layout.activity_settings)
+@EActivity(R.layout.activity_settings)
 public class SettingsActivity extends AppCompatActivity {
 
-    public String userID, firstName, lastName, nickName,email, mobileNumber, referral_code,countryCode, profileImage, status, message;
+    public String userID, firstName, lastName, nickName, email, mobileNumber, referral_code, countryCode, profileImage, status, message;
     ProgressDialog progressDialog;
     Dialog socialShareDialog;
 
@@ -91,10 +92,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     SocialShare socialShare;
 
-    @Click (R.id.share)
+    @Click(R.id.share)
     void share() {
         // Build view
-        if(ContextCompat.checkSelfPermission(getBaseContext(), "android.permission.WRITE_SMS") == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getBaseContext(), "android.permission.WRITE_SMS") == PackageManager.PERMISSION_GRANTED) {
 
             final View view = socialShare.getDefaultShareUI();
 
@@ -122,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("userid", null);
-        System.out.println("UserID in settings" + userID);
+        LogUtils.i("UserID in settings" + userID);
 
         //Change Font to Whole View
         displayDetails();
@@ -130,41 +131,41 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Click(R.id.editButton)
     void editProfile() {
-    Intent i=new Intent(SettingsActivity.this,EditProfileActivity_.class);
+        Intent i = new Intent(SettingsActivity.this, EditProfileActivity_.class);
         startActivity(i);
         finish();
     }
 
     @Click(R.id.backButton)
-    void goBack(){
+    void goBack() {
         finish();
     }
 
     public void displayDetails() {
         showDialog();
-        final String url = Constants.LIVE_URL + "editProfile/user_id/"+userID;
-        System.out.println("RiderProfileURL==>"+url);
+        final String url = Constants.LIVE_URL + "editProfile/user_id/" + userID;
+        LogUtils.i("RiderProfileURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 dismissDialog();
-                for (int i=0;i<response.length();i++){
+                for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
                         status = jsonObject.optString("status");
                         message = jsonObject.optString("message");
 
-                        if(status.equals("Success")){
-                            firstName=jsonObject.optString("firstname");
-                            lastName=jsonObject.optString("lastname");
-                            nickName=jsonObject.optString("nick_name"); ////////////////check NIck name
+                        if (status.equals("Success")) {
+                            firstName = jsonObject.optString("firstname");
+                            lastName = jsonObject.optString("lastname");
+                            nickName = jsonObject.optString("nick_name"); ////////////////check NIck name
 
-                            email=jsonObject.optString("email");
-                            mobileNumber=jsonObject.optString("mobile");
-                            profileImage=jsonObject.optString("profile_pic");
-                            countryCode=jsonObject.optString("country_code");
+                            email = jsonObject.optString("email");
+                            mobileNumber = jsonObject.optString("mobile");
+                            profileImage = jsonObject.optString("profile_pic");
+                            countryCode = jsonObject.optString("country_code");
 
-                            referral_code=jsonObject.optString("refrel_code"); ////////////////check refrral code
+                            referral_code = jsonObject.optString("refrel_code"); ////////////////check refrral code
 //                            savepreferences();
                             //Share code via Social
                             socialShare = new SocialShare(SettingsActivity.this);
@@ -176,54 +177,54 @@ public class SettingsActivity extends AppCompatActivity {
                                         + "Download App Now  "
                                         + new URL(Constants.Play_Store_URL) + "\n\n" +
                                         getString(R.string.sms_text)
-                                        +"\n\n"+"Your Referral Code is "+referral_code+"."+"\n\n"+
+                                        + "\n\n" + "Your Referral Code is " + referral_code + "." + "\n\n" +
                                         getString(R.string.sms_text_last);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                message = getString(R.string.sms_text)+"\n\n"+"Your Referral Code is "+referral_code+"."+"\n\n"+getString(R.string.sms_text_last);
+                                message = getString(R.string.sms_text) + "\n\n" + "Your Referral Code is " + referral_code + "." + "\n\n" + getString(R.string.sms_text_last);
                             }
                             socialShare.setMessage(message);
                             try {
-                                if(firstName == null ||(firstName.equals("null")))
+                                if (firstName == null || (firstName.equals("null")))
                                     inputFirstName.setHint("First Name");
                                 else {
                                     firstName = firstName.replaceAll("%20", " ");
                                     inputFirstName.setText(firstName);
                                 }
 
-                                if(lastName == null ||(lastName.equals("null")))
+                                if (lastName == null || (lastName.equals("null")))
                                     inputLastName.setHint("Last Name");
                                 else {
                                     lastName = lastName.replaceAll("%20", " ");
                                     inputLastName.setText(lastName);
                                 }
 
-                                if(nickName == null ||(nickName.equals("null")))
+                                if (nickName == null || (nickName.equals("null")))
                                     inputNickName.setHint("Last Name");
                                 else {
                                     nickName = nickName.replaceAll("%20", " ");
                                     inputNickName.setText(nickName);
                                 }
 
-                                if(email == null ||(email.equals("null")))
+                                if (email == null || (email.equals("null")))
                                     inputEmail.setHint("Email");
                                 else
                                     inputEmail.setText(email);
 
-                                if(mobileNumber == null || mobileNumber.equals("null"))
+                                if (mobileNumber == null || mobileNumber.equals("null"))
                                     inputMobileNumber.setHint("Mobile number");
                                 else
                                     inputMobileNumber.setText(mobileNumber);
 
-                                if(referral_code == null || referral_code.equals("null"))
+                                if (referral_code == null || referral_code.equals("null"))
                                     inputMobileNumber.setHint("Referral Code");
                                 else
                                     inputReferralcode.setText(referral_code);
 
-                                if(countryCode == null ||countryCode.equals("null"))
+                                if (countryCode == null || countryCode.equals("null"))
                                     inputCountryCode.setHint("CC");
                                 else
-                                inputCountryCode.setText(countryCode);
+                                    inputCountryCode.setText(countryCode);
 
                                 Glide.with(getApplicationContext()).load(profileImage).asBitmap().error(R.drawable.account_circle_grey).centerCrop().skipMemoryCache(true).into(new BitmapImageViewTarget(edtProfileImage) {
                                     @Override
@@ -235,11 +236,11 @@ public class SettingsActivity extends AppCompatActivity {
                                     }
                                 });
 
-                            } catch (NullPointerException e){
+                            } catch (NullPointerException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            System.out.print("inside else");
+                            LogUtils.i("inside else");
                         }
                     } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
@@ -250,9 +251,10 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 dismissDialog();
-                if (volleyError instanceof NoConnectionError){
-                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection,Toast.LENGTH_SHORT).show();
-                }  if(volleyError instanceof TimeoutError){
+                if (volleyError instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                }
+                if (volleyError instanceof TimeoutError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -262,8 +264,8 @@ public class SettingsActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(signUpReq);
     }
 
-    public void showDialog(){
-        progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -271,9 +273,9 @@ public class SettingsActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing()) {
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
@@ -284,10 +286,9 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if(socialShareDialog!=null){
+        if (socialShareDialog != null) {
 
-            if(socialShareDialog.isShowing())
-            {
+            if (socialShareDialog.isShowing()) {
                 Toast.makeText(this, "Please Wait...", Toast.LENGTH_SHORT).show();
                 socialShareDialog.dismiss();
             }
@@ -295,7 +296,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         super.onBackPressed();
         finish();
     }

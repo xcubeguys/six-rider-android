@@ -55,6 +55,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tommy.rider.adapter.Constants;
+import com.tommy.rider.utils.LogUtils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -77,10 +78,10 @@ import java.util.Map;
 import java.util.TimeZone;
 
 
-public class RideLater extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener   {
+public class RideLater extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "Ridelater";
-    TextView pickupdate,pickuptime,pickuploc,droploc;
-    RelativeLayout pickup_layout,time_layout,pickup_address_layout,drop_address_layout;
+    TextView pickupdate, pickuptime, pickuploc, droploc;
+    RelativeLayout pickup_layout, time_layout, pickup_address_layout, drop_address_layout;
     DatePickerDialog dpd;
     TimePickerDialog tpd;
 
@@ -95,25 +96,26 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
     LatLng center;
     LatLng orginlat;
     LatLng destlat;
-    String pickupCountryCode,User_id,pickupDateTime;
-    String dropCountryCode,strCarCategory,strSelectedCategory,pickupAddress,destinationAddress;
-    Double originLAT, originLNG, destLAT, destLNG, newOriginLat, newOriginLng, newDestLat, newDestLng,calctotalDistance;
+    String pickupCountryCode, User_id, pickupDateTime;
+    String dropCountryCode, strCarCategory, strSelectedCategory, pickupAddress, destinationAddress;
+    Double originLAT, originLNG, destLAT, destLNG, newOriginLat, newOriginLng, newDestLat, newDestLng, calctotalDistance;
     ImageButton back;
     Button done;
     Spinner carategory;
     ProgressDialog progressDialog;
-    String rideLaterStatus,rideLaterMessage,request_id,carCategory;
-    String strpickuploca,strdroploca,cashStatus,paymenttype;
+    String rideLaterStatus, rideLaterMessage, request_id, carCategory;
+    String strpickuploca, strdroploca, cashStatus, paymenttype;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ridelater);
 
 
-        pickup_layout = (RelativeLayout)findViewById(R.id.pickup_layout);
-        time_layout = (RelativeLayout)findViewById(R.id.time_layout);
-        pickup_address_layout = (RelativeLayout)findViewById(R.id.pickup_address_layout);
-        drop_address_layout = (RelativeLayout)findViewById(R.id.drop_address_layout);
+        pickup_layout = (RelativeLayout) findViewById(R.id.pickup_layout);
+        time_layout = (RelativeLayout) findViewById(R.id.time_layout);
+        pickup_address_layout = (RelativeLayout) findViewById(R.id.pickup_address_layout);
+        drop_address_layout = (RelativeLayout) findViewById(R.id.drop_address_layout);
 
         pickupdate = (TextView) findViewById(R.id.edtpickupdate);
         pickuptime = (TextView) findViewById(R.id.edtpickuptime);
@@ -124,23 +126,22 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         done = (Button) findViewById(R.id.done_button);
 
 
-
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         User_id = prefs.getString("userid", null);
-        System.out.println("UserID in settings" + User_id);
+        LogUtils.i("UserID in settings" + User_id);
         //Change Font to Whole View
 
 
         getCategoryDetails();
 
-        carategory=(Spinner)findViewById(R.id.car_category);
+        carategory = (Spinner) findViewById(R.id.car_category);
 
 
         carategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                strSelectedCategory= parent.getItemAtPosition(position).toString();
+                strSelectedCategory = parent.getItemAtPosition(position).toString();
 
             }
 
@@ -154,7 +155,7 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(RideLater.this,MapActivity.class);
+                Intent i = new Intent(RideLater.this, MapActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -162,10 +163,10 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              getPaymentReference();
+                getPaymentReference();
             }
         });
-    //date and time picker dialog
+        //date and time picker dialog
         Calendar now = Calendar.getInstance();
         dpd = DatePickerDialog.newInstance(
                 this,
@@ -181,8 +182,8 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             public void onClick(View v) {
 
                 Calendar minDate = Calendar.getInstance();
-              //  DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(RideLater.this, getcalendar.get(Calendar.YEAR), getcalendar.get(Calendar.MONTH), getcalendar.get(Calendar.DAY_OF_MONTH));
-                minDate.add(Calendar.DATE , 0);
+                //  DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(RideLater.this, getcalendar.get(Calendar.YEAR), getcalendar.get(Calendar.MONTH), getcalendar.get(Calendar.DAY_OF_MONTH));
+                minDate.add(Calendar.DATE, 0);
                 dpd.setMinDate(minDate);
                 dpd.show(getFragmentManager(), "datePicker");
                 //dpd.show(getFragmentManager(),"datepicker");
@@ -195,26 +196,26 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             public void onClick(View v) {
 
                 Calendar c = Calendar.getInstance(TimeZone.getDefault());
-                System.out.println("Current time => "+c.getTime());
+                LogUtils.i("Current time => " + c.getTime());
 
                 @SuppressLint("SimpleDateFormat")
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
                 String formattedDate = df.format(c.getTime());
-                System.out.println("formattedDate date=="+formattedDate);
+                LogUtils.i("formattedDate date==" + formattedDate);
                 tpd = TimePickerDialog.newInstance(
                         RideLater.this,
                         c.get(Calendar.HOUR_OF_DAY),
                         c.get(Calendar.MINUTE),
                         false
                 );
-                if(pickupdate.getText().toString().trim().length() == 0){
+                if (pickupdate.getText().toString().trim().length() == 0) {
                     alertSnackBar(getResources().getString(R.string.enter_pickup_date));
-                }else {
-                    if(pickupdate.getText().toString().trim().equals(formattedDate)) {
-                        tpd.setMinTime(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)+3,
+                } else {
+                    if (pickupdate.getText().toString().trim().equals(formattedDate)) {
+                        tpd.setMinTime(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE) + 3,
                                 c.get(Calendar.SECOND));
                         tpd.show(getFragmentManager(), "Timepickerdialog");
-                    }else{
+                    } else {
                         tpd.setMinTime(0, 0,
                                 0);
                         tpd.show(getFragmentManager(), "Timepickerdialog");
@@ -257,24 +258,23 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        System.out.println("monthofyear="+monthOfYear);
-        String month = "",day= "";
+        LogUtils.i("monthofyear=" + monthOfYear);
+        String month = "", day = "";
         if (dayOfMonth < 10) {
-            day = "0"+dayOfMonth;
-            System.out.println("day="+day);
-        }else{
+            day = "0" + dayOfMonth;
+            LogUtils.i("day=" + day);
+        } else {
             day = String.valueOf(dayOfMonth);
         }
         if (monthOfYear < 9) {
-            month = "0"+(++monthOfYear);
-            System.out.println("month="+month);
-        }
-        else{
+            month = "0" + (++monthOfYear);
+            LogUtils.i("month=" + month);
+        } else {
             month = String.valueOf(++monthOfYear);
         }
-    //    String date = dayOfMonth+"-"+(++monthOfYear)+"-"+year;
-        String date = day+"-"+month+"-"+year;
-        System.out.println("new date of settext=="+date);
+        //    String date = dayOfMonth+"-"+(++monthOfYear)+"-"+year;
+        String date = day + "-" + month + "-" + year;
+        LogUtils.i("new date of settext==" + date);
         pickupdate.setText(date);
     }
 
@@ -298,24 +298,24 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
 
         String min = "";
         if (minutes < 10)
-            min = "0" + minutes ;
+            min = "0" + minutes;
         else
             min = String.valueOf(minutes);
-        String hr ="";
+        String hr = "";
         if (hour < 10)
-            hr = "0" + hour ;
+            hr = "0" + hour;
         else
             hr = String.valueOf(hour);
 
 
-        System.out.println("hour===="+hr);
+        LogUtils.i("hour====" + hr);
 
         // Append in a StringBuilder
         String aTime = new StringBuilder().append(hr).append(':')
-                .append(min ).append(" ").append(timeSet).toString();
+                .append(min).append(" ").append(timeSet).toString();
         //et1.setText(aTime);
 
-        System.out.println("Current Country==>"+aTime);
+        LogUtils.i("Current Country==>" + aTime);
         pickuptime.setText(aTime);
     }
 
@@ -324,7 +324,7 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
 
             //Get country alpha2 code
             String locale = this.getResources().getConfiguration().locale.getCountry();
-            System.out.println("Current Country==>"+locale);
+            LogUtils.i("Current Country==>" + locale);
 
             //Location Filter based on the Country
             AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
@@ -335,10 +335,10 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             // builder checks this and throws an exception if it is not the case.
 
 
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                        .setFilter(autocompleteFilter)
-                        .build(this);
-                startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                    .setFilter(autocompleteFilter)
+                    .build(this);
+            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
             pickup_address_layout.setEnabled(true);
             drop_address_layout.setEnabled(true);
 
@@ -369,15 +369,15 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         // Check that the result was from the autocomplete widget.
         if (requestCode == Constants.ORIGIN_REQUEST_CODE_AUTOCOMPLETE && data != null) {
 
-            setAddress(data,resultCode,"ORIGIN");
+            setAddress(data, resultCode, "ORIGIN");
 
-        }else if (requestCode == Constants.DEST_REQUEST_CODE_AUTOCOMPLETE && data != null) {
+        } else if (requestCode == Constants.DEST_REQUEST_CODE_AUTOCOMPLETE && data != null) {
 
-            setAddress(data,resultCode,"DEST");
+            setAddress(data, resultCode, "DEST");
         }
     }
 
-    public void setAddress(Intent data,int resultCode,String source){
+    public void setAddress(Intent data, int resultCode, String source) {
 
         if (resultCode == RESULT_OK) {
             // Get the user's selected place from the Intent.
@@ -385,30 +385,28 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             Log.i(TAG, "Place Selected: " + place.getName());
             Log.i(TAG, "Latitude Selected: " + place.getLatLng());
 
-            if(source.matches("ORIGIN")){
-                exceptionLatLng=place.getLatLng();
-                newOriginLat=exceptionLatLng.latitude;
-                newOriginLng=exceptionLatLng.longitude;
-                getCountryName(this,newOriginLat,newOriginLng,source);
-                orginlat=new LatLng(newOriginLat,newOriginLng);
-            }
-            else
-            {
-                exceptionLatLng=place.getLatLng();
-                newDestLat=exceptionLatLng.latitude;
-                newDestLng=exceptionLatLng.longitude;
-                getCountryName(this,newDestLat,newDestLng,source);
-                destlat=new LatLng(newDestLat,newDestLng);
+            if (source.matches("ORIGIN")) {
+                exceptionLatLng = place.getLatLng();
+                newOriginLat = exceptionLatLng.latitude;
+                newOriginLng = exceptionLatLng.longitude;
+                getCountryName(this, newOriginLat, newOriginLng, source);
+                orginlat = new LatLng(newOriginLat, newOriginLng);
+            } else {
+                exceptionLatLng = place.getLatLng();
+                newDestLat = exceptionLatLng.latitude;
+                newDestLng = exceptionLatLng.longitude;
+                getCountryName(this, newDestLat, newDestLng, source);
+                destlat = new LatLng(newDestLat, newDestLng);
             }
 
-            if(source.matches("ORIGIN")){
+            if (source.matches("ORIGIN")) {
                 // Format the place's details and display them in the TextView.
-                    pickuploc.setText(formatPlaceDetails(getResources(), place.getName(),
+                pickuploc.setText(formatPlaceDetails(getResources(), place.getName(),
                         place.getId(), place.getAddress(), place.getPhoneNumber(),
                         place.getWebsiteUri()));
                 pickuploc.setText(place.getAddress());
 
-            }else {
+            } else {
                 // Format the place's details and display them in the TextView.
                 droploc.setText(formatPlaceDetails(getResources(), place.getName(),
                         place.getId(), place.getAddress(), place.getPhoneNumber(),
@@ -416,36 +414,36 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
                 droploc.setText(place.getAddress());
             }
 
-            System.out.println("address 1===>"+place.getName());
-            System.out.println("address 2==>"+place.getAddress());
+            LogUtils.i("address 1===>" + place.getName());
+            LogUtils.i("address 2==>" + place.getAddress());
 
             // Display attributions if required.
             CharSequence attributions = place.getAttributions();
             if (!TextUtils.isEmpty(attributions)) {
 
-                if(source.matches("ORIGIN")){
+                if (source.matches("ORIGIN")) {
                     pickuploc.setText(Html.fromHtml(attributions.toString()));
 
-                }else {
+                } else {
                     droploc.setText(Html.fromHtml(attributions.toString()));
                 }
 
             } else {
 
-                if(source.matches("ORIGIN")){
+                if (source.matches("ORIGIN")) {
                     pickuploc.setText(place.getAddress());
 
-                }else {
+                } else {
                     droploc.setText(place.getAddress());
 
                 }
             }
-            String tempadd=String.valueOf(place.getAddress());
+            String tempadd = String.valueOf(place.getAddress());
 
-            System.out.println("address after parshe==>"+place.getAddress());
+            LogUtils.i("address after parshe==>" + place.getAddress());
 
             //Get LAT and LNG
-            getLocationFromAddress1(tempadd,source);
+            getLocationFromAddress1(tempadd, source);
 
         } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             Status status = PlaceAutocomplete.getStatus(this, data);
@@ -453,7 +451,7 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         } else if (resultCode == RESULT_CANCELED) {
             // Indicates that the activity closed before a selection was made. For example if
             // the user pressed the back button.
-            System.out.println("Canceled by user");
+            LogUtils.i("Canceled by user");
         }
     }
 
@@ -464,13 +462,13 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {
-                if(locationType.matches("ORIGIN")) {
+                if (locationType.matches("ORIGIN")) {
                     pickupCountryCode = addresses.get(0).getCountryCode();
                 } else {
                     dropCountryCode = addresses.get(0).getCountryCode();
                 }
-                System.out.println("Pickup==>"+pickupCountryCode);
-                System.out.println("Drop==>"+dropCountryCode);
+                LogUtils.i("Pickup==>" + pickupCountryCode);
+                LogUtils.i("Drop==>" + dropCountryCode);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -485,8 +483,8 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
                 websiteUri));
     }
 
-    public LatLng getLocationFromAddress1(String strAddress,String source) {
-        System.out.println("Address"+strAddress);
+    public LatLng getLocationFromAddress1(String strAddress, String source) {
+        LogUtils.i("Address" + strAddress);
 
         Geocoder coder = new Geocoder(RideLater.this, Locale.ENGLISH);
         List<Address> address;
@@ -498,19 +496,19 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
                 return null;
             }
             Address location = address.get(0);
-            if(source.matches("ORIGIN")){
+            if (source.matches("ORIGIN")) {
 
-                originLAT=location.getLatitude();
-                originLNG=location.getLongitude();
+                originLAT = location.getLatitude();
+                originLNG = location.getLongitude();
 
-                if(originLAT!=null&originLNG!=null) {
+                if (originLAT != null & originLNG != null) {
 
                 }
 
-            }else {
+            } else {
 
-                destLAT=location.getLatitude();
-                destLNG=location.getLongitude();
+                destLAT = location.getLatitude();
+                destLNG = location.getLongitude();
             }
 
 
@@ -523,26 +521,24 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         return p1;
     }
 
-    private void getCategoryDetails()
-    {
-        final String url=Constants.CATEGORY_LIVE_URL + "Settings/getCategory";
-        System.out.println("URL is"+url);
+    private void getCategoryDetails() {
+        final String url = Constants.CATEGORY_LIVE_URL + "Settings/getCategory";
+        LogUtils.i("URL is" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         // Parsing json
-                        carcategory=new String[response.length()+1];
+                        carcategory = new String[response.length() + 1];
                         for (int i = 0; i < response.length(); i++) {
-                            try
-                            {
+                            try {
                                 strJsonCategory = response.getJSONObject(i);
-                                strCarCategory= strJsonCategory.getString("categoryname");
-                                Log.d("OUTPUT IS",strCarCategory);
-                                carcategory[0]="Select car category";
-                                carcategory[i+1]=strCarCategory;
-                                System.out.println("CATEGORY"+carcategory[i]);
+                                strCarCategory = strJsonCategory.getString("categoryname");
+                                Log.d("OUTPUT IS", strCarCategory);
+                                carcategory[0] = "Select car category";
+                                carcategory[i + 1] = strCarCategory;
+                                LogUtils.i("CATEGORY" + carcategory[i]);
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(RideLater.this, R.layout.spinner_item, carcategory);
                                 carategory.setAdapter(adapter);
                             } catch (JSONException e) {
@@ -554,11 +550,11 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(),"No net", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No net", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof AuthFailureError) {
                 } else if (error instanceof ServerError) {
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(getApplicationContext(),"No Net", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No Net", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof ParseError) {
                 }
             }
@@ -575,36 +571,34 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         //http://demo.cogzideltemplates.com/tommy/requests/rideLater/userid/5854c286da71b4d6308b4567/start_lat/32.2/
         // start_long/33.3/end_lat/43.3/end_long/44.4/pickup_address/madurai tamil nadu/drop_address/chennai tamil nadu/
         // category/xx/date_time/10-03-2017 11:00 AM/payment_mode/stripe
-        final String url = Constants.REQUEST_URL+"ridelater/userid/"+User_id+"/start_lat/"+newOriginLat+"/start_long/"+newOriginLng+
-                "/end_lat/"+newDestLat+"/end_long/"+newDestLng+"/pickup_address/"+strpickuploca+"/drop_address/"+strdroploca+
-                "/category/"+strSelectedCategory+"/date_time/"+pickupDateTime+"/payment_mode/"+paymenttype;
-        System.out.println("SignUpURL==>"+url);
+        final String url = Constants.REQUEST_URL + "ridelater/userid/" + User_id + "/start_lat/" + newOriginLat + "/start_long/" + newOriginLng +
+                "/end_lat/" + newDestLat + "/end_long/" + newDestLng + "/pickup_address/" + strpickuploca + "/drop_address/" + strdroploca +
+                "/category/" + strSelectedCategory + "/date_time/" + pickupDateTime + "/payment_mode/" + paymenttype;
+        LogUtils.i("SignUpURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 dismissDialog();
-                for (int i=0;i<response.length();i++){
+                for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
                         rideLaterStatus = jsonObject.optString("status");
 
-                        if(rideLaterStatus.equals("Success")){
+                        if (rideLaterStatus.equals("Success")) {
 
                             request_id = jsonObject.optString("request_id");
                             carCategory = jsonObject.optString("car_category");
-                            saveInFirebase(request_id,carCategory,newOriginLat,newOriginLng,newDestLat,newDestLng);
+                            saveInFirebase(request_id, carCategory, newOriginLat, newOriginLng, newDestLat, newDestLng);
                             Toast.makeText(RideLater.this, "we'll request a car on your behalf to be there when you’re ready to go.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RideLater.this,MapActivity.class);
+                            Intent intent = new Intent(RideLater.this, MapActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
 
-                        }else if(rideLaterStatus.equals("Fail")){
-                            Toast.makeText(getApplicationContext(),"Already added the ride on this time",Toast.LENGTH_SHORT).show();
-                        }
-
-                        else {
-                            Toast.makeText(getApplicationContext(),R.string.invalid_username_or_password,Toast.LENGTH_SHORT).show();
+                        } else if (rideLaterStatus.equals("Fail")) {
+                            Toast.makeText(getApplicationContext(), "Already added the ride on this time", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.invalid_username_or_password, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
@@ -615,8 +609,8 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 dismissDialog();
-                if (volleyError instanceof NoConnectionError){
-                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection,Toast.LENGTH_SHORT).show();
+                if (volleyError instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -626,58 +620,58 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         AppController.getInstance().addToRequestQueue(signUpReq);
     }
 
-    public void showDialog(){
-        progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
     }
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing())
-            {
+
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
                 progressDialog.dismiss();
-                progressDialog=null;
+                progressDialog = null;
             }
         }
     }
 
-    private void alertSnackBar(String alertMessage){
+    private void alertSnackBar(String alertMessage) {
         TSnackbar snackbar = TSnackbar.make(findViewById(android.R.id.content), alertMessage, TSnackbar.LENGTH_LONG);
-        snackbar.setActionTextColor(ContextCompat.getColor(getApplicationContext(),R.color.colorWhite));
+        snackbar.setActionTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.RED);
         TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
         textView.setGravity(Gravity.CENTER);
         textView.setMaxHeight(30);
         textView.setMaxLines(3);
-        textView.setPaddingRelative(0,20,0,0);
-        textView.setPadding(0,20,0,0);
-        textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.colorWhite));
+        textView.setPaddingRelative(0, 20, 0, 0);
+        textView.setPadding(0, 20, 0, 0);
+        textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT));
-        params.setMargins(0,30,0,0);
+        params.setMargins(0, 30, 0, 0);
         textView.setLayoutParams(params);
         snackbar.show();
     }
 
-    public void saveInFirebase(String request_id,String carCategory,Double orginlat,Double orginlng,Double destlat,Double destlng) {
+    public void saveInFirebase(String request_id, String carCategory, Double orginlat, Double orginlng, Double destlat, Double destlng) {
 
-        if(User_id!=null && !User_id.isEmpty()) {
-            System.out.println("Firebase URL"+FirebaseDatabase.getInstance().getReference());
+        if (User_id != null && !User_id.isEmpty()) {
+            LogUtils.i("Firebase URL" + FirebaseDatabase.getInstance().getReference());
 
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ride_later").child(User_id).child(request_id);
             Map<String, Object> updates = new HashMap<String, Object>();
-            updates.put("status","0");
-            updates.put("car_category",carCategory);
-            updates.put("orgin_lat",orginlat);
-            updates.put("orgin_lng",orginlng);
-            updates.put("dest_lat",destlat);
-            updates.put("dest_lng",destlng);
+            updates.put("status", "0");
+            updates.put("car_category", carCategory);
+            updates.put("orgin_lat", orginlat);
+            updates.put("orgin_lng", orginlng);
+            updates.put("dest_lat", destlat);
+            updates.put("dest_lng", destlng);
             //updates.put("request_id",request_id);
             ref.updateChildren(updates);
-            System.out.println("status updated in firebase");
+            LogUtils.i("status updated in firebase");
             /*Map<String, Object> updateaccept= new HashMap<String, Object>();
             updateaccept.put("status","0");
             updateaccept.put("request_id","0");
@@ -686,9 +680,9 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             ref.setValue(updates, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    System.out.println("DATA SAVED SUCCESSFULLY");
-                    if(databaseError!=null){
-                        System.out.println("DATA SAVED SUCCESSFULLY");
+                    LogUtils.i("DATA SAVED SUCCESSFULLY");
+                    if (databaseError != null) {
+                        LogUtils.i("DATA SAVED SUCCESSFULLY");
                     }
                 }
             });
@@ -714,19 +708,17 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             Date date1 = sdf.parse(time);
             Date date2 = sdf.parse(endtime);
 
-            if(date1.before(date2)) {
+            if (date1.before(date2)) {
 
                 return true;
-            }
-            else if(date1.equals(date2)){
+            } else if (date1.equals(date2)) {
 
                 return true;
-            }
-            else {
+            } else {
 
                 return false;
             }
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return false;
@@ -745,12 +737,12 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
                         String status = dataSnapshot.getValue().toString();
                         if (status != null) {
                             if (status.matches("stripe")) {
-                                paymenttype="stripe";
+                                paymenttype = "stripe";
                                 callridelater();
                             } else if (status.matches("cash")) {
                                 getCashOnOff();
                             } else if (status.matches("corpID")) {
-                                paymenttype="corpID";
+                                paymenttype = "corpID";
                                 callridelater();
                             }
                         }
@@ -766,42 +758,40 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         }
     }
 
-    public void callridelater(){
+    public void callridelater() {
         Calendar c = Calendar.getInstance(TimeZone.getDefault());
-        System.out.println("Current time => "+c.getTime());
+        LogUtils.i("Current time => " + c.getTime());
 
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String formattedDate = df.format(c.getTime());
-        System.out.println("formattedDate date=="+formattedDate);
-        if(strSelectedCategory==null || strSelectedCategory.equals("Select car category")){
+        LogUtils.i("formattedDate date==" + formattedDate);
+        if (strSelectedCategory == null || strSelectedCategory.equals("Select car category")) {
             alertSnackBar(getString(R.string.selectcategory));
-        }
-        else if(pickupdate.getText().toString().trim().length() == 0){
+        } else if (pickupdate.getText().toString().trim().length() == 0) {
             alertSnackBar(getResources().getString(R.string.enter_pickup_date));
-        }else  if(pickuptime.getText().toString().trim().length() == 0){
+        } else if (pickuptime.getText().toString().trim().length() == 0) {
             alertSnackBar(getResources().getString(R.string.enter_pickup_time));
-        }else if (pickuploc.getText().toString().trim().length() == 0) {
+        } else if (pickuploc.getText().toString().trim().length() == 0) {
             alertSnackBar(getResources().getString(R.string.enter_pickup_location));
-        }else if (droploc.getText().toString().trim().length() == 0) {
+        } else if (droploc.getText().toString().trim().length() == 0) {
             alertSnackBar(getResources().getString(R.string.enter_destination_location));
-        }else {
+        } else {
 
-            System.out.println("====>" + pickupdate.getText().toString() + pickuptime.getText().toString());
+            LogUtils.i("====>" + pickupdate.getText().toString() + pickuptime.getText().toString());
 
             pickupDateTime = pickupdate.getText().toString() + " " + pickuptime.getText().toString();
-            System.out.println("pickuptimeee in irest="+pickupDateTime);
-
+            LogUtils.i("pickuptimeee in irest=" + pickupDateTime);
 
 
             strpickuploca = pickuploc.getText().toString();
             strdroploca = droploc.getText().toString();
 
-            try{
+            try {
                 pickupDateTime = pickupDateTime.replaceAll("/", "");
                 pickupDateTime = URLEncoder.encode(pickupDateTime, "UTF-8");
                 //   pickupDateTime = pickupDateTime.replaceAll(" ", "%20");
-                System.out.println("pickuptimeee="+pickupDateTime);
+                LogUtils.i("pickuptimeee=" + pickupDateTime);
                 strpickuploca = strpickuploca.replaceAll("/", "");
                 strpickuploca = URLEncoder.encode(strpickuploca, "UTF-8");
                 strdroploca = strdroploca.replaceAll("/", "");
@@ -810,15 +800,13 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            if(pickupdate.getText().toString().trim().equals(formattedDate)){
-                if(checktimings(pickuptime.getText().toString(),getCurrentTime())){
+            if (pickupdate.getText().toString().trim().equals(formattedDate)) {
+                if (checktimings(pickuptime.getText().toString(), getCurrentTime())) {
                     alertSnackBar(getString(R.string.valid_time));
-                }
-                else{
+                } else {
                     callRideLater();
                 }
-            }
-            else{
+            } else {
                 callRideLater();
             }
 
@@ -838,10 +826,10 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
                     cashStatus = dataSnapshot.getValue().toString();
 
                     if (!cashStatus.matches("on")) {
-                       alertSnackBar(getString(R.string.cashnotavailable));
+                        alertSnackBar(getString(R.string.cashnotavailable));
                     } else {
-                            paymenttype="cash";
-                            callridelater();
+                        paymenttype = "cash";
+                        callridelater();
                     }
                 }
 

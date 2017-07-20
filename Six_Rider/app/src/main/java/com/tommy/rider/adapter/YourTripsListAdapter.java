@@ -17,6 +17,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tommy.rider.R;
 import com.tommy.rider.YourTripsActivity;
+import com.tommy.rider.utils.LogUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -35,20 +36,20 @@ public class YourTripsListAdapter extends RecyclerView.Adapter {
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
 
-    public YourTripsListAdapter(YourTripsActivity activity, ArrayList<YourTrips> tripsListItems,RecyclerView recyclerView) {
+    public YourTripsListAdapter(YourTripsActivity activity, ArrayList<YourTrips> tripsListItems, RecyclerView recyclerView) {
         this.activity = activity;
-        this.tripsListItems= tripsListItems;
+        this.tripsListItems = tripsListItems;
 
-        if(recyclerView.getLayoutManager() instanceof LinearLayoutManager){
-            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
                     totalItemCount = linearLayoutManager.getItemCount();
                     lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                    if(!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
-                        if(onLoadMoreListener != null){
+                    if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                        if (onLoadMoreListener != null) {
                             onLoadMoreListener.onLoadMore();
                         }
                         loading = true;
@@ -63,13 +64,13 @@ public class YourTripsListAdapter extends RecyclerView.Adapter {
 
         RecyclerView.ViewHolder viewHolder;
 
-        if(viewType == VIEW_ITEM){
+        if (viewType == VIEW_ITEM) {
             View convertView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.activity_your_trips_list, parent, false);
             FontChangeCrawler fontChanger = new FontChangeCrawler(activity.getAssets(), activity.getString(R.string.app_font));
-            fontChanger.replaceFonts((ViewGroup)convertView);
+            fontChanger.replaceFonts((ViewGroup) convertView);
             viewHolder = new MyViewHolder(convertView);
-        }else{
+        } else {
             View convertView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.loadmore_progress_bar, parent, false);
             viewHolder = new ProgressViewHolder(convertView);
@@ -81,71 +82,70 @@ public class YourTripsListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
-        if(holder instanceof MyViewHolder){
+        if (holder instanceof MyViewHolder) {
             YourTrips trips = tripsListItems.get(position);
 
             try {
 
                 Glide.with(activity).load(trips.getDriverImage())
                         .asBitmap().centerCrop().priority(Priority.IMMEDIATE).placeholder(R.drawable.account_circle_grey)
-                        .into(new BitmapImageViewTarget( ((MyViewHolder) holder).driverImage) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        ((MyViewHolder) holder).driverImage.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
+                        .into(new BitmapImageViewTarget(((MyViewHolder) holder).driverImage) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                ((MyViewHolder) holder).driverImage.setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
 
                /* Glide.with(getApplicationContext()).load(trips.getCarImage()).asBitmap().centerCrop().placeholder(R.drawable.trip_car)
                         .skipMemoryCache(true).into(((MyViewHolder) holder).carImage);*/
 
 //            driverName.setText(trips.getDriverName());
-                ((MyViewHolder) holder).tripAmount.setText("$ "+convertToDecimal(Double.parseDouble(trips.getTripAmount())));
-                System.out.println("new trips="+trips.getTripDate());
+                ((MyViewHolder) holder).tripAmount.setText("$ " + convertToDecimal(Double.parseDouble(trips.getTripAmount())));
+                LogUtils.i("new trips=" + trips.getTripDate());
                 ((MyViewHolder) holder).tripDate.setText(trips.getTripDate());
                 ((MyViewHolder) holder).carType.setText(trips.getCarType());
                 ((MyViewHolder) holder).pickupLocation.setText(trips.getPickupLocation());
                 ((MyViewHolder) holder).dropLocation.setText(trips.getDropLocation());
                 //Set Payment Icon based on their payments made
-                if(trips.getPaymentType()!=null) {
+                if (trips.getPaymentType() != null) {
                     if (trips.getPaymentType().matches("stripe")) {
                         ((MyViewHolder) holder).paymentType.setBackground(activity.getResources().getDrawable(R.mipmap.ub__payment_type_delegate));
                     } else if (trips.getPaymentType().matches("cash")) {
                         ((MyViewHolder) holder).paymentType.setBackground(activity.getResources().getDrawable(R.drawable.ub__payment_type_cash));
 
-                    }
-                    else if (trips.getPaymentType().matches("corpID")) {
+                    } else if (trips.getPaymentType().matches("corpID")) {
                         ((MyViewHolder) holder).paymentType.setBackground(activity.getResources().getDrawable(R.mipmap.ic_cardss));
 
                     }
 
                 }
-            } catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
-        }else{
-            ((ProgressViewHolder)holder).progressBar.setIndeterminate(true);
+        } else {
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
 
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView carImage,driverImage,paymentType;
-        TextView driverName,tripAmount,tripDate,carType,pickupLocation,dropLocation;
+        ImageView carImage, driverImage, paymentType;
+        TextView driverName, tripAmount, tripDate, carType, pickupLocation, dropLocation;
 
         public MyViewHolder(View convertView) {
             super(convertView);
-            carImage=(ImageView)convertView.findViewById(R.id.car_image);
-            driverImage=(ImageView)convertView.findViewById(R.id.driver_image);
-            driverName=(TextView)convertView.findViewById(R.id.driver_name);
-            tripAmount=(TextView)convertView.findViewById(R.id.trip_amount);
-            tripDate=(TextView)convertView.findViewById(R.id.trip_date);
-            carType=(TextView)convertView.findViewById(R.id.trip_car_trype);
-            pickupLocation=(TextView)convertView.findViewById(R.id.pick_location);
-            dropLocation=(TextView)convertView.findViewById(R.id.drop_location);
-            paymentType=(ImageView)convertView.findViewById(R.id.payment_type);
+            carImage = (ImageView) convertView.findViewById(R.id.car_image);
+            driverImage = (ImageView) convertView.findViewById(R.id.driver_image);
+            driverName = (TextView) convertView.findViewById(R.id.driver_name);
+            tripAmount = (TextView) convertView.findViewById(R.id.trip_amount);
+            tripDate = (TextView) convertView.findViewById(R.id.trip_date);
+            carType = (TextView) convertView.findViewById(R.id.trip_car_trype);
+            pickupLocation = (TextView) convertView.findViewById(R.id.pick_location);
+            dropLocation = (TextView) convertView.findViewById(R.id.drop_location);
+            paymentType = (ImageView) convertView.findViewById(R.id.payment_type);
         }
     }
 
@@ -176,13 +176,12 @@ public class YourTripsListAdapter extends RecyclerView.Adapter {
         loading = false;
     }
 
-    public String convertToDecimal(Double amount){
+    public String convertToDecimal(Double amount) {
 
-        if(amount>0){
-            System.out.println("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
+        if (amount > 0) {
+            LogUtils.i("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
             return new DecimalFormat("0.00").format(amount);
-        }
-        else {
+        } else {
             return String.valueOf(0);
         }
     }

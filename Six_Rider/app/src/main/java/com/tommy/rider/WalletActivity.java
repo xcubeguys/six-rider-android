@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,10 +44,10 @@ public class WalletActivity extends AppCompatActivity {
 
     private static final String TAG = "WalletActivity";
 
-    JSONObject wallet_jsonobj,update_jsonobj;
-    String walletamount,wallet_status,wallet_userfname,wallet_userlname,wallet_userimage,wallup_status,Amount,User_id;
+    JSONObject wallet_jsonobj, update_jsonobj;
+    String walletamount, wallet_status, wallet_userfname, wallet_userlname, wallet_userimage, wallup_status, Amount, User_id;
     ImageView propic;
-    TextView bal_amt,header;
+    TextView bal_amt, header;
     Button addamount;
     EditText get_amout;
     ImageButton back;
@@ -61,16 +62,16 @@ public class WalletActivity extends AppCompatActivity {
         FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
         fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
 
-        propic=(ImageView)findViewById(R.id.propic);
-        bal_amt=(TextView) findViewById(R.id.bal_amt);
-        addamount=(Button) findViewById(R.id.addamount);
-        get_amout=(EditText) findViewById(R.id.get_amout);
-        back=(ImageButton) findViewById(R.id.back);
-        header=(TextView)findViewById(R.id.header);
+        propic = (ImageView) findViewById(R.id.propic);
+        bal_amt = (TextView) findViewById(R.id.bal_amt);
+        addamount = (Button) findViewById(R.id.addamount);
+        get_amout = (EditText) findViewById(R.id.get_amout);
+        back = (ImageButton) findViewById(R.id.back);
+        header = (TextView) findViewById(R.id.header);
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         User_id = prefs.getString("userid", null);
-        System.out.println("UserID in settings" + User_id);
+        LogUtils.i("UserID in settings" + User_id);
         //Change Font to Whole View
 
         get_wallet_detail();
@@ -84,7 +85,7 @@ public class WalletActivity extends AppCompatActivity {
                 // Check if no view has focus:
                 View view = getCurrentFocus();
                 if (view != null) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
@@ -114,8 +115,8 @@ public class WalletActivity extends AppCompatActivity {
         });
     }
 
-    public void show_progress(){
-        progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void show_progress() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -123,9 +124,9 @@ public class WalletActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing()) {
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
                 try {
                     progressDialog.dismiss();
                     progressDialog = null;
@@ -136,33 +137,33 @@ public class WalletActivity extends AppCompatActivity {
         }
     }
 
-    public  void callStripe(){
+    public void callStripe() {
 
-        Intent i=new Intent(WalletActivity.this,CardPaymentActivity_.class);
-        i.putExtra("page","wallet");
+        Intent i = new Intent(WalletActivity.this, CardPaymentActivity_.class);
+        i.putExtra("page", "wallet");
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivityForResult(i,Constants.REQUEST_STRIPE_PAYMENT);
+        startActivityForResult(i, Constants.REQUEST_STRIPE_PAYMENT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         //Stripe Payment
-        if(requestCode==Constants.REQUEST_STRIPE_PAYMENT){
+        if (requestCode == Constants.REQUEST_STRIPE_PAYMENT) {
 
-            System.out.println("result code==>"+ Activity.RESULT_OK);
+            LogUtils.i("result code==>" + Activity.RESULT_OK);
 
-            if(resultCode==Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
 
-                String result=data.getStringExtra("Token");
+                String result = data.getStringExtra("Token");
 
-                System.out.println("Stripe token wallet==>"+ result);
+                LogUtils.i("Stripe token wallet==>" + result);
 
                 update_walletamount(result);  //change for problem
 
                 //Toast.makeText(WalletActivity.this, result, Toast.LENGTH_SHORT).show();
 
-            }else {
+            } else {
 
                 Toast.makeText(WalletActivity.this, "Payment canceled by user", Toast.LENGTH_SHORT).show();
             }
@@ -172,10 +173,10 @@ public class WalletActivity extends AppCompatActivity {
     public void get_wallet_detail() {
 
         show_progress();
-        System.out.println("am insid the function==>");
+        LogUtils.i("am insid the function==>");
 
         final String url = Constants.LIVE_URL + "editProfile/user_id/" + User_id;
-        System.out.println("URL is" + url);
+        LogUtils.i("URL is" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -198,24 +199,24 @@ public class WalletActivity extends AppCompatActivity {
                                     wallet_userimage = wallet_jsonobj.optString("profile_pic");
                                     walletamount = wallet_jsonobj.optString("wallet_amount");
 
-                                    String name = "         "+wallet_userfname+" "+wallet_userlname;
-                                    name=name.replaceAll("%20"," ");
+                                    String name = "         " + wallet_userfname + " " + wallet_userlname;
+                                    name = name.replaceAll("%20", " ");
 
                                     header.setText(name);
-                                    if(!walletamount.isEmpty()){
-                                        if (walletamount==null||walletamount.equals("null")||walletamount.equals("")) {
+                                    if (!walletamount.isEmpty()) {
+                                        if (walletamount == null || walletamount.equals("null") || walletamount.equals("")) {
                                             bal_amt.setText("0.00");
-                                            System.out.println("am in not setting the amount==>"+walletamount);
+                                            LogUtils.i("am in not setting the amount==>" + walletamount);
                                         } else {
-                                            System.out.println("am in setting the amount==>"+walletamount);
+                                            LogUtils.i("am in setting the amount==>" + walletamount);
 
                                             Double amount;
 
-                                            if (isDouble(walletamount)){
+                                            if (isDouble(walletamount)) {
 
                                                 amount = Double.parseDouble(walletamount);
 
-                                            }else {
+                                            } else {
                                                 amount = (double) Integer.parseInt(walletamount);
                                             }
 
@@ -223,7 +224,7 @@ public class WalletActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    System.out.print("Insite the Profile Activity Profile image" + wallet_userimage);
+                                    LogUtils.i("Insite the Profile Activity Profile image" + wallet_userimage);
 
                                     Glide.with(getApplication()).load(wallet_userimage).asBitmap().placeholder(R.drawable.account_circle_grey).error(R.drawable.account_circle_grey).into(new BitmapImageViewTarget(propic) {
                                         @Override
@@ -248,7 +249,7 @@ public class WalletActivity extends AppCompatActivity {
 
                 dismissDialog();
                 if (error instanceof NoConnectionError) {
-                    System.out.println("No internet connection");
+                    LogUtils.i("No internet connection");
                     Toast toast = Toast.makeText(getApplicationContext(), "There is no network please connect.", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP, 0, 70);
                     toast.show();
@@ -273,13 +274,12 @@ public class WalletActivity extends AppCompatActivity {
         }
     }
 
-    public String convertToDecimal(Double amount){
+    public String convertToDecimal(Double amount) {
 
-        if(amount>0){
-            System.out.println("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
+        if (amount > 0) {
+            LogUtils.i("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
             return new DecimalFormat("0.00").format(amount);
-        }
-        else {
+        } else {
             return String.valueOf(0);
         }
     }
@@ -288,8 +288,8 @@ public class WalletActivity extends AppCompatActivity {
 
         show_progress();
         //http://demo.cogzideltemplates.com/tommy/rider/updateWalletAamount/payid/tok_19rl2AGO6Fk1Vdt6O8CKqzZd/user_id/58a32805da71b437308b4567/payment_amount/100
-        final String url = Constants.LIVE_URL+"updateWalletAmount/user_id/"+User_id+"/payid/"+stripeToken+"/payment_amount/"+Amount;
-        System.out.println("URL is" + url);
+        final String url = Constants.LIVE_URL + "updateWalletAmount/user_id/" + User_id + "/payid/" + stripeToken + "/payment_amount/" + Amount;
+        LogUtils.i("URL is" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -297,7 +297,7 @@ public class WalletActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
 
                         dismissDialog();
-                        System.out.print("responses==>"+response.toString());
+                        LogUtils.i("responses==>" + response.toString());
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -311,8 +311,8 @@ public class WalletActivity extends AppCompatActivity {
                                     Toast.makeText(WalletActivity.this, "successfully Added to Wallet!!", Toast.LENGTH_SHORT).show();
                                     walletamount = update_jsonobj.optString("message");
 
-                                    if(!walletamount.isEmpty()){
-                                        if (walletamount==null||walletamount.equals("null")||walletamount.equals("")) {
+                                    if (!walletamount.isEmpty()) {
+                                        if (walletamount == null || walletamount.equals("null") || walletamount.equals("")) {
                                             bal_amt.setText("0.00");
 
                                         } else {
@@ -322,7 +322,7 @@ public class WalletActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                }else {
+                                } else {
                                     Toast.makeText(WalletActivity.this, "Failed to Add Amount in Wallet", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -338,7 +338,7 @@ public class WalletActivity extends AppCompatActivity {
 
                 dismissDialog();
                 if (error instanceof NoConnectionError) {
-                    System.out.println("No internet connection");
+                    LogUtils.i("No internet connection");
                     Toast toast = Toast.makeText(getApplicationContext(), "There is no network please connect.", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP, 0, 70);
                     toast.show();
@@ -348,7 +348,7 @@ public class WalletActivity extends AppCompatActivity {
         });
 
         // Adding request to request queue
-        movieReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        movieReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(movieReq);
     }
 }

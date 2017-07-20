@@ -22,18 +22,18 @@ import java.util.List;
 @EActivity(R.layout.activity_signup_name)
 public class SignupName extends MyBaseActivity implements Validator.ValidationListener {
 
-    public String firstName,lastName,nickName;
+    public String firstName, lastName, nickName;
     Validator validator;
 
     @NotEmpty(message = "Enter first name")
-    @ViewById (R.id.edtFirstName)
+    @ViewById(R.id.edtFirstName)
     MaterialEditText inputFirstName;
     @NotEmpty(message = "Enter last name")
-    @ViewById (R.id.edtLastName)
+    @ViewById(R.id.edtLastName)
     MaterialEditText inputLastName;
 
     @NotEmpty(message = "Enter nick name")
-    @ViewById (R.id.edtNickName)
+    @ViewById(R.id.edtNickName)
     MaterialEditText inputNickName;
 
     @AfterViews
@@ -46,13 +46,13 @@ public class SignupName extends MyBaseActivity implements Validator.ValidationLi
     }
 
 
-    @Click({R.id.imageButton3,R.id.imageButton2})
+    @Click({R.id.imageButton3, R.id.imageButton2})
     void toSignUpEmail() {
         validator.validate();
     }
 
-    @Click (R.id.backButton)
-    void goBack(){
+    @Click(R.id.backButton)
+    void goBack() {
 
         super.onBackPressed();
     }
@@ -70,14 +70,14 @@ public class SignupName extends MyBaseActivity implements Validator.ValidationLi
             e1.printStackTrace();
         }
         String base64 = Base64.encodeToString(data, Base64.DEFAULT);
-        System.out.println("encoded FirstName "+base64);*/
+        LogUtils.i("encoded FirstName "+base64);*/
 
-            Intent i = new Intent(SignupName.this,SignupEmail_.class);
-            i.putExtra("firstname",firstName);
-            i.putExtra("lastname",lastName);
-            i.putExtra("nickname",nickName);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
+        Intent i = new Intent(SignupName.this, SignupEmail_.class);
+        i.putExtra("firstname", firstName);
+        i.putExtra("lastname", lastName);
+        i.putExtra("nickname", nickName);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
 
     }
 

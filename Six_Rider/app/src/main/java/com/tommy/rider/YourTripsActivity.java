@@ -28,6 +28,7 @@ import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.FontChangeCrawler;
 import com.tommy.rider.adapter.YourTrips;
 import com.tommy.rider.adapter.YourTripsListAdapter;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -43,13 +44,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-@EActivity (R.layout.activity_your_trips)
+@EActivity(R.layout.activity_your_trips)
 public class YourTripsActivity extends AppCompatActivity {
 
-    private ArrayList<YourTrips> tripsListItems= new ArrayList<YourTrips>();
+    private ArrayList<YourTrips> tripsListItems = new ArrayList<YourTrips>();
     private YourTripsListAdapter tripsListsAdapter;
     ProgressDialog progressDialog;
-    String userID,tripID,pickupAddress,dropAddress,tripDate,date;
+    String userID, tripID, pickupAddress, dropAddress, tripDate, date;
     Handler handler;
     JSONArray jsonArray;
 
@@ -64,8 +65,7 @@ public class YourTripsActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @AfterViews
-    void yourTripsActivity()
-    {
+    void yourTripsActivity() {
 
         //Change Font to Whole View
         FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
@@ -73,7 +73,7 @@ public class YourTripsActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("userid", null);
-        System.out.println("User ID in YourTrips" + userID);
+        LogUtils.i("User ID in YourTrips" + userID);
 
         LinearLayoutManager verticalLayoutmanager
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -90,9 +90,9 @@ public class YourTripsActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         // do whatever
                         Intent tripDetails = new Intent(getApplicationContext(), YourTripDetailsActivity_.class);
-                        tripID=tripsListItems.get(position).getTripID();
-                        tripDetails.putExtra("created",tripsListItems.get(position).getTripDate());
-                        tripDetails.putExtra("trip_id",tripID);
+                        tripID = tripsListItems.get(position).getTripID();
+                        tripDetails.putExtra("created", tripsListItems.get(position).getTripDate());
+                        tripDetails.putExtra("trip_id", tripID);
                         startActivity(tripDetails);
                     }
 
@@ -123,62 +123,62 @@ public class YourTripsActivity extends AppCompatActivity {
     }
 
     @Click(R.id.backButton)
-    void goBack(){
+    void goBack() {
         finish();
     }
 
     private void displayYourTrips() {
         showDialog();
 //        final String url = "http://demo.cogzideltemplates.com/tommy/requests/yourtrips/userid/58b69164da71b494448b4567";
-        final String url = Constants.REQUEST_URL+"yourtrips/userid/"+userID;
-        System.out.println("Your Trips URL==>"+url);
+        final String url = Constants.REQUEST_URL + "yourtrips/userid/" + userID;
+        LogUtils.i("Your Trips URL==>" + url);
         final JsonArrayRequest tripListReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 
                 dismissDialog();
-                System.out.println("response length="+response.length());
+                LogUtils.i("response length=" + response.length());
                 //jsonArray=response;
                 for (int i = 0; i < response.length(); i++) {
-                        try {
+                    try {
 
-                            JSONObject jsonObject = response.getJSONObject(i);
-                            System.out.println("Status from Your Trips" + jsonObject.optString("status"));
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        LogUtils.i("Status from Your Trips" + jsonObject.optString("status"));
 
-                            if(jsonObject.optString("status").equals("success")) {
-                                YourTrips trips = new YourTrips();
-                                if(!jsonObject.optString("total_price").isEmpty()) {
-                                    if(!jsonObject.optString("total_price").equals("0")) {
-                                        dismissDialog();
-                                        tripLists.setVisibility(View.VISIBLE);
-                                        tripDetails.setVisibility(View.GONE);
-                                        trips.setTripID(jsonObject.optString("trip_id"));
-                                        pickupAddress = jsonObject.optString("pickup_address");
-                                        dropAddress = jsonObject.optString("drop_address");
-                                        trips.setDriverImage(jsonObject.optString("driver_profile"));
-                                        trips.setCarImage(jsonObject.optString(null));
-                                        trips.setCarType(jsonObject.optString("car_category"));
-                                        trips.setPaymentType(jsonObject.optString("payment_mode"));
-                                        // tripDate = getDate(Long.parseLong(jsonObject.optString("created")));
-                                        tripDate = jsonObject.optString("created");
-                                        trips.setTripDate(tripDate);
-                                        trips.setTripAmount(jsonObject.optString("total_price"));
-                                        trips.setPickupLocation(pickupAddress);
-                                        trips.setDropLocation(dropAddress);
-                                        tripsListItems.add(0, trips); // Reverse the list items in the Array
-                                    }
+                        if (jsonObject.optString("status").equals("success")) {
+                            YourTrips trips = new YourTrips();
+                            if (!jsonObject.optString("total_price").isEmpty()) {
+                                if (!jsonObject.optString("total_price").equals("0")) {
+                                    dismissDialog();
+                                    tripLists.setVisibility(View.VISIBLE);
+                                    tripDetails.setVisibility(View.GONE);
+                                    trips.setTripID(jsonObject.optString("trip_id"));
+                                    pickupAddress = jsonObject.optString("pickup_address");
+                                    dropAddress = jsonObject.optString("drop_address");
+                                    trips.setDriverImage(jsonObject.optString("driver_profile"));
+                                    trips.setCarImage(jsonObject.optString(null));
+                                    trips.setCarType(jsonObject.optString("car_category"));
+                                    trips.setPaymentType(jsonObject.optString("payment_mode"));
+                                    // tripDate = getDate(Long.parseLong(jsonObject.optString("created")));
+                                    tripDate = jsonObject.optString("created");
+                                    trips.setTripDate(tripDate);
+                                    trips.setTripAmount(jsonObject.optString("total_price"));
+                                    trips.setPickupLocation(pickupAddress);
+                                    trips.setDropLocation(dropAddress);
+                                    tripsListItems.add(0, trips); // Reverse the list items in the Array
                                 }
-                            } else {
-                                tripDetails.setVisibility(View.VISIBLE);
-                                tripLists.setVisibility(View.GONE);
                             }
-
-                        } catch (JSONException | NullPointerException e) {
-                            e.printStackTrace();
+                        } else {
+                            tripDetails.setVisibility(View.VISIBLE);
+                            tripLists.setVisibility(View.GONE);
                         }
-                    }
 
-                    tripsListsAdapter.notifyDataSetChanged();
+                    } catch (JSONException | NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                tripsListsAdapter.notifyDataSetChanged();
 
             }
         }, new Response.ErrorListener() {
@@ -187,7 +187,8 @@ public class YourTripsActivity extends AppCompatActivity {
                 dismissDialog();
                 if (volleyError instanceof NoConnectionError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-                } if(volleyError instanceof TimeoutError){
+                }
+                if (volleyError instanceof TimeoutError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -209,7 +210,7 @@ public class YourTripsActivity extends AppCompatActivity {
         for (int i = start + 1; i <= end; i++) {
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                System.out.println("response in LoadMore" + jsonObject);
+                LogUtils.i("response in LoadMore" + jsonObject);
                 YourTrips trips = new YourTrips();
                 trips.setTripID(jsonObject.optString("trip_id"));
                 pickupAddress = jsonObject.optString("pickup_address");
@@ -222,7 +223,7 @@ public class YourTripsActivity extends AppCompatActivity {
                 trips.setTripAmount(jsonObject.optString("total_price"));
                 trips.setPickupLocation(pickupAddress);
                 trips.setDropLocation(dropAddress);
-                tripsListItems.add(0,trips); // Reverse the list items in the Array
+                tripsListItems.add(0, trips); // Reverse the list items in the Array
             } catch (JSONException | NullPointerException e) {
                 dismissDialog();
                 e.printStackTrace();
@@ -233,13 +234,12 @@ public class YourTripsActivity extends AppCompatActivity {
     }
 
 
-
-    public void onBackPressed(){
+    public void onBackPressed() {
         finish();
     }
 
-    public void showDialog(){
-        progressDialog= new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setMessage("Loading...");
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -247,9 +247,9 @@ public class YourTripsActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing()) {
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
@@ -261,10 +261,10 @@ public class YourTripsActivity extends AppCompatActivity {
         dateFormat.setTimeZone(TimeZone.getDefault());
         Calendar objCalendar =
                 Calendar.getInstance(TimeZone.getDefault());
-        objCalendar.setTimeInMillis(time*1000);//edit
+        objCalendar.setTimeInMillis(time * 1000);//edit
         String date = dateFormat.format(objCalendar.getTime());
         objCalendar.clear();
-        System.out.println("Trip Date==>"+date);
+        LogUtils.i("Trip Date==>" + date);
         return date;
     }
 
@@ -298,7 +298,8 @@ public class YourTripsActivity extends AppCompatActivity {
             });
         }
 
-        @Override public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
             View childView = view.findChildViewUnder(e.getX(), e.getY());
             if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
                 mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
@@ -307,10 +308,13 @@ public class YourTripsActivity extends AppCompatActivity {
             return false;
         }
 
-        @Override public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) { }
+        @Override
+        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        }
 
         @Override
-        public void onRequestDisallowInterceptTouchEvent (boolean disallowIntercept){}
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        }
     }
 
 }

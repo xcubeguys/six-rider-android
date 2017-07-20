@@ -53,6 +53,7 @@ import com.stripe.exception.InvalidRequestException;
 import com.stripe.model.Token;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -79,11 +80,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.tommy.rider.R.id.Submit;
 
 @EActivity(R.layout.activity_bank_details)
-public class BankDetails extends AppCompatActivity implements Validator.ValidationListener,com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener {
+public class BankDetails extends AppCompatActivity implements Validator.ValidationListener, com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener {
     String userID = null;
-    boolean isValue=false,isImage=false,isImageback=false;
+    boolean isValue = false, isImage = false, isImageback = false;
 
-    String side="";
+    String side = "";
 
     @Click(R.id.back)
     void back() {
@@ -95,10 +96,10 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
     private Uri fileUri;
     private static final int CAMERA_CAPTURE_IMAGE = 100;
     public static final int MEDIA_TYPE_IMAGE = 1;
-    public String accname, bankname,strfirstname,strlastname,routings,branch_code, accounts,pin_code, billaddress, riderUpdateURL, status, message,stripeToken,Test_ApiKey,Live_ApiKey,is_live_stripe,stripeKey;
+    public String accname, bankname, strfirstname, strlastname, routings, branch_code, accounts, pin_code, billaddress, riderUpdateURL, status, message, stripeToken, Test_ApiKey, Live_ApiKey, is_live_stripe, stripeKey;
     ProgressDialog progressDialog;
-    String picturePath,profImage,profileImageNew="null",strdateofbirt,strSecurityNumber;
-    String stripdoc="null",stripdocback="null";
+    String picturePath, profImage, profileImageNew = "null", strdateofbirt, strSecurityNumber;
+    String stripdoc = "null", stripdocback = "null";
     com.wdullaer.materialdatetimepicker.date.DatePickerDialog dpd;
 
     @NotEmpty(message = "Enter First Name")
@@ -116,12 +117,12 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
     @ViewById(R.id.Bank_name)
     EditText Bank_name;
 
-    @Length(max =4, message = "Enter 4 digit Bank Code")
+    @Length(max = 4, message = "Enter 4 digit Bank Code")
     @NotEmpty(message = "Enter Bank Code")
     @ViewById(R.id.bankcode)
     EditText routing;
 
-    @Length(max =3, message = "Enter 3 digit Branch Code")
+    @Length(max = 3, message = "Enter 3 digit Branch Code")
     @NotEmpty(message = "Enter Branch Code")
     @ViewById(R.id.branchcode)
     EditText branchcode;
@@ -132,7 +133,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
     EditText pincode;
 
     @NotEmpty(message = "Enter your account number")
-    @Length(max =15, message = "Enter 15 digit Account No")
+    @Length(max = 15, message = "Enter 15 digit Account No")
     @ViewById(R.id.account)
     EditText account;
 
@@ -166,11 +167,11 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
     }
 
     @Click(R.id.date_birth)
-    void date(){
+    void date() {
 
         Calendar minDate = Calendar.getInstance();
         //  DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(RideLater.this, getcalendar.get(Calendar.YEAR), getcalendar.get(Calendar.MONTH), getcalendar.get(Calendar.DAY_OF_MONTH));
-        minDate.add(Calendar.DATE , 0);
+        minDate.add(Calendar.DATE, 0);
         dpd.setMaxDate(minDate);
         dpd.show(getFragmentManager(), "datePicker");
         //dpd.show(getFragmentManager(),"datepicker");
@@ -178,7 +179,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
 
     @Click(R.id.profileImage)
     public void updateProfileImage() {
-        side="front";
+        side = "front";
         android.support.v7.app.AlertDialog.Builder builder =
                 new android.support.v7.app.AlertDialog.Builder(BankDetails.this, R.style.AppCompatAlertDialogStyle);
         builder.setMessage("Add Bank Document Front Image");
@@ -236,7 +237,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         }
     }
 
-    private void start_camera(){
+    private void start_camera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Image File name");
         fileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -248,8 +249,8 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
     }
 
     @Click(R.id.profileImageback)
-    public void profileback(){
-        side="back";
+    public void profileback() {
+        side = "back";
         android.support.v7.app.AlertDialog.Builder builder =
                 new android.support.v7.app.AlertDialog.Builder(BankDetails.this, R.style.AppCompatAlertDialogStyle);
         builder.setMessage("Add Bank Document Back Image");
@@ -273,8 +274,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
             }
         });
 
-        builder.setNeutralButton(getString(R.string.gallery), new DialogInterface.OnClickListener()
-        {
+        builder.setNeutralButton(getString(R.string.gallery), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -284,8 +284,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
             }
         });
 
-        builder.setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -299,14 +298,12 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
 
     @Click(R.id.delete)
     void delete() {
-        if(submitButton.getText().toString().equals("Update") && (!isImage || !isImageback)){
+        if (submitButton.getText().toString().equals("Update") && (!isImage || !isImageback)) {
             Toast.makeText(this, "Loading... Please delete after loaded.", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            if(!isValue){
+        } else {
+            if (!isValue) {
                 Toast.makeText(this, "You didn't submit any details", Toast.LENGTH_SHORT).show();
-            }
-            else{
+            } else {
                 sweetDialog();
             }
         }
@@ -343,22 +340,22 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         strfirstname = firstName.getText().toString().trim();
         strlastname = lastName.getText().toString().trim();
         routings = routing.getText().toString().trim();
-        branch_code=branchcode.getText().toString().trim();
+        branch_code = branchcode.getText().toString().trim();
         accounts = account.getText().toString().trim();
         pin_code = pincode.getText().toString().trim();
         billaddress = billingaddress.getText().toString().trim();
-        strSecurityNumber= social_number.getText().toString().trim();
-        strdateofbirt=editdate.getText().toString().trim();
+        strSecurityNumber = social_number.getText().toString().trim();
+        strdateofbirt = editdate.getText().toString().trim();
         if (!Bank_name.getText().toString().matches("[a-zA-z]+([ '-][a-zA-Z]+)*")) {
             Bank_name.setError("Enter Valid Bank Name");
 
-        }else if((stripdoc==null||stripdoc.equals("null")) && (stripdocback==null||stripdocback.equals("null"))){
+        } else if ((stripdoc == null || stripdoc.equals("null")) && (stripdocback == null || stripdocback.equals("null"))) {
             Toast.makeText(BankDetails.this, "Please upload your NRIC document", Toast.LENGTH_SHORT).show();
-        }else if(stripdoc==null||stripdoc.equals("null")){
+        } else if (stripdoc == null || stripdoc.equals("null")) {
             Toast.makeText(BankDetails.this, "Please upload your front side document", Toast.LENGTH_SHORT).show();
-        }else if(stripdocback==null||stripdocback.equals("null")){
+        } else if (stripdocback == null || stripdocback.equals("null")) {
             Toast.makeText(BankDetails.this, "Please upload your back side document", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             createBankToken();
         }
     }
@@ -366,16 +363,16 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
     public void updateDetails() {
 
         accname = accname.replaceAll(" ", "%20");
-        strfirstname = strfirstname .replaceAll(" ", "%20");
-        strlastname = strlastname .replaceAll(" ", "%20");
+        strfirstname = strfirstname.replaceAll(" ", "%20");
+        strlastname = strlastname.replaceAll(" ", "%20");
         bankname = bankname.replaceAll(" ", "%20");
         accounts = accounts.replaceAll(" ", "%20");
         pin_code = pin_code.replaceAll(" ", "%20");
         try {
             byte[] encoded = Base64.encode(billaddress.getBytes("UTF-8"), Base64.DEFAULT);
-            billaddress= new String(encoded, "UTF-8");
-            billaddress= billaddress.replaceAll("=","").trim();
-            System.out.println("Encoding UTF"+billaddress);
+            billaddress = new String(encoded, "UTF-8");
+            billaddress = billaddress.replaceAll("=", "").trim();
+            LogUtils.i("Encoding UTF" + billaddress);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -387,10 +384,10 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         //New format changed
         //http://54.172.2.238/driver/addBankDetails?driver_id=58e351ff192d2eb64ca5bb36&account_name=Hira&bank_name=Baroda&routing_number=110000000&account_number=000123456789&billing=21/2-1,Anna%20nagar,Madurai.&payment_mode=stripe&token=btok_1AAxqdBQilqnldByKtnKz1rf&dob=21-04-2017&ssn=985857458&stripe_doc=9ef2dcfda1474df0bc1a7f4f6d47632b.jpg
 
-            //riderUpdateURL = Constants.LIVE_URL + "addBankDetails?rider_id=" + userID + "&account_name=" + accname + "&bank_name=" + bankname + "&routing_number=" + routings + "&account_number=" + accounts + "&billing=" + billaddress + "&payment_mode=stripe&token="+stripeToken+"&dob="+strdateofbirt+"&ssn="+strSecurityNumber+"&stripe_doc="+profileImageNew;
-        riderUpdateURL = Constants.LIVE_URL + "addBankDetails/rider_id/" + userID + "/first_name/" + strfirstname + "/last_name/" + strlastname +"/account_name/" + accname + "/bank_name/" + bankname + "/routing_number/" + routings + "/account_number/" + accounts + "/billing/" + billaddress +"/postal/" + pin_code+ "/payment_mode/stripe/token/"+stripeToken+"/dob/"+strdateofbirt+"/ssn/"+strSecurityNumber+"/stripe_doc/"+stripdoc+"/stripe_doc_back/"+stripdocback;
+        //riderUpdateURL = Constants.LIVE_URL + "addBankDetails?rider_id=" + userID + "&account_name=" + accname + "&bank_name=" + bankname + "&routing_number=" + routings + "&account_number=" + accounts + "&billing=" + billaddress + "&payment_mode=stripe&token="+stripeToken+"&dob="+strdateofbirt+"&ssn="+strSecurityNumber+"&stripe_doc="+profileImageNew;
+        riderUpdateURL = Constants.LIVE_URL + "addBankDetails/rider_id/" + userID + "/first_name/" + strfirstname + "/last_name/" + strlastname + "/account_name/" + accname + "/bank_name/" + bankname + "/routing_number/" + routings + "/account_number/" + accounts + "/billing/" + billaddress + "/postal/" + pin_code + "/payment_mode/stripe/token/" + stripeToken + "/dob/" + strdateofbirt + "/ssn/" + strSecurityNumber + "/stripe_doc/" + stripdoc + "/stripe_doc_back/" + stripdocback;
 
-        System.out.println("bankDetailsURL==>" + riderUpdateURL);
+        LogUtils.i("bankDetailsURL==>" + riderUpdateURL);
         showDialog();
         final JsonArrayRequest signUpReq = new JsonArrayRequest(riderUpdateURL, new Response.Listener<JSONArray>() {
             @Override
@@ -398,7 +395,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
 
                 dismissDialog();
 
-                System.out.println("bankDetailsURL response==>" + response);
+                LogUtils.i("bankDetailsURL response==>" + response);
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -419,7 +416,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 dismissDialog();
-                System.out.println("Exception"+volleyError);
+                LogUtils.i("Exception" + volleyError);
                 if (volleyError instanceof NoConnectionError) {
                     Toast.makeText(getApplicationContext(), "No internet Connection", Toast.LENGTH_SHORT).show();
                 }
@@ -434,7 +431,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
 
         showDialog();
         riderUpdateURL = Constants.LIVE_URL + "getBankDetails/rider_id/" + userID;
-        System.out.println("bankDetailsURL==>" + riderUpdateURL);
+        LogUtils.i("bankDetailsURL==>" + riderUpdateURL);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(riderUpdateURL, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -444,98 +441,92 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
                         JSONObject jsonObject = response.getJSONObject(i);
                         status = jsonObject.optString("status");
 
-                        if(status.matches("Success")) {
+                        if (status.matches("Success")) {
 
-                            isValue=true;
-                            String accName=jsonObject.optString("account_name");
-                            String firstname=jsonObject.optString("first_name");
-                            String lastname=jsonObject.optString("last_name");
-                            String bank_name=jsonObject.optString("bank_name");
-                            String routing_no=jsonObject.optString("routing_number");
-                            String acc_no=jsonObject.optString("account_number");
-                            String billing_address=jsonObject.optString("billing");
-                            String pin_code=jsonObject.optString("postal");
-                            strdateofbirt   =jsonObject.optString("dob");
-                            strSecurityNumber    =jsonObject.optString("ssn");
-                            stripdoc  =jsonObject.optString("stripe_doc");
-                            stripdocback  =jsonObject.optString("stripe_doc_back");
+                            isValue = true;
+                            String accName = jsonObject.optString("account_name");
+                            String firstname = jsonObject.optString("first_name");
+                            String lastname = jsonObject.optString("last_name");
+                            String bank_name = jsonObject.optString("bank_name");
+                            String routing_no = jsonObject.optString("routing_number");
+                            String acc_no = jsonObject.optString("account_number");
+                            String billing_address = jsonObject.optString("billing");
+                            String pin_code = jsonObject.optString("postal");
+                            strdateofbirt = jsonObject.optString("dob");
+                            strSecurityNumber = jsonObject.optString("ssn");
+                            stripdoc = jsonObject.optString("stripe_doc");
+                            stripdocback = jsonObject.optString("stripe_doc_back");
                             submitButton.setText("Update");
                             //firstname
-                            if(firstname!=null){
-                                firstName.setText(firstname.replaceAll("%20"," "));
+                            if (firstname != null) {
+                                firstName.setText(firstname.replaceAll("%20", " "));
                                 firstName.setSelection(firstName.length());
                             }
 
                             //lastname
-                            if(lastname!=null){
-                                lastName.setText(lastname.replaceAll("%20"," "));
+                            if (lastname != null) {
+                                lastName.setText(lastname.replaceAll("%20", " "));
                                 lastName.setSelection(lastName.length());
                             }
 
                             //Account Name
-                            if(accName!=null)
-                            {
-                                acc_name.setText(accName.replaceAll("%20"," "));
+                            if (accName != null) {
+                                acc_name.setText(accName.replaceAll("%20", " "));
                                 acc_name.setSelection(acc_name.length());
                             }
                             //Bank Name
-                            if(bank_name!=null)
-                            {
-                                Bank_name.setText(bank_name.replaceAll("%20"," "));
+                            if (bank_name != null) {
+                                Bank_name.setText(bank_name.replaceAll("%20", " "));
                             }
                             //Routing No
-                            if(routing_no!=null)
-                            {
+                            if (routing_no != null) {
                                 String[] bankArray = routing_no.split("-");
                                 String bankcode = bankArray[0];
                                 String branchcode1 = bankArray[1];
 
-                                routing.setText(bankcode.replaceAll("%20"," "));
-                                branchcode.setText(branchcode1.replaceAll("%20"," "));
+                                routing.setText(bankcode.replaceAll("%20", " "));
+                                branchcode.setText(branchcode1.replaceAll("%20", " "));
                             }
                             //Account No
-                            if(acc_no!=null)
-                            {
-                                account.setText(acc_no.replaceAll("%20"," "));
+                            if (acc_no != null) {
+                                account.setText(acc_no.replaceAll("%20", " "));
                             }
 
                             //pincode
-                            if(pin_code!=null){
-                                pincode.setText(pin_code.replaceAll("%20"," "));
+                            if (pin_code != null) {
+                                pincode.setText(pin_code.replaceAll("%20", " "));
                             }
                             //Address
-                            if(billing_address!=null)
-                            {
-                                billingaddress.setText(billing_address.replaceAll("%20"," "));
+                            if (billing_address != null) {
+                                billingaddress.setText(billing_address.replaceAll("%20", " "));
                             }
-                            if(strdateofbirt!=null)
-                            {
+                            if (strdateofbirt != null) {
                                 editdate.setText(strdateofbirt);
-                            }if(strSecurityNumber!=null && !strSecurityNumber.equals("null"))
-                            {
+                            }
+                            if (strSecurityNumber != null && !strSecurityNumber.equals("null")) {
                                 social_number.setText(strSecurityNumber);
                             }
-                          //  Glide.with(getApplicationContext()).placeholder(R.drawable.file_document).load(profileImageNew).skipMemoryCache(true).into(edtProfileImage);
+                            //  Glide.with(getApplicationContext()).placeholder(R.drawable.file_document).load(profileImageNew).skipMemoryCache(true).into(edtProfileImage);
                             Glide.with(BankDetails.this)
                                     .load(stripdoc)
                                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                                     .priority(Priority.IMMEDIATE)
                                     .placeholder(R.drawable.file_document)
                                     .skipMemoryCache(true)
-                                    .into(new GlideDrawableImageViewTarget(edtProfileImage){
+                                    .into(new GlideDrawableImageViewTarget(edtProfileImage) {
                                         @Override
                                         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                                             super.onResourceReady(resource, animation);
                                             //never called
-                                            isImage=true;
-                                            System.out.println("inside resource ready"+isImage);
+                                            isImage = true;
+                                            LogUtils.i("inside resource ready" + isImage);
                                         }
 
                                         @Override
                                         public void onLoadFailed(Exception e, Drawable errorDrawable) {
                                             super.onLoadFailed(e, errorDrawable);
                                             //never called
-                                            System.out.println("inside resource ready"+isImage+e);
+                                            LogUtils.i("inside resource ready" + isImage + e);
                                         }
                                     });
 
@@ -545,31 +536,30 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
                                     .placeholder(R.drawable.file_document)
                                     .priority(Priority.IMMEDIATE)
                                     .skipMemoryCache(true)
-                                    .into(new GlideDrawableImageViewTarget(edtProfileImageback){
+                                    .into(new GlideDrawableImageViewTarget(edtProfileImageback) {
                                         @Override
                                         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                                             super.onResourceReady(resource, animation);
                                             //never called
-                                            isImageback=true;
-                                            System.out.println("inside resource ready failed"+isImageback);
+                                            isImageback = true;
+                                            LogUtils.i("inside resource ready failed" + isImageback);
                                         }
 
                                         @Override
                                         public void onLoadFailed(Exception e, Drawable errorDrawable) {
                                             super.onLoadFailed(e, errorDrawable);
                                             //never called
-                                            System.out.println("inside resource ready failed"+isImageback+e);
+                                            LogUtils.i("inside resource ready failed" + isImageback + e);
                                         }
                                     });
 
-                            stripdoc=stripdoc.replaceAll(Constants.BASE_URL+"images/","");
-                            System.out.println("stipe documentation image front==>"+stripdoc);
+                            stripdoc = stripdoc.replaceAll(Constants.BASE_URL + "images/", "");
+                            LogUtils.i("stipe documentation image front==>" + stripdoc);
 
-                            stripdocback=stripdocback.replaceAll(Constants.BASE_URL+"images/","");
-                            System.out.println("stipe documentation image back==>"+stripdocback);
-                        }
-                        else{
-                            isValue=false;
+                            stripdocback = stripdocback.replaceAll(Constants.BASE_URL + "images/", "");
+                            LogUtils.i("stipe documentation image back==>" + stripdocback);
+                        } else {
+                            isValue = false;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -625,19 +615,17 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        if(stripeKey==null)
-        {
+        if (stripeKey == null) {
             Stripe.apiKey = "sk_test_PndPOXIAzvkHOqN28jaGO17U";
-        }else
-        {
+        } else {
             Stripe.apiKey = stripeKey;
         }
 
-        System.out.println("Acc Name firstname lastname"+accname+strfirstname+strlastname);
-        routings=routings+"-"+branch_code;
+        LogUtils.i("Acc Name firstname lastname" + accname + strfirstname + strlastname);
+        routings = routings + "-" + branch_code;
 
-        System.out.println("Routing No"+routings);
-        System.out.println("Acc No"+accounts);
+        LogUtils.i("Routing No" + routings);
+        LogUtils.i("Acc No" + accounts);
 
         Map<String, Object> tokenParams = new HashMap<String, Object>();
         Map<String, Object> bank_accountParams = new HashMap<String, Object>();
@@ -650,9 +638,9 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         tokenParams.put("bank_account", bank_accountParams);
 
         try {
-            Token token= Token.create(tokenParams);
-            stripeToken=token.getId();
-            System.out.println("stripeToken"+stripeToken);
+            Token token = Token.create(tokenParams);
+            stripeToken = token.getId();
+            LogUtils.i("stripeToken" + stripeToken);
             updateDetails();
         } catch (AuthenticationException e) {
             Toast.makeText(this, "Check your Account/Branch/Bankcode No", Toast.LENGTH_SHORT).show();
@@ -675,7 +663,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
 
         //http://demo.cogzideltemplates.com/tommy/settings/getdetails
         String url = Constants.CATEGORY_LIVE_URL + "settings/getdetails";
-        System.out.println(" CATEGOR URL is " + url);
+        LogUtils.i(" CATEGOR URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -690,16 +678,16 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
                                 Test_ApiKey = signIn_jsonobj.optString("Test_ApiKey");
                                 Live_ApiKey = signIn_jsonobj.optString("Live_ApiKey");
                                 is_live_stripe = signIn_jsonobj.optString("is_live_stripe");
-                                if(is_live_stripe.matches("0")){
+                                if (is_live_stripe.matches("0")) {
 
-                                    stripeKey=Test_ApiKey;
+                                    stripeKey = Test_ApiKey;
 
-                                }else {
+                                } else {
 
-                                    stripeKey=Live_ApiKey;
+                                    stripeKey = Live_ApiKey;
                                 }
 
-                                System.out.println("stripe live==>"+Live_ApiKey+"test live==>"+Test_ApiKey);
+                                LogUtils.i("stripe live==>" + Live_ApiKey + "test live==>" + Test_ApiKey);
 
                             } catch (JSONException e) {
                                 //stopAnim();
@@ -758,21 +746,20 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
 
             new BankDetails.ImageuploadTask(this).execute();
 
-        } /*else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {*/
-        else if (requestCode == MEDIA_TYPE_IMAGE && resultCode == RESULT_OK && null != data) {
+        } /*else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {*/ else if (requestCode == MEDIA_TYPE_IMAGE && resultCode == RESULT_OK && null != data) {
 
             //            String single_path = data.getStringExtra("single_path");
             Uri selectedImage = data.getData();
             if (Build.VERSION.SDK_INT >= 19) {
                 if (selectedImage != null && !selectedImage.toString().equals("null")) {
-                    System.out.println("greater 19:" + "kitkat");
+                    LogUtils.i("greater 19:" + "kitkat");
                     picturePath = getImagePath(selectedImage);
-                    System.out.println("mSelectedFissslssePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslssePath res" + picturePath);
 
                 } else {
-                    System.out.println("greater 19:" + "not kitkat");
+                    LogUtils.i("greater 19:" + "not kitkat");
                     picturePath = getPathOfImage(selectedImage);
-                    System.out.println("mSelectedFissslePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslePath res" + picturePath);
                 }
             }
 
@@ -849,27 +836,27 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
 
     @Override
     public void onDateSet(com.wdullaer.materialdatetimepicker.date.DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        System.out.println("monthofyear="+monthOfYear);
-        String month = "",day= "";
+        LogUtils.i("monthofyear=" + monthOfYear);
+        String month = "", day = "";
         if (dayOfMonth < 10) {
-            day = "0"+dayOfMonth;
-            System.out.println("day="+day);
-        }else{
+            day = "0" + dayOfMonth;
+            LogUtils.i("day=" + day);
+        } else {
             day = String.valueOf(dayOfMonth);
         }
         if (monthOfYear < 9) {
-            month = "0"+(++monthOfYear);
-            System.out.println("month="+month);
-        }else{
+            month = "0" + (++monthOfYear);
+            LogUtils.i("month=" + month);
+        } else {
             month = String.valueOf(++monthOfYear);
         }
         //    String date = dayOfMonth+"-"+(++monthOfYear)+"-"+year;
-        String date = day+"-"+month+"-"+year;
-        System.out.println("new date of settext=="+date);
+        String date = day + "-" + month + "-" + year;
+        LogUtils.i("new date of settext==" + date);
         editdate.setText(date);
     }
 
-    private class ImageuploadTask extends AsyncTask< String, Void, Boolean > {
+    private class ImageuploadTask extends AsyncTask<String, Void, Boolean> {
         private ProgressDialog dialog;
         private BankDetails activity;
 
@@ -893,20 +880,19 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         @Override
         protected void onPostExecute(final Boolean success) {
 
-                if (dialog != null && dialog.isShowing())
-                {
-                    if(!activity.isFinishing() && !activity.isDestroyed()){
-                        try {
-                            dialog.dismiss();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+            if (dialog != null && dialog.isShowing()) {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
+            }
         }
 
         @Override
-        protected Boolean doInBackground(final String...args) {
+        protected Boolean doInBackground(final String... args) {
             try {
                 // ... processing ...
                 Upload_Server();
@@ -917,6 +903,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
             }
         }
     }
+
     protected void Upload_Server() {
         // TODO Auto-generated method stub
         try {
@@ -929,11 +916,11 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
             String pathToOurFile = picturePath;
             //	  String pathToOurFile1 = imagepathcam;
 
-            System.out.println("Before Image Upload" + picturePath);
+            LogUtils.i("Before Image Upload" + picturePath);
 
-            String urlServer = Constants.LIVE_URL_DRIVER+"imageUpload/";
-            System.out.println("URL SETVER" + urlServer);
-            System.out.println("After Image Upload" + picturePath);
+            String urlServer = Constants.LIVE_URL_DRIVER + "imageUpload/";
+            LogUtils.i("URL SETVER" + urlServer);
+            LogUtils.i("After Image Upload" + picturePath);
             String lineEnd = "\r\n";
             String twoHyphens = "--";
             String boundary = "*****";
@@ -947,8 +934,8 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
 
             URL url = new URL(urlServer);
             connection = (HttpURLConnection) url.openConnection();
-            System.out.println("URL is " + url);
-            System.out.println("connection is " + connection);
+            LogUtils.i("URL is " + url);
+            LogUtils.i("connection is " + connection);
             // Allow Inputs & Outputs
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -987,7 +974,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
             String serverResponseMessage = connection.getResponseMessage();
 
 
-            System.out.println("image" + serverResponseMessage);
+            LogUtils.i("image" + serverResponseMessage);
 
             fileInputStream.close();
             outputStream.flush();
@@ -1005,24 +992,24 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
                 Log.e("Debug", "Server Response String imageurl" + str);
             }
             inputStream1.close();
-            System.out.println("image url" + Str1_imageurl);
+            LogUtils.i("image url" + Str1_imageurl);
 
             //get the image url and store
             profImage = Str1_imageurl.trim();
             JSONArray array = new JSONArray(profImage);
             JSONObject jsonObj = array.getJSONObject(0);
-            System.out.println("image name" + jsonObj.getString("image_name"));
+            LogUtils.i("image name" + jsonObj.getString("image_name"));
 
             profileImageNew = jsonObj.optString("image_name");
-            if(side.equals("front")){
-                stripdoc=profileImageNew;
-                System.out.println("Profile Picture Path front"+stripdoc);
-            }else if (side.equals("back")){
+            if (side.equals("front")) {
+                stripdoc = profileImageNew;
+                LogUtils.i("Profile Picture Path front" + stripdoc);
+            } else if (side.equals("back")) {
                 stripdocback = profileImageNew;
-                System.out.println("Profile Picture Path back"+stripdocback);
+                LogUtils.i("Profile Picture Path back" + stripdocback);
             }
 
-            System.out.println("Profile Picture Pathhh" + profImage);
+            LogUtils.i("Profile Picture Pathhh" + profImage);
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -1030,7 +1017,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         }
     }
 
-    public void sweetDialog(){
+    public void sweetDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Are you sure?")
                 .setContentText("Won't be able to recover this bank detail!")
@@ -1045,10 +1032,10 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
                 .show();
     }
 
-    public void deleteBankDetail(final SweetAlertDialog sDialog){
+    public void deleteBankDetail(final SweetAlertDialog sDialog) {
 
-        String deletedetailurl = Constants.LIVE_URL+"delBankDetails/rider_id/"+userID;
-        System.out.println("bankdeleteDetailsURL==>" + deletedetailurl);
+        String deletedetailurl = Constants.LIVE_URL + "delBankDetails/rider_id/" + userID;
+        LogUtils.i("bankdeleteDetailsURL==>" + deletedetailurl);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(deletedetailurl, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -1056,9 +1043,8 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
                         status = jsonObject.optString("status");
-                        if(status.matches("Success"))
-                        {
-                            isValue=false;
+                        if (status.matches("Success")) {
+                            isValue = false;
                             acc_name.setText("");
                             firstName.setText("");
                             lastName.setText("");
@@ -1116,7 +1102,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
                     null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
             cursor.moveToFirst();
             path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            System.out.println("path111:" + path);
+            LogUtils.i("path111:" + path);
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1127,7 +1113,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
     private String getPathOfImage(Uri uri) {
         String wholeID = DocumentsContract.getDocumentId(uri);
 
-        System.out.println("WholeId:" + wholeID);
+        LogUtils.i("WholeId:" + wholeID);
 
         // Split at colon, use second item in the array
         String id = wholeID.split(":")[1];
@@ -1149,7 +1135,7 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
             filePath = cursor.getString(columnIndex);
         }
 
-        System.out.println("File Path1:" + filePath);
+        LogUtils.i("File Path1:" + filePath);
         cursor.close();
         return filePath;
     }

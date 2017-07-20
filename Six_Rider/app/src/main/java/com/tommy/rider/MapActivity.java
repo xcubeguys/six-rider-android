@@ -161,6 +161,7 @@ import com.tommy.rider.adapter.RetrofitArrayAPI;
 import com.tommy.rider.adapter.SlideUpPanelLayout;
 import com.tommy.rider.adapter.SortPlaces;
 import com.tommy.rider.adapter.UberProgressDrawable;
+import com.tommy.rider.utils.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -377,13 +378,13 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             tripStatus = false;
         }
 
-        System.out.println("THE TRIPSTATE" + tripState);
+        LogUtils.i("THE TRIPSTATE" + tripState);
 
         //UserID from Shared preferences
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("userid", null);
         riderfirstname = prefs.getString("username", null);
-        System.out.println("UserID in Map" + userID);
+        LogUtils.i("UserID in Map" + userID);
 
         //getPaymentTypeofUser
         getPaymentReference();
@@ -629,7 +630,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             @Override
             public void onClick(View v) {
 
-                System.out.println("am in Seting==>");
+                LogUtils.i("am in Seting==>");
 
                 String selectedTerminal = terminalSpinner.getItems().get(terminalSpinner.getSelectedIndex()).toString();
 
@@ -660,7 +661,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 txtPickArea.setText("");
                 boolean isChangiAirport = state.getBoolean("getPlaceName", false);
 
-                System.out.println("PlaceNamee in Changing==>" + isChangiAirport);
+                LogUtils.i("PlaceNamee in Changing==>" + isChangiAirport);
 
                 if (isChangiAirport) {
                     terminalSpinner.setItems(terminalsArray);
@@ -707,7 +708,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                     Location dest_point = convertLatLngToLocation(destlat);
 
                     float distance_meter = start_point.distanceTo(dest_point);
-                    System.out.print("distance in meter in req " + distance_meter);
+                    LogUtils.i("distance in meter in req " + distance_meter);
 
                     if (distance_meter <= 0.05) {
                         alertSnackBar(getResources().getString(R.string.minimum_distance_for_ride));
@@ -735,7 +736,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 if (mCurrentLocation != null) {
                     LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-                    System.out.println("INSIDE LOCATION CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+                    LogUtils.i("INSIDE LOCATION CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
 
                     float zoomPosition;
                     if (tripStatus) {
@@ -773,7 +774,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                         }
                         final String url = Constants.BASE_URL + "requests/estFareCalc?category_id=" + categoryId + "&start_lat=" + toUseLatLng.latitude
                                 + "&start_long=" + toUseLatLng.longitude + "&end_lat=" + destlat.latitude + "&end_long=" + destlat.longitude;
-                        System.out.println("GetCategoryURL==>" + url);
+                        LogUtils.i("GetCategoryURL==>" + url);
                         final JsonArrayRequest fareEstimate = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
                             @Override
                             public void onResponse(JSONArray response) {
@@ -814,26 +815,26 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                 getFareInfo(3);
                             }
 
-                            System.out.println("origin lat" + orginlat);
-                            System.out.println("dest lat" + destlat);
+                            LogUtils.i("origin lat" + orginlat);
+                            LogUtils.i("dest lat" + destlat);
 
                             if (center != null || destlat != null) {
                                 calctotalDistance = CalculationByDistance(center, destlat);
                             }
 
-                            System.out.println("Minimum Fare" + calcBaseFare);
-                            System.out.println("Minimum KM" + calcPriceKM);
-                            System.out.println("Minimum Price" + calcPriceMin);
-                            System.out.println("Pickup Latlng" + pickupLatLng);
+                            LogUtils.i("Minimum Fare" + calcBaseFare);
+                            LogUtils.i("Minimum KM" + calcPriceKM);
+                            LogUtils.i("Minimum Price" + calcPriceMin);
+                            LogUtils.i("Pickup Latlng" + pickupLatLng);
 
-                            System.out.println("Pickup calctotalDistance" + calctotalDistance);
-                            System.out.println("Pickup strBookfee" + strBookfee);
-                            System.out.println("Pickup strAirportfee" + strAirportfee);
-                            System.out.println("Pickup strTaxpercentage" + strTaxpercentage);
+                            LogUtils.i("Pickup calctotalDistance" + calctotalDistance);
+                            LogUtils.i("Pickup strBookfee" + strBookfee);
+                            LogUtils.i("Pickup strAirportfee" + strAirportfee);
+                            LogUtils.i("Pickup strTaxpercentage" + strTaxpercentage);
 
                             if (calctotalDistance != null && calctotalDistance != 0.0) {
                                 String estimate = calculateEstimate(calctotalDistance, calcPriceKM, calcPriceMin, calcBaseFare, strBookfee, strAirportfee, strTaxpercentage);
-                                System.out.println("Total Estimate" + estimate);
+                                LogUtils.i("Total Estimate" + estimate);
                                 showFareEstimateDialog(originLocation.getText().toString(), destinationLocation.getText().toString(), getCategory(), estimate);
                             }
                         }*/
@@ -930,25 +931,25 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             categorySeekBar.incrementProgressBy(a);
 
             if (a == 5) {
-                System.out.println("SeekbarValue==>" + a);
+                LogUtils.i("SeekbarValue==>" + a);
                 getFareInfo(0);
                 categorySeekBar.setThumb(hatchBackCar);
             }
             if (a == 35) {
                 categorySeekBar.setThumb(sedanCar);
-                System.out.println("SeekbarValue==>" + a);
+                LogUtils.i("SeekbarValue==>" + a);
                 getFareInfo(1);
             }
 
             if (a == 65) {
                 categorySeekBar.setThumb(suvCar);
                 getFareInfo(2);
-                System.out.println("SeekbarValue==>" + a);
+                LogUtils.i("SeekbarValue==>" + a);
             }
             if (a == 95) {
                 categorySeekBar.setThumb(fourthCar);
                 getFareInfo(3);
-                System.out.println("SeekbarValue==>" + a);
+                LogUtils.i("SeekbarValue==>" + a);
             }
 
         } else {
@@ -975,7 +976,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 //Dynamic_Radious
                 geoQuery = getGeofire().queryAtLocation(new GeoLocation(center.latitude, center.longitude), nearByDistanceRadius);
                 geoQuery.addGeoQueryEventListener(MapActivity.this);
-                System.out.println("geo status: geo queery started in oncreate");
+                LogUtils.i("geo status: geo queery started in oncreate");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1054,7 +1055,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     private void setOfflineCategory() {
 
-        System.out.println("In Offline");
+        LogUtils.i("In Offline");
         strCategoryName = new String[]{"Standard", "Luxury", "SUV", "Taxi"};
         strCategoryId = new String[]{"1", "2", "3", "4"};
         strMinFare = new String[]{"10", "7", "7", "7"};
@@ -1065,7 +1066,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         categoryMarker = new String[]{"null", "null", "null", "null"};
 
         for (int i = 0; i < strCategoryName.length; i++) {
-            System.out.println("cccatergoyname=" + strCategoryName[i]);
+            LogUtils.i("cccatergoyname=" + strCategoryName[i]);
             if (strCategoryName != null && !strCategoryName.equals("null")) {
                 if (i == 0)
                     txtHatchBack.setText(strCategoryName[i]);
@@ -1089,7 +1090,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
             //access via new for-loop
             for (Object object : startaddressSet) {
-                System.out.println("i===>" + i);
+                LogUtils.i("i===>" + i);
                 if (i == 0)
                     element = (String) object;
                 else
@@ -1119,7 +1120,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         trip_info_layout.setVisibility(View.VISIBLE);
 
         if (geoQuery != null) {
-            System.out.println("removing geo query listener");
+            LogUtils.i("removing geo query listener");
             geoQuery.removeAllListeners();
             for (Marker marker : markers.values()) {
                 marker.remove();
@@ -1251,7 +1252,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     private void getCategoryInfo() {
         final String url = Constants.CATEGORY_LIVE_URL + "Settings/getCategory";
-        System.out.println("GetCategoryURL==>" + url);
+        LogUtils.i("GetCategoryURL==>" + url);
         final JsonArrayRequest infoReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -1260,7 +1261,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        System.out.println("Response from GetCategory==>" + jsonObject);
+                        LogUtils.i("Response from GetCategory==>" + jsonObject);
                         strCategoryName[i] = jsonObject.optString("categoryname");
                         strCategoryId[i] = jsonObject.optString("categoryId");
                         strMinFare[i] = jsonObject.optString("price_fare");
@@ -1273,7 +1274,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                         airportfee[i] = jsonObject.optString("airport_surge");
                         taxpercentage[i] = jsonObject.optString("tax_percentage");
 
-                        System.out.println("cccatergoyname=" + strCategoryName[i]);
+                        LogUtils.i("cccatergoyname=" + strCategoryName[i]);
                         if (strCategoryName != null && !strCategoryName.equals("null")) {
                             if (i == 0)
                                 txtHatchBack.setText(strCategoryName[i]);
@@ -1376,8 +1377,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog1, int which) {
-                        System.out.println("TripID in Cancel" + tripID);
-                        System.out.println("driverID in Cancel" + tripID);
+                        LogUtils.i("TripID in Cancel" + tripID);
+                        LogUtils.i("driverID in Cancel" + tripID);
                         if (driverID != null && tripID != null) {
                             getState.putString("tripstate", "endclicked");
                             getState.apply();
@@ -1450,7 +1451,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Driver mobile number" + driverMobileNumber);
+                LogUtils.i("Driver mobile number" + driverMobileNumber);
                 /*Intent sendIntent = new Intent(Intent.ACTION_VIEW);
                 sendIntent.setData(Uri.parse(driverMobileNumber));
                 try {
@@ -1574,8 +1575,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             dropCountryCode = getResources().getConfiguration().locale.getCountry();
         }
 
-        System.out.println("Pickup country code==>" + pickupCountryCode);
-        System.out.println("Drop country code==>" + dropCountryCode);
+        LogUtils.i("Pickup country code==>" + pickupCountryCode);
+        LogUtils.i("Drop country code==>" + dropCountryCode);
 
         if (pickupCountryCode != null && dropCountryCode != null) {
             if (pickupCountryCode.matches(dropCountryCode)) {
@@ -1685,7 +1686,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
      */
     @Override
     public void onLocationChanged(Location location) {
-        System.out.println("location changed" + location);
+        LogUtils.i("location changed" + location);
 
 
         if (mMapLocationListener != null) {
@@ -1732,7 +1733,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 mGoogleApiClient);
 
         if (mLastLocation != null && count == 0) {
-            System.out.println("The Last Known Location " + mLastLocation);
+            LogUtils.i("The Last Known Location " + mLastLocation);
             filterLocation = mLastLocation;
             count = count + 1;
 
@@ -1756,7 +1757,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                     // radius in km Dynamic_Radious
                     this.geoQuery.setRadius(nearByDistanceRadius);
                     this.geoQuery.addGeoQueryEventListener(MapActivity.this);
-                    System.out.println("geo status: geo queery started in on connected");
+                    LogUtils.i("geo status: geo queery started in on connected");
                 } else {
                     Toast.makeText(MapActivity.this, "Geoquery Null", Toast.LENGTH_SHORT).show();
                 }
@@ -1887,7 +1888,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
             //Get country alpha2 code
             String locale = this.getResources().getConfiguration().locale.getCountry();
-            System.out.println("Current Country==>" + locale);
+            LogUtils.i("Current Country==>" + locale);
 
             //Location Filter based on the Country
             AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
@@ -1929,7 +1930,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
 
     public LatLng getLocationFromAddress1(String strAddress, String source) {
-        System.out.println("Address" + strAddress);
+        LogUtils.i("Address" + strAddress);
 
         Geocoder coder = new Geocoder(MapActivity.this, Locale.ENGLISH);
         List<Address> address;
@@ -2055,12 +2056,12 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 diaogDestinationLocation.setText(place.getAddress());
             }
 
-            System.out.println("address 1==>" + place.getName());
-            System.out.println("address 2==>" + place.getAddress());
-            System.out.println("address 3==>" + place.getViewport());
-            System.out.println("address 4==>" + place.getPlaceTypes());
-            System.out.println("address 5==>" + place.getId());
-            System.out.println("address 6==>" + place.getAttributions());
+            LogUtils.i("address 1==>" + place.getName());
+            LogUtils.i("address 2==>" + place.getAddress());
+            LogUtils.i("address 3==>" + place.getViewport());
+            LogUtils.i("address 4==>" + place.getPlaceTypes());
+            LogUtils.i("address 5==>" + place.getId());
+            LogUtils.i("address 6==>" + place.getAttributions());
 
             // Display attributions if required.
             CharSequence attributions = place.getAttributions();
@@ -2111,7 +2112,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             }
 
             String tempadd = String.valueOf(place.getAddress());
-            System.out.println("address after parshe==>" + place.getAddress());
+            LogUtils.i("address after parshe==>" + place.getAddress());
 
             //Get LAT and LNG
             getLocationFromAddress1(tempadd, source);
@@ -2122,7 +2123,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         } else if (resultCode == RESULT_CANCELED) {
             // Indicates that the activity closed before a selection was made. For example if
             // the user pressed the back button.
-            System.out.println("Canceled by user");
+            LogUtils.i("Canceled by user");
         }
     }
 
@@ -2239,10 +2240,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             //LatLng startLatLng = getLocationFromAddress(startAddress);
             LatLng startLatLng = new LatLng(center.latitude, center.longitude);
             LatLng endLatLng = getLocationFromAddress(endAddress);
-            System.out.println("startlatlng" + startLatLng);
-            System.out.println("endlatlng" + endLatLng);
-            System.out.println("newendlatlng" + newDestLat);
-            System.out.println("Category" + category);
+            LogUtils.i("startlatlng" + startLatLng);
+            LogUtils.i("endlatlng" + endLatLng);
+            LogUtils.i("newendlatlng" + newDestLat);
+            LogUtils.i("Category" + category);
 
             if (startLatLng == null || startLatLng.equals("null")) {
                 startLatLng = destLatLng; //StartLatLng is null so replacing with current location
@@ -2297,23 +2298,23 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                     maxShare = sharecount.getSelectedItem().toString();
                 }
                 new getPlaceType(String.valueOf(startLatLng.latitude) + "," + String.valueOf(startLatLng.longitude)).execute();
-                System.out.println("Ride Type" + rideType);
-                System.out.println("Max Share" + maxShare);
+                LogUtils.i("Ride Type" + rideType);
+                LogUtils.i("Max Share" + maxShare);
 
                 final String url = Constants.REQUEST_URL + "setRequest/userid/" + userID + "/start_lat/" + startLatLng.latitude + "/start_long/" + startLatLng.longitude + "/end_lat/" + endLatLng.latitude + "/end_long/" + endLatLng.longitude + "/payment_mode/" + paymentType + "/pickup_address/" + startAddress + "/drop_address/" + endAddress + "/category/" + category + "/ride_type/" + rideType + "/max_share/" + maxShare;
-                System.out.println("get Request ID==>" + url);
+                LogUtils.i("get Request ID==>" + url);
                 final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
-                                System.out.println("response" + jsonObject);
+                                LogUtils.i("response" + jsonObject);
 
                                 requestStatus = jsonObject.optString("request_status");
                                 requestID = jsonObject.optString("request_id");
-                                System.out.println("requestStatus" + requestStatus);
-                                System.out.println("requestID" + requestID);
+                                LogUtils.i("requestStatus" + requestStatus);
+                                LogUtils.i("requestID" + requestID);
 
                                 //Save req id
                                 getState.putString("tripreqid", requestID);
@@ -2331,7 +2332,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        System.out.println("Volley Error in Set request" + volleyError);
+                        LogUtils.i("Volley Error in Set request" + volleyError);
                         if (volleyError instanceof NoConnectionError) {
 
                             Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
@@ -2345,13 +2346,13 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 AppController.getInstance().addToRequestQueue(signUpReq);
             } else {
                 //Issue with Geo Coder
-                System.out.println("Geocoder");
+                LogUtils.i("Geocoder");
                 dismissViews();
             }
         } catch (NullPointerException e) {
             dismissViews();
             Toast.makeText(this, "Please make sure to set your Pickup and Drop Location more accurate", Toast.LENGTH_SHORT).show();
-            System.out.println("Exception in Set Request" + e);
+            LogUtils.i("Exception in Set Request" + e);
         }
     }
 
@@ -2360,17 +2361,17 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
         String estimate = "0";
         if (orginlat != null || destlat != null) {
-            System.out.println("The pick up and drop " + destlat);
+            LogUtils.i("The pick up and drop " + destlat);
             calctotalDistance = CalculationByDistance(center, destlat);
         }
 
-        System.out.println("Minimum Fare" + calcBaseFare);
-        System.out.println("Minimum KM" + calcPriceKM);
-        System.out.println("Minimum Price" + calcPriceMin);
-        System.out.println("Pickup calctotalDistance" + calctotalDistance);
-        System.out.println("Pickup strBookfee" + strBookfee);
-        System.out.println("Pickup strAirportfee" + strAirportfee);
-        System.out.println("Pickup strTaxpercentage" + strTaxpercentage);
+        LogUtils.i("Minimum Fare" + calcBaseFare);
+        LogUtils.i("Minimum KM" + calcPriceKM);
+        LogUtils.i("Minimum Price" + calcPriceMin);
+        LogUtils.i("Pickup calctotalDistance" + calctotalDistance);
+        LogUtils.i("Pickup strBookfee" + strBookfee);
+        LogUtils.i("Pickup strAirportfee" + strAirportfee);
+        LogUtils.i("Pickup strTaxpercentage" + strTaxpercentage);
 
         if (calctotalDistance != null && calctotalDistance != 0.0)
             estimate = calculateEstimate(calctotalDistance, calcPriceKM, calcPriceMin, calcBaseFare, strBookfee, strAirportfee, strTaxpercentage);
@@ -2382,14 +2383,14 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         final String url = Constants.REQUEST_URL + "processRequest/request_id/" + requestID + "/est_fare/" + estimate;
 
 
-        System.out.println("process Request ID==>" + url);
+        LogUtils.i("process Request ID==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        System.out.println("response from requestID in ProcessRequest" + jsonObject);
+                        LogUtils.i("response from requestID in ProcessRequest" + jsonObject);
 
                     } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
@@ -2399,7 +2400,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                System.out.println("Volley Error in Process request" + volleyError);
+                LogUtils.i("Volley Error in Process request" + volleyError);
                 if (volleyError instanceof NoConnectionError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
@@ -2427,10 +2428,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             public void onResponse(Call<List<RequestInfo>> call, retrofit2.Response<List<RequestInfo>> response) {
                 try {
                     List<RequestInfo> RequestData = response.body();
-                    System.out.println("Response Size" + RequestData.size());
+                    LogUtils.i("Response Size" + RequestData.size());
                     for (int i = 0; i < RequestData.size(); i++) {
                         String responseStatus = RequestData.get(i).getRequest_status();
-                        System.out.println("responseStatus" + responseStatus);
+                        LogUtils.i("responseStatus" + responseStatus);
                         driverID = RequestData.get(i).getDriver_id();
                         tripID = RequestData.get(i).getTrip_id();
                         String pickupposition_lat = RequestData.get(i).getPickup().getLat();
@@ -2450,8 +2451,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                     getState.putBoolean("tripbool", true);
                                     getState.apply();
 
-                                    System.out.println("Driver ID" + driverID);
-                                    System.out.println("Driver ID tripID" + tripID);
+                                    LogUtils.i("Driver ID" + driverID);
+                                    LogUtils.i("Driver ID tripID" + tripID);
 
                                     getState.putString("tripdriverid", driverID);
                                     getState.putString("tripID", tripID);
@@ -2491,7 +2492,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                     getState.apply();
 
                                     if (geoQuery != null) {
-                                        System.out.println("removing geo query listener");
+                                        LogUtils.i("removing geo query listener");
                                         geoQuery.removeAllListeners();
                                         for (Marker marker : markers.values()) {
                                             marker.remove();
@@ -2499,7 +2500,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                         markers.clear();
                                     }
                                     if (request_type != null) {
-                                        System.out.println("ride later request accept");
+                                        LogUtils.i("ride later request accept");
                                         if (request_type.equals("ride_later_request")) {
 
                                             getState.putString("pickupposition_lat", pickupposition_lat);
@@ -2508,7 +2509,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                             getState.putString("destposition_lng", destposition_lng);
                                             getState.apply();
 
-                                            System.out.println("inside of ride later request" + userID + " " + requestID);
+                                            LogUtils.i("inside of ride later request" + userID + " " + requestID);
                                             changeFBRideLaterStatus(requestID);
                                             requesttype = request_type;
 
@@ -2528,7 +2529,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                     dismissViews();
                                     noDriversAlert("No Driver", "It seems Drivers are not available to pick up. Try again later");
                                 } else {
-                                    System.out.println("Running");
+                                    LogUtils.i("Running");
                                 }
                             }
 
@@ -2555,16 +2556,16 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     private void getTripID(String requestID) {
 
         final String url = Constants.REQUEST_URL + "getRequest/request_id/" + requestID;
-        System.out.println("getTripID==>" + url);
+        LogUtils.i("getTripID==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        System.out.println("response for Trip ID" + jsonObject);
+                        LogUtils.i("response for Trip ID" + jsonObject);
                         tripID = jsonObject.optString("trip_id");
-                        System.out.println("tripID" + tripID);
+                        LogUtils.i("tripID" + tripID);
 
 
                     } catch (JSONException | NullPointerException e) {
@@ -2589,11 +2590,11 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     //Get Trip status from Firebase
     private void getstatusfromfirebase() {
 
-        System.out.println("driver id====>" + driverID);
-        System.out.println("trip id====>" + tripID);
+        LogUtils.i("driver id====>" + driverID);
+        LogUtils.i("trip id====>" + tripID);
 
         if (tripID != null) {
-            System.out.println("trip id====>" + tripID);
+            LogUtils.i("trip id====>" + tripID);
             //final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverID).child("accept").child("status");
             final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID).child("status");
             databaseReference.addValueEventListener(new ValueEventListener() {
@@ -2601,7 +2602,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getValue() != null) {
                         String status = dataSnapshot.getValue().toString();
-                        System.out.println("Status from Firebase====>" + status);
+                        LogUtils.i("Status from Firebase====>" + status);
                         if (status != null) {
                             if (status.matches("2")) {
                                 headerButton.setText("ARRIVING");
@@ -2720,9 +2721,9 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                                 Object tripDistance = dataSnapshot.child("Distance").getValue();
                                                 Object ratingFromDriver = dataSnapshot.child("driver_rating").getValue();
 
-                                                System.out.println("Trip Summary: Price from firebase==>" + tripPrice);
-                                                System.out.println("Trip Summary: Distance from firebase==>" + tripDistance);
-                                                System.out.println("Trip Summary: Driver Rating from firebase==>" + ratingFromDriver);
+                                                LogUtils.i("Trip Summary: Price from firebase==>" + tripPrice);
+                                                LogUtils.i("Trip Summary: Distance from firebase==>" + tripDistance);
+                                                LogUtils.i("Trip Summary: Driver Rating from firebase==>" + ratingFromDriver);
 
                                                 if (tripPrice != null)
                                                     driverTripAmount.setText("$" + tripPrice);
@@ -2749,7 +2750,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                 riderRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                                     @Override
                                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                                        System.out.println("Rating value" + rating);
+                                        LogUtils.i("Rating value" + rating);
                                         updateRating(String.valueOf(rating));
                                         try {
                                             int ratingInt = Math.round(rating);
@@ -2786,7 +2787,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                 String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
                                 tripDate.setText(currentDateTimeString);
 
-                                System.out.println("afterview summary driverProfileImage" + driverProfileImage);
+                                LogUtils.i("afterview summary driverProfileImage" + driverProfileImage);
 
                                 Glide.with(getApplicationContext()).load(driverProfileImage).asBitmap().centerCrop().placeholder(R.drawable.account_circle_grey).skipMemoryCache(true).into(new BitmapImageViewTarget(driverImage) {
                                     @Override
@@ -2868,7 +2869,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 }
             });
         } else {
-            System.out.println("trip id is null====>");
+            LogUtils.i("trip id is null====>");
         }
     }
 
@@ -2877,7 +2878,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
         //http://demo.cogzideltemplates.com/tommy/settings/getdetails
         String url = Constants.CATEGORY_LIVE_URL + "settings/getdetails";
-        System.out.println(" CATEGOR URL is " + url);
+        LogUtils.i(" CATEGOR URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -2914,7 +2915,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.print("getKeys,no internet");
+                    LogUtils.i("getKeys,no internet");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
@@ -2981,7 +2982,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             @Override
             public void onClick(DialogInterface dialog1, int which) {
                 try {
-                    System.out.println("cancel trip and tripid" + canceltripid + " price" + cancelprice);
+                    LogUtils.i("cancel trip and tripid" + canceltripid + " price" + cancelprice);
                     if (canceltripid != null && !cancelprice.equals("0")) {
                         Intent intent = new Intent(getApplicationContext(), YourTripDetailsActivity_.class);
                         intent.putExtra("frommap", "yes");
@@ -3075,7 +3076,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     private void updatecancelTrip() {
 
         String url = Constants.REQUEST_URL + "updateTrips/trip_id/" + tripID + "/trip_status/cancel/accept_status/5/distance/0/user_id/" + userID;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -3084,12 +3085,12 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                     public void onResponse(JSONArray response) {
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
-                            System.out.print("updatecancelTrip");
+                            LogUtils.i("updatecancelTrip");
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
                                 cancelprice = jsonObject.optString("total_price");
                                 canceltripid = jsonObject.optString("trip_id");
-                                System.out.println("price and tripid" + cancelprice + " " + canceltripid);
+                                LogUtils.i("price and tripid" + cancelprice + " " + canceltripid);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -3101,7 +3102,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.print("updatecancelTrip, NoConnectionError");
+                    LogUtils.i("updatecancelTrip, NoConnectionError");
                     // stopAnim();
                     // Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -3126,7 +3127,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 return null;
             }
             Address location = address.get(0);
-            System.out.println("location from address" + location);
+            LogUtils.i("location from address" + location);
             location.getLatitude();
             location.getLongitude();
 
@@ -3170,7 +3171,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     //Display profile details of Driver
     public void displayDetails(String driverID) {
         final String url = Constants.LIVE_URL_DRIVER + "editProfile/user_id/" + driverID;
-        System.out.println("Driver Profile==>" + url);
+        LogUtils.i("Driver Profile==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -3191,7 +3192,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             tripDriverVehicleModel = jsonObject.optString("vehicle_model");
                             licenseplate = jsonObject.optString("license");
                             licenseplate_number = jsonObject.optString("number_plate");
-                            System.out.println("THE TRIP DRIVER CATEGORY" + jsonObject.optString("category"));
+                            LogUtils.i("THE TRIP DRIVER CATEGORY" + jsonObject.optString("category"));
                             try {
                                 //Set Trip Name
                                 if (driverDisplayName != null) {
@@ -3203,14 +3204,14 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                     tripDriverVehicleMake = tripDriverVehicleMake.replaceAll("%20", " ");
                                     tripDriverVehicleModel = tripDriverVehicleModel.replaceAll("%20", " ");
                                     tripModelMakeName.setText(tripDriverVehicleMake + " " + tripDriverVehicleModel);
-                                    System.out.println("licenseplate_number" + licenseplate_number);
+                                    LogUtils.i("licenseplate_number" + licenseplate_number);
                                     number_plate.setText("Plate no: " + licenseplate_number.replaceAll("%20", " "));
                                 }
 
 
                                 int carCategoryImageID;
 
-                                System.out.println("Driver Category Driver Profile==>" + tripDriverCategory + "categories===>" + strCategoryName[0] +
+                                LogUtils.i("Driver Category Driver Profile==>" + tripDriverCategory + "categories===>" + strCategoryName[0] +
                                         "," + strCategoryName[1] + "," + strCategoryName[2] + "," + strCategoryName[3] + ",");
 
                                 if (tripDriverCategory.equals(strCategoryName[1])) {
@@ -3289,7 +3290,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             }
 
                         } else {
-                            System.out.print("else");
+                            LogUtils.i("else");
                         }
                     } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
@@ -3313,14 +3314,14 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     //Set cancel Request
     public void cancelRequest(String requestID) {
         final String url = Constants.REQUEST_URL + "cancelRequest/request_id/" + requestID;
-        System.out.println("Cancel Request==>" + url);
+        LogUtils.i("Cancel Request==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        System.out.println("The request is Cancelled" + jsonObject);
+                        LogUtils.i("The request is Cancelled" + jsonObject);
                         String requeststatus = jsonObject.optString("request_status");
                         if (requeststatus.equals("cancel")) {
                             setCancelStatus("6");
@@ -3364,7 +3365,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         if (!MapActivity.this.isFinishing() && progressBar != null) {
             progressBar.dismiss();
         }
-        System.out.println("INside ACCEPT VIEWS");
+        LogUtils.i("INside ACCEPT VIEWS");
         requestBar.setVisibility(View.GONE);
         categoryLayout.setVisibility(View.GONE);
         headerButton.setVisibility(View.VISIBLE);
@@ -3440,7 +3441,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     //A timer to get response every X seconds
     public void AsynchTaskTimer(final String requestID, final String request_type) {
-        System.out.println("Request ID before starting Timer" + requestID);
+        LogUtils.i("Request ID before starting Timer" + requestID);
         if (requestID != null) {
             easyTimer.start();
             easyTimer.setOnTaskRunListener(new EasyTimer.OnTaskRunListener() {
@@ -3457,7 +3458,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     //get Details of Driver
     private void getRiderDetails() {
         final String url = Constants.LIVE_URL + "editProfile/user_id/" + userID;
-        System.out.println("Rider Profile in Map==>" + url);
+        LogUtils.i("Rider Profile in Map==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -3491,7 +3492,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             }
 
                         } else {
-                            System.out.print("getRiderDetails else");
+                            LogUtils.i("getRiderDetails else");
                         }
                     } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
@@ -3580,7 +3581,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                     double[] startValues = new double[]{prevLatLng.latitude, prevLatLng.longitude};
                     double[] endValues = new double[]{startLatLng.latitude, startLatLng.longitude};
 
-                    System.out.println("Driver ID call listion direction===>" + driverID);
+                    LogUtils.i("Driver ID call listion direction===>" + driverID);
                     this.animateMarkerTo(myMarker, startValues, endValues, getBearing);
 
                 } else {
@@ -3605,7 +3606,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             if (pickUPrDropMarker != null)
                 pickUPrDropMarker.remove();
 
-            System.out.println("pick location ===>" + pickupLatLng);
+            LogUtils.i("pick location ===>" + pickupLatLng);
             pickUPrDropMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_pickup)));
 
 
@@ -3615,7 +3616,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             if (pickUPrDropMarker != null)
                 pickUPrDropMarker.remove();
 
-            System.out.println("dest location ===>" + destinationLatLng);
+            LogUtils.i("dest location ===>" + destinationLatLng);
             pickUPrDropMarker = mMap.addMarker(new MarkerOptions().position(destinationLatLng).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_dropoff)));
 
 
@@ -3629,9 +3630,9 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
 
-        System.out.println("Direction status" + direction.getStatus());
-        System.out.println("Accepting Trip LatLng" + startLatLng + "||" + pickupLatLng);
-        System.out.println("On Trip LatLng" + startLatLng + "||" + destinationLatLng);
+        LogUtils.i("Direction status" + direction.getStatus());
+        LogUtils.i("Accepting Trip LatLng" + startLatLng + "||" + pickupLatLng);
+        LogUtils.i("On Trip LatLng" + startLatLng + "||" + destinationLatLng);
 
         if (destLatLng == null) {
             if (filterLocation != null)
@@ -3674,12 +3675,12 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
 
-        System.out.println("location at geoquery" + location);
-        System.out.println("Category at geoquery" + getCategory());
-        System.out.println("Category at position 0" + strCategoryName[0]);
-        System.out.println("Category at position 1" + strCategoryName[1]);
-        System.out.println("Category at position 2" + strCategoryName[2]);
-        System.out.println("Category at position 3" + strCategoryName[3]);
+        LogUtils.i("location at geoquery" + location);
+        LogUtils.i("Category at geoquery" + getCategory());
+        LogUtils.i("Category at position 0" + strCategoryName[0]);
+        LogUtils.i("Category at position 1" + strCategoryName[1]);
+        LogUtils.i("Category at position 2" + strCategoryName[2]);
+        LogUtils.i("Category at position 3" + strCategoryName[3]);
 
         if (location != null && !tripStatus) {
 
@@ -3690,7 +3691,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             txtETA.setVisibility(View.VISIBLE);
 
 
-            System.out.println("Driver Category on key Enter==>" + getCategory() + "  categories===>" + strCategoryName[0] +
+            LogUtils.i("Driver Category on key Enter==>" + getCategory() + "  categories===>" + strCategoryName[0] +
                     "," + strCategoryName[1] + "," + strCategoryName[2] + "," + strCategoryName[3] + ",");
 
             if (getCategory().equals(strCategoryName[1])) {
@@ -3723,8 +3724,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     @Override
     public void onKeyExited(String key) {
-        System.out.println("no matches found");
-        System.out.println("Total Number of Markers" + markers.size());
+        LogUtils.i("no matches found");
+        LogUtils.i("Total Number of Markers" + markers.size());
         // Remove any old marker
         Marker marker = this.markers.get(key);
         if (marker != null) {
@@ -3736,18 +3737,18 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             }
             marker.remove();
             this.markers.remove(key);
-            System.out.println("Check marker is empty" + markers.isEmpty());
+            LogUtils.i("Check marker is empty" + markers.isEmpty());
         }
 
     }
 
     @Override
     public void onKeyMoved(String key, GeoLocation location) {
-        System.out.println("Key moved");
-        System.out.println("Key moved outside===>" + key);
+        LogUtils.i("Key moved");
+        LogUtils.i("Key moved outside===>" + key);
 
 
-        System.out.println("Key moved inside===>" + key);
+        LogUtils.i("Key moved inside===>" + key);
         // Move the marker
         Marker marker = this.markers.get(key);
 
@@ -3772,7 +3773,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
                 double[] startValues = new double[]{marker.getPosition().latitude, marker.getPosition().longitude};
                 double[] endValues = new double[]{location.latitude, location.longitude};
-                System.out.println("Driver ID call listion key moved===>" + key);
+                LogUtils.i("Driver ID call listion key moved===>" + key);
                 this.animateMarkerTo(marker, startValues, endValues, getDriverBearing(key));
 
             }
@@ -3782,7 +3783,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     public void zoomCameraToPosition(LatLng curPos) {
 
-        System.out.println("map location===>" + curPos.latitude + "  " + curPos.longitude);
+        LogUtils.i("map location===>" + curPos.latitude + "  " + curPos.longitude);
 
         boolean contains = mMap.getProjection().getVisibleRegion().latLngBounds.contains(curPos);
 
@@ -3823,7 +3824,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         });
         latLngAnimator.start();
         //float rotate = getBearing(new LatLng(startValues[0], startValues[1]), new LatLng(endValues[0], endValues[1]));
-        System.out.println("Rotate===>" + rotate);
+        LogUtils.i("Rotate===>" + rotate);
         //marker.setRotation(rotate + mMap.getCameraPosition().bearing);
         //marker.setRotation(getDriverBearing(driverID));
         marker.setRotation(rotate);
@@ -3867,17 +3868,17 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     @Override
     public void onGeoQueryReady() {
-        System.out.println("geoquery ready");
+        LogUtils.i("geoquery ready");
     }
 
     @Override
     public void onGeoQueryError(DatabaseError error) {
-        System.out.println("geoquery error" + error);
+        LogUtils.i("geoquery error" + error);
     }
 
     @Override
     public void onCameraChange(final CameraPosition cameraPosition) {
-        System.out.println("geo status: trip status===>" + tripStatus);
+        LogUtils.i("geo status: trip status===>" + tripStatus);
         if (!tripStatus) {
             //getCompleteAddressString(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
@@ -3888,7 +3889,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
             markerLoc = new Location("markerloc");
 
-            System.out.println("Camera Change: LatLng==> " + center.latitude + "," + center.longitude);
+            LogUtils.i("Camera Change: LatLng==> " + center.latitude + "," + center.longitude);
 
             setPickupLocation.setText("NO CARS AVAILABLE");
             setPickupLocation.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -3919,7 +3920,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 // radius in km //Dynamic_Radious
                 this.geoQuery.setRadius(nearByDistanceRadius);
                 this.geoQuery.addGeoQueryEventListener(MapActivity.this);
-                System.out.println("geo status: geo queery started in camera change");
+                LogUtils.i("geo status: geo queery started in camera change");
 
             } else {
                 Toast.makeText(MapActivity.this, "Geoquery Null", Toast.LENGTH_SHORT).show();
@@ -3932,8 +3933,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 e.printStackTrace();
             }
 
-            System.out.println("The Markers size" + markers.size());
-            System.out.println("The Markers==>" + markers);
+            LogUtils.i("The Markers size" + markers.size());
+            LogUtils.i("The Markers==>" + markers);
 
 
             List<LatLng> locations = new ArrayList<LatLng>();
@@ -3945,8 +3946,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 }
             }
 
-            System.out.println("The Markers size" + locations.size());
-            System.out.println("The Markers==>" + locations);
+            LogUtils.i("The Markers size" + locations.size());
+            LogUtils.i("The Markers==>" + locations);
 
             if (locations.size() >= 1) {
                 //sort the list, give the Comparator the current location
@@ -3966,10 +3967,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     public String getCategory() {
         if (category != null) {
-            System.out.println("strCategory=" + carCategory);
+            LogUtils.i("strCategory=" + carCategory);
             return carCategory;
         } else {
-            System.out.println("strCategory=" + strCategoryName[0]);
+            LogUtils.i("strCategory=" + strCategoryName[0]);
             return strCategoryName[0];
         }
     }
@@ -4000,8 +4001,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             drivBearing = "0";
 
                         String status = dataSnapshot.child("l").getValue().toString(); //get location child
-                        System.out.println("Status==>" + status);
-                        System.out.println("Bearing" + status);
+                        LogUtils.i("Status==>" + status);
+                        LogUtils.i("Bearing" + status);
                         if (drivBearing != null) {
                             if (isFloat(drivBearing)) {
                                 getBearing = Float.parseFloat(drivBearing);
@@ -4011,7 +4012,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                         }
                         String[] lat1ong = status.split(",");
 
-                        System.out.println("length of the latlong==>" + lat1ong.length);
+                        LogUtils.i("length of the latlong==>" + lat1ong.length);
 
                         String latitude = lat1ong[0];
                         String longitude = lat1ong[1];
@@ -4039,7 +4040,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             pickupLatLng = new LatLng(Double.parseDouble(startaddresslat), Double.parseDouble(startaddresslng));
 
 
-                        System.out.println("THE LATLNG ++" + startLatLng + "Destination" + pickupLatLng);
+                        LogUtils.i("THE LATLNG ++" + startLatLng + "Destination" + pickupLatLng);
 
 
                         if (headerButton.getText().toString().equals("ACCEPTED") || headerButton.getText().toString().equals("ARRIVING")) {
@@ -4051,7 +4052,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                             .to(pickupLatLng)
                                             .transportMode(TransportMode.DRIVING)
                                             .execute(MapActivity.this);
-                                    System.out.println("google_api_keyhhhhhhhh" + google_api_key);
+                                    LogUtils.i("google_api_keyhhhhhhhh" + google_api_key);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -4127,11 +4128,11 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             if (geoQuery != null) {
                 try {
                     this.geoQuery.addGeoQueryEventListener(this);
-                    System.out.println("geo status: geo queery started in on start");
+                    LogUtils.i("geo status: geo queery started in on start");
                 } catch (NullPointerException e) {
-                    System.out.print("Geo query event listener Null Point exception" + e);
+                    LogUtils.i("Geo query event listener Null Point exception" + e);
                 } catch (IllegalArgumentException e) {
-                    System.out.print("Geo query event listener Illegal Argument exception" + e);
+                    LogUtils.i("Geo query event listener Illegal Argument exception" + e);
                 }
             }
         }
@@ -4242,7 +4243,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         @Override
         protected void onPostExecute(String result) {
             try {
-                System.out.println("Address is " + completeAddress);
+                LogUtils.i("Address is " + completeAddress);
                 if (completeAddress != null) {
                     originLocation.setText(completeAddress);
                 }
@@ -4281,9 +4282,9 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 } else {
                     dropCountryCode = addresses.get(0).getCountryCode();
                 }
-                System.out.println("Pickup==>" + pickupCountryCode);
-                System.out.println("multi==>" + multiDestCountryCode);
-                System.out.println("Drop==>" + dropCountryCode);
+                LogUtils.i("Pickup==>" + pickupCountryCode);
+                LogUtils.i("multi==>" + multiDestCountryCode);
+                LogUtils.i("Drop==>" + dropCountryCode);
 
             }
         } catch (IOException e) {
@@ -4311,7 +4312,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     public void updateRating(String rating) {
         if (tripID != null) {
-            System.out.println("tripIDtripIDtripID" + tripID);
+            LogUtils.i("tripIDtripIDtripID" + tripID);
             if (rating != null) {
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID);
                 Map<String, Object> taskMap = new HashMap<String, Object>();
@@ -4331,7 +4332,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     private String calculateEstimate(double strDistance, String priceKM, String priceMin, String baseFare, String bookfee, String airportfee, String taxpercentage) {
 
-        System.out.println("Inside calculation" + priceKM + "    " + priceMin + "    " + baseFare);
+        LogUtils.i("Inside calculation" + priceKM + "    " + priceMin + "    " + baseFare);
         try {
             double totalEstimate;
             double totalDistance, totalPriceMin, totalBaseFare, totbookfee, totairportfee;
@@ -4368,7 +4369,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             try {
                 taxpercent = (totalAmount * (Double.parseDouble(taxpercentage) / 100.0f));
                 taxaddamount = totalAmount + taxpercent;
-                System.out.println("After adding tax percentage of" + taxpercent + "to" + taxaddamount);
+                LogUtils.i("After adding tax percentage of" + taxpercent + "to" + taxaddamount);
                 totalAmount = taxaddamount;
             } catch (Exception e) {
                 taxpercent = 0.0;
@@ -4381,8 +4382,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             boolean isAirport = state.getBoolean("getPlaceType", false);
             boolean isChangiAirport = state.getBoolean("getPlaceName", false);
 
-            System.out.println("PlaceType in showing==>" + isAirport);
-            System.out.println("PlaceNamee in showing==>" + isChangiAirport);
+            LogUtils.i("PlaceType in showing==>" + isAirport);
+            LogUtils.i("PlaceNamee in showing==>" + isChangiAirport);
             if (isAirport && isChangiAirport) {
                 totalEstimate = totbookfee + totalAmount + totairportfee;
             } else {
@@ -4404,7 +4405,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             getKeys();
 
         String url = Constants.DISTANCE_MATRIX + "origins=" + originAddress.latitude + "," + originAddress.longitude + "&destinations=" + destinationAddress.latitude + "," + destinationAddress.longitude + "&sensor=false&key=" + google_api_key + "&mode=driving";
-        System.out.print("Calculate ETA" + url);
+        LogUtils.i("Calculate ETA" + url);
 
         // Creating volley request obj
         JsonObjectRequest movieReq = new JsonObjectRequest(url, null,
@@ -4426,16 +4427,16 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                 JSONObject durationJSONObject = new JSONObject(duration);
                                 totalDuration = durationJSONObject.optString("text");
                                 totalDuration = totalDuration.replaceAll("[^0-9]", "");
-                                System.out.println("Total Duration time- " + totalDuration);
+                                LogUtils.i("Total Duration time- " + totalDuration);
                                 txtETA.setText(totalDuration + "\n" + "MIN");
                                 txtDriverArrivalETA.setText("Your Driver will Arrive in " + totalDuration + " MIN");
 
                                 if (!setPickupLocation.getText().toString().matches("NO CARS AVAILABLE")) {
                                     // estimateTime.setText(totalDuration + " MIN");
-                                    System.out.print("Calculate ETA no cars");
+                                    LogUtils.i("Calculate ETA no cars");
                                 } else {
                                     // estimateTime.setText("--");
-                                    System.out.print("Calculate ETA no else");
+                                    LogUtils.i("Calculate ETA no else");
                                 }
                             }
 
@@ -4444,9 +4445,9 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                 JSONObject distanceJSONObject = new JSONObject(distance);
                                 totalDistance = distanceJSONObject.optString("text");
                                 totalDistance_meter = distanceJSONObject.optString("value");
-                                System.out.println("Total Distance- " + totalDistance);
+                                LogUtils.i("Total Distance- " + totalDistance);
                                 //totalDistance = totalDistance.replaceAll("[^0-9]", "");
-                                System.out.println("Total Distance m- " + totalDistance_meter);
+                                LogUtils.i("Total Distance m- " + totalDistance_meter);
 
                                 //txtDriverArrivalETA.setText("Your Driver will Arrive in "+totalDuration+" MIN and "+
                                 //      totalDistance+ "away from you.");
@@ -4480,19 +4481,19 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     }
 
     public void listeningRideLater() {
-        System.out.println("userid for ridelater" + userID);
-        System.out.println("firebase url=" + FirebaseDatabase.getInstance().getReference());
+        LogUtils.i("userid for ridelater" + userID);
+        LogUtils.i("firebase url=" + FirebaseDatabase.getInstance().getReference());
         if (userID != null) {
 
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ride_later").child(userID);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    System.out.println("userid for ridelater in statusd" + dataSnapshot.getValue());
+                    LogUtils.i("userid for ridelater in statusd" + dataSnapshot.getValue());
 
                     if (dataSnapshot.getValue() != null) {
                         String status = dataSnapshot.getValue().toString();
-                        System.out.println("ride later Status" + status);
+                        LogUtils.i("ride later Status" + status);
 
                         listeningRideLaterStatus();
 
@@ -4521,7 +4522,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //map.clear();
                 //Get the node from the datasnapshot
-                System.out.println("new pppp");
+                LogUtils.i("new pppp");
                 String requestIDRidelater = dataSnapshot.getKey();
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -4529,9 +4530,9 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                     String key = child.getKey();
 
                     String value = child.getValue().toString();
-                    System.out.println("parentid=" + requestIDRidelater);
-                    System.out.println("key=" + key);
-                    System.out.println("value=" + value);
+                    LogUtils.i("parentid=" + requestIDRidelater);
+                    LogUtils.i("key=" + key);
+                    LogUtils.i("value=" + value);
 
                     if (value != null) {
 
@@ -4547,7 +4548,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             }
 
                         } else {
-                            System.out.println("empty time");
+                            LogUtils.i("empty time");
 
                         }
 
@@ -4591,7 +4592,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             //Get map of users in datasnapshot
                             if (dataSnapshot.getValue() != null) {
 
-                                System.out.println("response ===>" + dataSnapshot.toString());
+                                LogUtils.i("response ===>" + dataSnapshot.toString());
 
                                 Object rideLaterCarCategory = dataSnapshot.child("car_category").getValue();
                                 //getpickup drop latlng
@@ -4600,7 +4601,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                 Object destlati = dataSnapshot.child("dest_lat").getValue();
                                 Object destlngi = dataSnapshot.child("dest_lng").getValue();
 
-                                System.out.println("response rideLaterCarCategory===>" + rideLaterCarCategory);
+                                LogUtils.i("response rideLaterCarCategory===>" + rideLaterCarCategory);
 
                                 if (rideLaterCarCategory != null) {
 
@@ -4626,10 +4627,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 new AlertDialog.Builder(MapActivity.this);
         tripState = state.getString("tripstate", null);
 
-        System.out.println("Trip state in ride later" + tripState);
+        LogUtils.i("Trip state in ride later" + tripState);
         if (tripState != null) {
 
-            System.out.println("Trip state in ride later" + tripState);
+            LogUtils.i("Trip state in ride later" + tripState);
 
             if (tripState.matches("endclicked")) {
 
@@ -4657,7 +4658,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
 
                 if (!MapActivity.this.isFinishing() && builder != null) {
-                    System.out.println("check status no : Already in trip ");
+                    LogUtils.i("check status no : Already in trip ");
                     builder.show();
                 }
             }
@@ -4671,7 +4672,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     public void rideLaterRequestDialog(android.app.AlertDialog.Builder builder, final String rideLaterRequestID) {
 
-        System.out.println("Trip state in ride later" + tripState);
+        LogUtils.i("Trip state in ride later" + tripState);
 
 
         getRideLaterCarCategory(rideLaterRequestID);
@@ -4732,7 +4733,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
 
         if (!MapActivity.this.isFinishing()) {
-            System.out.println("check status no :  ");
+            LogUtils.i("check status no :  ");
             builder.show();
         }
     }
@@ -4754,7 +4755,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         setPickupLocation.setVisibility(View.GONE);
         txtETA.setVisibility(View.GONE);
 
-        System.out.println("data ddsaved==" + parentnode);
+        LogUtils.i("data ddsaved==" + parentnode);
         requestID = parentnode;
         processRequest(requestID);
         //Set a runnable task every 3 seconds
@@ -4791,7 +4792,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         if ((activeNetwork != null) && activeNetwork.isConnected()) {
             connection = true;
         }
-        System.out.println("Network status " + connection);
+        LogUtils.i("Network status " + connection);
         return connection;
     }
 
@@ -4848,7 +4849,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     String status = dataSnapshot.getValue().toString();
-                    System.out.println("Status" + status);
+                    LogUtils.i("Status" + status);
 
                     if (isFloat(status)) {
                         driverBearing = Float.parseFloat(status);
@@ -4871,7 +4872,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     public void getEarning() {
 
         String url = Constants.LIVE_URL + "refrel_detail/user_id/" + userID;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -4942,7 +4943,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("getEarning NoConnectionError");
+                    LogUtils.i("getEarning NoConnectionError");
                     // stopAnim();
                 }
                 VolleyLog.d("Error", "EarningActivity: " + error.getMessage());
@@ -4958,7 +4959,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     public String convertToDecimal(Double amount) {
 
         if (amount > 0) {
-            System.out.println("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
+            LogUtils.i("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
             return new DecimalFormat("0.00").format(amount);
         } else {
             return String.valueOf(0);
@@ -5027,7 +5028,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         category = strCategoryName[categoryCount];
         categoryId = strCategoryId[categoryCount];
 
-        System.out.println("category and count===>" + category + "  " + categoryCount);
+        LogUtils.i("category and count===>" + category + "  " + categoryCount);
         setCategory(category);
 
         if (mMap != null)
@@ -5051,7 +5052,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             //Dynamic_Radious
             geoQuery = getGeofire().queryAtLocation(new GeoLocation(center.latitude, center.longitude), nearByDistanceRadius);
             geoQuery.addGeoQueryEventListener(MapActivity.this);
-            System.out.println("geo status: geo queery started in progress count");
+            LogUtils.i("geo status: geo queery started in progress count");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -5146,12 +5147,12 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
         mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        System.out.println("Location Provoider:" + " Fused Location");
+        LogUtils.i("Location Provoider:" + " Fused Location");
 
         if (mCurrentLocation == null) {
 
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            System.out.println("Location Provoider:" + " Fused Location Fail: GPS Location");
+            LogUtils.i("Location Provoider:" + " Fused Location Fail: GPS Location");
 
             if (locationManager != null) {
 
@@ -5164,7 +5165,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
                 if (mCurrentLocation == null) {
 
-                    System.out.println("Location Provoider:" + " GPS Location Fail: Network Location");
+                    LogUtils.i("Location Provoider:" + " GPS Location Fail: Network Location");
 
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
@@ -5276,7 +5277,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                                 } else {
-                                    System.out.print("inside else");
+                                    LogUtils.i("inside else");
                                     // handler.postDelayed(this, Constants.updateLocationToFBHandlerTime);
                                 }
 
@@ -5338,8 +5339,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     public void updatedrop(String userID, String lat, String lng) {
         if (userID != null) {
             int previouscount, count = 0;
-            System.out.println("INside the update location" + driverID);
-            System.out.println("INside the DestinationWaypoints" + userID);
+            LogUtils.i("INside the update location" + driverID);
+            LogUtils.i("INside the DestinationWaypoints" + userID);
             DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("riders_location").child(userID).child("Updatelocation");
             Map<String, Object> taskMap2 = new HashMap<String, Object>();
             taskMap2.put("0", lat);
@@ -5402,9 +5403,9 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 contryCodeValue = contryCodeValue.startsWith(",") ? contryCodeValue.substring(1) : contryCodeValue;
                 addressValue = addressValue.startsWith("|") ? addressValue.substring(1) : addressValue;
 
-                System.out.println("string array cordinatesValue are===>" + cordinatesValue);
-                System.out.println("string array contryCodeValue are===>" + contryCodeValue);
-                System.out.println("string array addressValue are===>" + addressValue);
+                LogUtils.i("string array cordinatesValue are===>" + cordinatesValue);
+                LogUtils.i("string array contryCodeValue are===>" + contryCodeValue);
+                LogUtils.i("string array addressValue are===>" + addressValue);
 
                 if (!cordinatesValue.matches("") & !addressValue.matches("") & !contryCodeValue.matches("")) {
 
@@ -5441,7 +5442,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
                         count = previouscount + wayPointCount;
 
-                        System.out.println("the counts are +" + previouscount + " " + count + " " + wayPointCount);
+                        LogUtils.i("the counts are +" + previouscount + " " + count + " " + wayPointCount);
                         //Toast.makeText(this, "Count is" + count, Toast.LENGTH_SHORT).show();
 
                         wayPointsCount.put("WayPointCount", count);
@@ -5473,13 +5474,13 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             public void onResponse(Call<List<Contributor>> call, retrofit2.Response<List<Contributor>> response) {
                 try {
                     List<Contributor> RequestData = response.body();
-                    System.out.println("Response Size" + RequestData.size());
+                    LogUtils.i("Response Size" + RequestData.size());
                     for (int i = 0; i < RequestData.size(); i++) {
                         status = RequestData.get(i).getStatus();
                         if (status.equals("Success")) {
                             surgePrice = RequestData.get(i).getPercentage();
 
-                            System.out.println("The Price was" + surgePrice);
+                            LogUtils.i("The Price was" + surgePrice);
                         } else if (requesttype.equals("normal")) {
                             sendRequest();
                         } else {
@@ -5581,7 +5582,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
 
         final String url = Constants.LIVE_URL + "feedback?user_id=" + userID + "&feedback=" + feedback + "&subject=" + subject;
-        System.out.println("Driver Profile==>" + url);
+        LogUtils.i("Driver Profile==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -5656,7 +5657,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         //final String url="https://maps.googleapis.com/maps/api/geocode/json?latlng="+latlng+"&sensor=true&key="+google_api_key;
         final String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latlng + "&radius=1000&types=airport&key=" + google_api_key;
 
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonObjectRequest movieReq = new JsonObjectRequest(url, null,
@@ -5669,7 +5670,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                         try {
 
                             String status = response.getString("status");
-                            System.out.println("status responce====>" + status);
+                            LogUtils.i("status responce====>" + status);
 
                             if (status.matches("OK")) {
 
@@ -5685,8 +5686,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
                                 boolean savePlaceType, savePlaceName;
 
-                                System.out.println("Airport PlaceType==>" + placeType);
-                                System.out.println("Airport PlaceName==>" + placeName);
+                                LogUtils.i("Airport PlaceType==>" + placeType);
+                                LogUtils.i("Airport PlaceName==>" + placeName);
 
                                 if (placeType.matches("airport"))
                                     savePlaceType = true;
@@ -5706,17 +5707,17 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
                                 String error_msg = response.getString("error_message");
 
-                                System.out.println("The Error message in invalidreq" + error_msg);
+                                LogUtils.i("The Error message in invalidreq" + error_msg);
 
                             } else if (status.matches("REQUEST_DENIED")) {
 
                                 String error_msg = response.getString("error_message");
 
-                                System.out.println("The Error message in reqdenied" + error_msg);
+                                LogUtils.i("The Error message in reqdenied" + error_msg);
 
                             } else {
 
-                                System.out.println("Execption on Getting Airport Type");
+                                LogUtils.i("Execption on Getting Airport Type");
                             }
 
                         } catch (JSONException e) {
@@ -5748,8 +5749,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         boolean isAirport = state.getBoolean("getPlaceType", false);
         boolean isChangiAirport = state.getBoolean("getPlaceName", false);
 
-        System.out.println("PlaceType in showing==>" + isAirport);
-        System.out.println("PlaceNamee in showing==>" + isChangiAirport);
+        LogUtils.i("PlaceType in showing==>" + isAirport);
+        LogUtils.i("PlaceNamee in showing==>" + isChangiAirport);
 
         if (isAirport)
             terminal_layout.setVisibility(View.VISIBLE);
@@ -5786,7 +5787,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         // Calculate the available radius of canvas
         int radius = Math.min(canvas.getWidth(), canvas.getHeight() / 2);
 
-        System.out.println("radious of the circle===>" + radius);
+        LogUtils.i("radious of the circle===>" + radius);
 
         // Set a pixels value to padding around the circle
         int padding = 5;
@@ -5950,11 +5951,11 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             @Override
             public void onClick(View v) {
 
-                System.out.println("Array of latlng==>" + Arrays.toString(mulitiDestLatLng));
-                System.out.println("Array of CC==>" + Arrays.toString(mulitiDestCountryCode));
-                System.out.println("Array of Address==>" + Arrays.toString(mulitiDestaddress));
-                System.out.println("drop coutrycode==>" + dropCountryCode);
-                System.out.println("Pickup country code==>" + pickupCountryCode);
+                LogUtils.i("Array of latlng==>" + Arrays.toString(mulitiDestLatLng));
+                LogUtils.i("Array of CC==>" + Arrays.toString(mulitiDestCountryCode));
+                LogUtils.i("Array of Address==>" + Arrays.toString(mulitiDestaddress));
+                LogUtils.i("drop coutrycode==>" + dropCountryCode);
+                LogUtils.i("Pickup country code==>" + pickupCountryCode);
 
                 boolean isSameCC = true;
                 String alertMsg;
@@ -6127,7 +6128,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     private void getSubjectCategory() {
 
         final String url = Constants.CATEGORY_LIVE_URL + "home/getsubject";
-        System.out.println("URL is" + url);
+        LogUtils.i("URL is" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -6142,7 +6143,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                 Log.d("OUTPUT IS", strCarCategory);
                                 subjectcategory[0] = "Select a subject";
                                 subjectcategory[i + 1] = strCarCategory;
-                                System.out.println("CATEGORY" + subjectcategory[i]);
+                                LogUtils.i("CATEGORY" + subjectcategory[i]);
                                 //adapteradapter  = new ArrayAdapter<String>(MapActivity.this, R.layout.spinner_item, subjectcategory);
                             } catch (JSONException e) {
 
@@ -6175,7 +6176,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
         final String url = Constants.REQUEST_URL + "updateDestinationWaypoints/trip_id/" + tripID + "/coordinates/" + coordinatesValue + "/countrycodes/" +
                 ccValue + "/address/" + addressValue;
-        System.out.println("URL is" + url);
+        LogUtils.i("URL is" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {

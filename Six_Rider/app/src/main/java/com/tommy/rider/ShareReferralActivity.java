@@ -32,6 +32,7 @@ import com.tommy.rider.adapter.FontChangeCrawler;
 import com.tommy.rider.adapter.contacts.DatabaseAdapter;
 import com.tommy.rider.adapter.contacts.SelectUser;
 import com.tommy.rider.adapter.contacts.SelectUserAdapter;
+import com.tommy.rider.utils.LogUtils;
 
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class ShareReferralActivity extends AppCompatActivity {
         Intent i = getIntent();
         referralcode = i.getStringExtra("referralcode");
 
-        System.out.println("oncreate referral code===>"+referralcode);
+        LogUtils.i("oncreate referral code===>" + referralcode);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Sending Messages.. Please wait!");
@@ -271,7 +272,7 @@ public class ShareReferralActivity extends AppCompatActivity {
 
         PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
 
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,new Intent(DELIVERED), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
 
         // ---when the SMS has been sent---
         registerReceiver(new BroadcastReceiver() {
@@ -287,16 +288,16 @@ public class ShareReferralActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), "SMS sent", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(getBaseContext(), "Generic failure",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "Generic failure", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(getBaseContext(), "No service",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "No service", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(getBaseContext(), "Null PDU",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "Null PDU", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(getBaseContext(), "Radio off",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "Radio off", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }

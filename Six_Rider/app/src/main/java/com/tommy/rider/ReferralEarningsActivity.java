@@ -17,6 +17,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -32,7 +33,7 @@ import java.util.Date;
 
 @EActivity(R.layout.activity_referral_earnings)
 public class ReferralEarningsActivity extends AppCompatActivity {
-    String tripTime, earnings,earnings_daily,earnings_weekly,earnings_monthly,earnings_yearly, userID;
+    String tripTime, earnings, earnings_daily, earnings_weekly, earnings_monthly, earnings_yearly, userID;
     SharedPreferences state;
 
     @Click(R.id.back)
@@ -73,7 +74,7 @@ public class ReferralEarningsActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("userid", null);
-        System.out.println("UserID in settings" + userID);
+        LogUtils.i("UserID in settings" + userID);
 
         getEarning();
     }
@@ -89,7 +90,7 @@ public class ReferralEarningsActivity extends AppCompatActivity {
     public void getEarning() {
 
         String url = Constants.LIVE_URL + "refrel_detail/user_id/" + userID;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -150,9 +151,9 @@ public class ReferralEarningsActivity extends AppCompatActivity {
                                 }
 
                                 if (tripTime != null && !tripTime.isEmpty()) {
-                                    lastTripTime.setText(tripTime+" Users used your code");
+                                    lastTripTime.setText(tripTime + " Users used your code");
                                 } else {
-                                    lastTripTime.setText("0"+" Users used your code");
+                                    lastTripTime.setText("0" + " Users used your code");
                                 }
 
 
@@ -169,7 +170,7 @@ public class ReferralEarningsActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.print("EarningActivity NoConnectionError");
+                    LogUtils.i("EarningActivity NoConnectionError");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
@@ -183,13 +184,12 @@ public class ReferralEarningsActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(movieReq);
     }
 
-    public String convertToDecimal(Double amount){
+    public String convertToDecimal(Double amount) {
 
-        if(amount>0){
-            System.out.println("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
+        if (amount > 0) {
+            LogUtils.i("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
             return new DecimalFormat("0.00").format(amount);
-        }
-        else {
+        } else {
             return String.valueOf(0);
         }
     }

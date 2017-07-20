@@ -27,12 +27,12 @@ import com.facebook.share.widget.ShareDialog;
 import com.tommy.rider.R;
 import com.tommy.rider.ShareReferralActivity;
 import com.tommy.rider.adapter.Constants;
+import com.tommy.rider.utils.LogUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
 
 /**
  * Created by javier on 24/04/15.
@@ -42,7 +42,7 @@ public class SocialShare {
     private ArrayList<Integer> socialNetworks;
     private SocialImages socialImages;
 
-    private String subject, message, imagePath,ReferralCode;
+    private String subject, message, imagePath, ReferralCode;
 
     private Uri fbphotoURI;
 
@@ -89,6 +89,7 @@ public class SocialShare {
     /**
      * Default constructor:
      * All networks and default images
+     *
      * @param activity My activity
      */
     public SocialShare(Activity activity) {
@@ -198,41 +199,41 @@ public class SocialShare {
             case SocialNetwork.FACEBOOK:
                 //shareIntent(SocialNetwork.FACEBOOK_PACKAGE);
                 String text = activity.getString(R.string.share_text) + "\n" + activity.getString(R.string.sms_text_last);
-                String text1 = "Your Referral Code is "+getReferralCode()+".";
+                String text1 = "Your Referral Code is " + getReferralCode() + ".";
 
-                System.out.print("fb error" + ShareDialog.canShow(ShareLinkContent.class));
+                LogUtils.i("fb error" + ShareDialog.canShow(ShareLinkContent.class));
 
-                    if (ShareDialog.canShow(SharePhotoContent.class) || ShareDialog.canShow(ShareLinkContent.class)) {
+                if (ShareDialog.canShow(SharePhotoContent.class) || ShareDialog.canShow(ShareLinkContent.class)) {
 
                     if (fbphotoURI != null && !fbphotoURI.toString().isEmpty() && ShareDialog.canShow(SharePhotoContent.class)) {
 
-                        System.out.print("inside if the success");
+                        LogUtils.i("inside if the success");
 
                         if (bitMap == null)
-                            System.out.print("null bitmap");
+                            LogUtils.i("null bitmap");
 
-                            SharePhoto photo = new SharePhoto.Builder()
-                                    .setBitmap(bitMap)
-                                    .setImageUrl(Uri.parse(Constants.CATEGORY_LIVE_URL))
-                                    .build();
+                        SharePhoto photo = new SharePhoto.Builder()
+                                .setBitmap(bitMap)
+                                .setImageUrl(Uri.parse(Constants.CATEGORY_LIVE_URL))
+                                .build();
 
-                            SharePhotoContent content = new SharePhotoContent.Builder()
-                                    //.setContentUrl(Uri.parse(Constants.CATEGORY_LIVE_URL))
-                                    .addPhoto(photo)
-                                    .build();
-                            System.out.print("inside if the fb");
-                            shareDialog.show(content);
-                        } else {
-                            ShareLinkContent linkContent;
-                            System.out.print("inside else the fb");
-                            linkContent = new ShareLinkContent.Builder()
-                                    .setContentTitle(text1)
-                                    .setContentDescription(text)
-                                    .setContentUrl(Uri.parse(Constants.CATEGORY_LIVE_URL))
-                                    .build();
-                            System.out.print("inside else the");
-                            shareDialog.show(linkContent);
-                        }
+                        SharePhotoContent content = new SharePhotoContent.Builder()
+                                //.setContentUrl(Uri.parse(Constants.CATEGORY_LIVE_URL))
+                                .addPhoto(photo)
+                                .build();
+                        LogUtils.i("inside if the fb");
+                        shareDialog.show(content);
+                    } else {
+                        ShareLinkContent linkContent;
+                        LogUtils.i("inside else the fb");
+                        linkContent = new ShareLinkContent.Builder()
+                                .setContentTitle(text1)
+                                .setContentDescription(text)
+                                .setContentUrl(Uri.parse(Constants.CATEGORY_LIVE_URL))
+                                .build();
+                        LogUtils.i("inside else the");
+                        shareDialog.show(linkContent);
+                    }
                 }
 
                 break;
@@ -272,17 +273,16 @@ public class SocialShare {
                 break;
             case SocialNetwork.SNAPCHAT:
                 shareIntenttoContacts();
-               // shareIntent(SocialNetwork.SNAPCHAT_PACKAGE);
+                // shareIntent(SocialNetwork.SNAPCHAT_PACKAGE);
                 break;
         }
     }
 
-    private void instagramShareIntent(){
+    private void instagramShareIntent() {
 
-        if(iamge_file == null || !iamge_file.exists()){
-            Log.e("file","no image file at location ");
-        }
-        else {
+        if (iamge_file == null || !iamge_file.exists()) {
+            Log.e("file", "no image file at location ");
+        } else {
             String type = "image";
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType(type);
@@ -307,7 +307,7 @@ public class SocialShare {
                 intent.putExtra(Intent.EXTRA_TEXT, message);
             intent.putExtra(Intent.EXTRA_STREAM, fbphotoURI);
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            activity.startActivity(Intent.createChooser(intent ,"Share"));
+            activity.startActivity(Intent.createChooser(intent, "Share"));
         } else {
             final Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setPackage(packageName);
@@ -317,14 +317,14 @@ public class SocialShare {
             if (message != null && !message.isEmpty())
                 intent.putExtra(Intent.EXTRA_TEXT, message);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(Intent.createChooser(intent ,"Share"));
+            activity.startActivity(Intent.createChooser(intent, "Share"));
         }
     }
 
     private void shareIntenttoContacts() {
 
-        Intent i=new Intent(activity,ShareReferralActivity.class);
-        i.putExtra("subject",subject);
+        Intent i = new Intent(activity, ShareReferralActivity.class);
+        i.putExtra("subject", subject);
         i.putExtra("referralcode", message);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(i);
@@ -369,51 +369,52 @@ public class SocialShare {
             case SocialNetwork.HANGOUTS:
                 return testSocial(SocialNetwork.HANGOUTS_PACKAGE);
             case SocialNetwork.PINTEREST:
-              //  return testSocial(SocialNetwork.PINTEREST_PACKAGE);
+                //  return testSocial(SocialNetwork.PINTEREST_PACKAGE);
                 return false;
             case SocialNetwork.LINE:
-              //  return testSocial(SocialNetwork.LINE_PACKAGE);
+                //  return testSocial(SocialNetwork.LINE_PACKAGE);
                 return false;
             case SocialNetwork.SNAPCHAT:
                 return true;
-              //  return testSocial(SocialNetwork.SNAPCHAT_PACKAGE);
+            //  return testSocial(SocialNetwork.SNAPCHAT_PACKAGE);
             default:
                 return false;
         }
     }
+
     private boolean testSocial(String packageName) {
-        try{
+        try {
             activity.getPackageManager().
-                    getApplicationInfo(packageName, 0 );
+                    getApplicationInfo(packageName, 0);
             return true;
-        } catch( PackageManager.NameNotFoundException e ){
+        } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
     }
 
-    private File convertToPath(){
+    private File convertToPath() {
 
         Bitmap bitmap;
-        bitmap = BitmapFactory.decodeResource(activity.getResources(),R.mipmap.ic_referral_new);
-        Point p=new Point();
-        Point p1=new Point();
+        bitmap = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.ic_referral_new);
+        Point p = new Point();
+        Point p1 = new Point();
 
         p.set(10, 800);
         p1.set(10, 900);
 
         String text = activity.getString(R.string.share_text);
-        String text1 = "Your Referral Code is "+ReferralCode+".";
+        String text1 = "Your Referral Code is " + ReferralCode + ".";
 
-        bitMap = waterMark(bitmap,text,text1,p, p1, Color.BLACK,200,30,false);
+        bitMap = waterMark(bitmap, text, text1, p, p1, Color.BLACK, 200, 30, false);
 
         //Bitmap bitMap = BitmapFactory.decodeResource(activity.getResources(),R.drawable.rider_logo);
 
         String directory_name = "/storage/emulated/0/Download/";
         File mFile1 = new File(directory_name);
 
-        String fileName ="Six_Referral_Code.jpg";
+        String fileName = "Six_Referral_Code.jpg";
 
-        File mFile2 = new File(mFile1,fileName);
+        File mFile2 = new File(mFile1, fileName);
         try {
             FileOutputStream outStream;
 
@@ -427,17 +428,17 @@ public class SocialShare {
 
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.print("inside catch");
+            LogUtils.i("inside catch");
         }
 
         String sdPath = mFile1.getAbsolutePath() + "/" + fileName;
 
-        Log.i("hiya", "Your IMAGE ABSOLUTE PATH:-"+sdPath);
+        Log.i("hiya", "Your IMAGE ABSOLUTE PATH:-" + sdPath);
 
-        File temp=new File(sdPath);
+        File temp = new File(sdPath);
 
-        if(!temp.exists()){
-            Log.e("file","no image file at location :"+sdPath);
+        if (!temp.exists()) {
+            Log.e("file", "no image file at location :" + sdPath);
         }
 
         return temp;
@@ -468,7 +469,7 @@ public class SocialShare {
         //draw text on given location
         //canvas.drawText(watermark, 40, 200, paint);
 
-        drawText(canvas,paint,ReferralCode);
+        drawText(canvas, paint, ReferralCode);
 
         return result;
     }
@@ -476,8 +477,8 @@ public class SocialShare {
     private static void drawText(Canvas canvas, Paint paint, String text) {
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
-        int x = ((canvas.getWidth() / 2) - (bounds.width() / 2))-100;
-        int y = ((canvas.getHeight() / 2) - (bounds.height() / 2))+80;
+        int x = ((canvas.getWidth() / 2) - (bounds.width() / 2)) - 100;
+        int y = ((canvas.getHeight() / 2) - (bounds.height() / 2)) + 80;
         paint.setTextSize(70);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         canvas.drawText(text, x, y, paint);

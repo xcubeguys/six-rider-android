@@ -48,6 +48,7 @@ import com.tommy.rider.adapter.Constants;
 import com.tommy.rider.adapter.CountryCodeDialog;
 import com.tommy.rider.adapter.CountryCodePicker;
 import com.tommy.rider.adapter.FontChangeCrawler;
+import com.tommy.rider.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -69,7 +70,7 @@ import java.util.List;
 public class EditProfileActivity extends AppCompatActivity implements CountryCodePicker.OnCountryChangeListener, Validator.ValidationListener {
 
     Validator validator;
-    public String userID, firstName, lastName, nickName,email, mobileNumber, referal_code,countryCode, profileImage, profileImageNew = "null", status, message;
+    public String userID, firstName, lastName, nickName, email, mobileNumber, referal_code, countryCode, profileImage, profileImageNew = "null", status, message;
     private static final int CAMERA_CAPTURE_IMAGE = 100;
     public static final int MEDIA_TYPE_IMAGE = 1;
     String picturePath, profImage, updateURL;
@@ -126,7 +127,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         //UserID from Shared preferences
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("userid", null);
-        System.out.println("UserID in settings" + userID);
+        LogUtils.i("UserID in settings" + userID);
         validator = new Validator(this);
         validator.setValidationListener(this);
         ccp.setOnCountryChangeListener(this);
@@ -198,7 +199,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         }
     }
 
-    private void start_camera(){
+    private void start_camera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Image File name");
         fileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -224,8 +225,8 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     public void displayDetails() {
         showDialog();
         final String url = Constants.LIVE_URL + "editProfile/user_id/" + userID;
-        System.out.println("RiderProfileURL==>" + url);
-        final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener < JSONArray > () {
+        LogUtils.i("RiderProfileURL==>" + url);
+        final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 dismissDialog();
@@ -284,7 +285,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
                                 if (countryCode.equals("null") || countryCode.equals(null))
                                     inputCountryCode.setHint("CC");
-                                else{
+                                else {
                                     inputCountryCode.setText(countryCode);
                                     inputCountryCode.setError(null);
                                 }
@@ -335,20 +336,20 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         mobileNumber = inputMobileNumber.getText().toString().trim();
         email = inputEmail.getText().toString().trim();
 
-        firstName = firstName.replaceAll(" ","%20");
-        lastName= lastName.replaceAll(" ","%20");
-        nickName= nickName.replaceAll(" ","%20");
+        firstName = firstName.replaceAll(" ", "%20");
+        lastName = lastName.replaceAll(" ", "%20");
+        nickName = nickName.replaceAll(" ", "%20");
 
         showDialog();
-        System.out.println("ProfileImage==>" + profileImage);
-        System.out.println("ProfileImageNew==>" + profileImageNew);
+        LogUtils.i("ProfileImage==>" + profileImage);
+        LogUtils.i("ProfileImageNew==>" + profileImageNew);
         if (profileImageNew == null || profileImageNew.equals("null")) {
-            updateURL = Constants.LIVE_URL + "updateDetails/user_id/" + userID + "/firstname/" + firstName + "/lastname/" + lastName + "/nick_name/" +nickName + "/mobile/" + mobileNumber + "/country_code/" + countryCode + "/city/" + "madurai" + "/email/" + email;
+            updateURL = Constants.LIVE_URL + "updateDetails/user_id/" + userID + "/firstname/" + firstName + "/lastname/" + lastName + "/nick_name/" + nickName + "/mobile/" + mobileNumber + "/country_code/" + countryCode + "/city/" + "madurai" + "/email/" + email;
         } else {
-            updateURL = Constants.LIVE_URL + "updateDetails/user_id/" + userID + "/firstname/" + firstName + "/lastname/" + lastName +"/nick_name/" +nickName + "/mobile/" + mobileNumber + "/country_code/" + countryCode + "/profile_pic/" + profileImageNew + "/city/" + "madurai" + "/email/" + email;
+            updateURL = Constants.LIVE_URL + "updateDetails/user_id/" + userID + "/firstname/" + firstName + "/lastname/" + lastName + "/nick_name/" + nickName + "/mobile/" + mobileNumber + "/country_code/" + countryCode + "/profile_pic/" + profileImageNew + "/city/" + "madurai" + "/email/" + email;
         }
-        System.out.println("RiderUpdateProfileURL==>" + updateURL);
-        final JsonArrayRequest signUpReq = new JsonArrayRequest(updateURL, new Response.Listener < JSONArray > () {
+        LogUtils.i("RiderUpdateProfileURL==>" + updateURL);
+        final JsonArrayRequest signUpReq = new JsonArrayRequest(updateURL, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 dismissDialog();
@@ -422,7 +423,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                 return false;
             } else {
                 int maxLengthofEditText = 15;
-                inputMobileNumber.setFilters(new InputFilter[] {
+                inputMobileNumber.setFilters(new InputFilter[]{
                         new InputFilter.LengthFilter(maxLengthofEditText)
                 });
                 inputMobileNumber.setError(null);
@@ -436,13 +437,13 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         countryCode = inputCountryCode.getText().toString();
         mobileNumber = inputMobileNumber.getText().toString();
         if (validatePhone() && validateCountryCode()) {
-            System.out.println("CountryCode==>" + countryCode);
+            LogUtils.i("CountryCode==>" + countryCode);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 countryCode = countryCode.replace("+", "");
             }
-            System.out.println("SDK_VERSION==>" + Build.VERSION.SDK_INT);
-            System.out.println("SDK_VERSION_RELEASE" + Build.VERSION.RELEASE);
-            System.out.println("CountryCode1==>" + countryCode);
+            LogUtils.i("SDK_VERSION==>" + Build.VERSION.SDK_INT);
+            LogUtils.i("SDK_VERSION_RELEASE" + Build.VERSION.RELEASE);
+            LogUtils.i("CountryCode1==>" + countryCode);
             PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
             String isoCode = phoneNumberUtil.getRegionCodeForCountryCode(Integer.parseInt(countryCode));
             Phonenumber.PhoneNumber phoneNumber = null;
@@ -473,7 +474,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             inputFirstName.setError("25 characters only allowed");
         } else if (inputLastName.getText().toString().trim().length() > 25) {
             inputLastName.setError("25 characters only allowed");
-        }else if (inputNickName.getText().toString().trim().length() > 25) {
+        } else if (inputNickName.getText().toString().trim().length() > 25) {
             inputNickName.setError("25 characters only allowed");
         } else if (!validateCountryCode()) {
 
@@ -488,8 +489,8 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     }
 
     @Override
-    public void onValidationFailed(List < ValidationError > errors) {
-        for (ValidationError error: errors) {
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
             View view = error.getView();
             String message = error.getCollatedErrorMessage(this);
 
@@ -527,21 +528,20 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
             new ImageuploadTask(this).execute();
 
-        } /*else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {*/
-        else if (requestCode == MEDIA_TYPE_IMAGE && resultCode == RESULT_OK && null != data) {
+        } /*else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {*/ else if (requestCode == MEDIA_TYPE_IMAGE && resultCode == RESULT_OK && null != data) {
 
             //            String single_path = data.getStringExtra("single_path");
             Uri selectedImage = data.getData();
             if (Build.VERSION.SDK_INT >= 19) {
                 if (selectedImage != null && !selectedImage.toString().equals("null")) {
-                    System.out.println("greater 19:" + "kitkat");
+                    LogUtils.i("greater 19:" + "kitkat");
                     picturePath = getImagePath(selectedImage);
-                    System.out.println("mSelectedFissslssePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslssePath res" + picturePath);
 
                 } else {
-                    System.out.println("greater 19:" + "not kitkat");
+                    LogUtils.i("greater 19:" + "not kitkat");
                     picturePath = getPathOfImage(selectedImage);
-                    System.out.println("mSelectedFissslePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslePath res" + picturePath);
                 }
             }
          /*   if (selectedImage != null && !selectedImage.toString().equals("null")) {
@@ -607,7 +607,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         }
     }
 
-    private class ImageuploadTask extends AsyncTask < String, Void, Boolean > {
+    private class ImageuploadTask extends AsyncTask<String, Void, Boolean> {
         private ProgressDialog dialog;
         private EditProfileActivity activity;
 
@@ -630,9 +630,8 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            if (dialog != null && dialog.isShowing())
-            {
-                if(!activity.isFinishing() && !activity.isDestroyed()){
+            if (dialog != null && dialog.isShowing()) {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
                     try {
                         dialog.dismiss();
                     } catch (Exception e) {
@@ -640,13 +639,15 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                     }
                 }
             }
-            if (success) {System.out.print("success");} else {
-                System.out.print("failure");
+            if (success) {
+                LogUtils.i("success");
+            } else {
+                LogUtils.i("failure");
             }
         }
 
         @Override
-        protected Boolean doInBackground(final String...args) {
+        protected Boolean doInBackground(final String... args) {
             try {
                 // ... processing ...
                 Upload_Server();
@@ -657,6 +658,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             }
         }
     }
+
     protected void Upload_Server() {
         // TODO Auto-generated method stub
         try {
@@ -669,11 +671,11 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             String pathToOurFile = picturePath;
             //	  String pathToOurFile1 = imagepathcam;
 
-            System.out.println("Before Image Upload" + picturePath);
+            LogUtils.i("Before Image Upload" + picturePath);
 
-            String urlServer = Constants.LIVE_URL_DRIVER+"imageUpload/";
-            System.out.println("URL SETVER" + urlServer);
-            System.out.println("After Image Upload" + picturePath);
+            String urlServer = Constants.LIVE_URL_DRIVER + "imageUpload/";
+            LogUtils.i("URL SETVER" + urlServer);
+            LogUtils.i("After Image Upload" + picturePath);
             String lineEnd = "\r\n";
             String twoHyphens = "--";
             String boundary = "*****";
@@ -687,8 +689,8 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
             URL url = new URL(urlServer);
             connection = (HttpURLConnection) url.openConnection();
-            System.out.println("URL is " + url);
-            System.out.println("connection is " + connection);
+            LogUtils.i("URL is " + url);
+            LogUtils.i("connection is " + connection);
             // Allow Inputs & Outputs
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -727,7 +729,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             String serverResponseMessage = connection.getResponseMessage();
 
 
-            System.out.println("image" + serverResponseMessage);
+            LogUtils.i("image" + serverResponseMessage);
 
             fileInputStream.close();
             outputStream.flush();
@@ -745,18 +747,18 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                 Log.e("Debug", "Server Response String imageurl" + str);
             }
             inputStream1.close();
-            System.out.println("image url" + Str1_imageurl);
+            LogUtils.i("image url" + Str1_imageurl);
 
             //get the image url and store
             profImage = Str1_imageurl.trim();
             JSONArray array = new JSONArray(profImage);
             JSONObject jsonObj = array.getJSONObject(0);
-            System.out.println("image name" + jsonObj.getString("image_name"));
+            LogUtils.i("image name" + jsonObj.getString("image_name"));
 
             profileImageNew = jsonObj.optString("image_name");
 
-            System.out.println("Profile Picture Path" + profImage);
-            System.out.println("Profile Picture Path" + profileImageNew);
+            LogUtils.i("Profile Picture Path" + profImage);
+            LogUtils.i("Profile Picture Path" + profileImageNew);
 
         } catch (Exception e) {
 
@@ -764,6 +766,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
         }
     }
+
     public void showDialog() {
         progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
@@ -785,6 +788,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         startActivity(i);
         finish();
     }
+
     public String getImagePath(Uri uri) {
         String path = "";
         try {
@@ -799,7 +803,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                     null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
             cursor.moveToFirst();
             path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            System.out.println("path111:" + path);
+            LogUtils.i("path111:" + path);
             cursor.close();
         } catch (Exception e) {
 
@@ -810,7 +814,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     private String getPathOfImage(Uri uri) {
         String wholeID = DocumentsContract.getDocumentId(uri);
 
-        System.out.println("WholeId:" + wholeID);
+        LogUtils.i("WholeId:" + wholeID);
 
         // Split at colon, use second item in the array
         String id = wholeID.split(":")[1];
@@ -832,7 +836,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             filePath = cursor.getString(columnIndex);
         }
 
-        System.out.println("File Path1:" + filePath);
+        LogUtils.i("File Path1:" + filePath);
         cursor.close();
         return filePath;
     }
