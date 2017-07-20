@@ -20,6 +20,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.tommy.driver.adapter.AppController;
 import com.tommy.driver.adapter.Constants;
 import com.tommy.driver.adapter.FontChangeCrawler;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -31,14 +32,14 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-@EActivity (R.layout.activity_forgot_password)
+@EActivity(R.layout.activity_forgot_password)
 public class ForgotPasswordActivity extends AppCompatActivity implements Validator.ValidationListener {
 
-  @Click (R.id.back)
-    void getBack(){
-      Intent intent=new Intent(this,SigninActivity_.class);
-      startActivity(intent);
-  }
+    @Click(R.id.back)
+    void getBack() {
+        Intent intent = new Intent(this, SigninActivity_.class);
+        startActivity(intent);
+    }
 
     @NotEmpty(message = "")
     @Email(message = "Enter a valid email")
@@ -47,14 +48,15 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Validat
 
     Validator validator;
     String strEmail;
-    @Click (R.id.btnSubmit)
-    void con()
-    {
+
+    @Click(R.id.btnSubmit)
+    void con() {
         validator.validate();
     }
+
     @AfterViews
-    void create(){
-        FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(),getString(R.string.app_font));
+    void create() {
+        FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
         fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
 
         validator = new Validator(this);
@@ -63,18 +65,16 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Validat
     }
 
     @Override
-    public void onValidationSucceeded()
-    {
+    public void onValidationSucceeded() {
 
         resetPassword();
     }
 
-    private void resetPassword()
-    {
+    private void resetPassword() {
         //http://demo.cogzidel.com/arcane_lite/driver/forgotPassword/email/cogzidel_new@gmail.com
-        strEmail= edtEmail.getText().toString().trim();
-        String url = Constants.LIVEURL+"forgotPassword/email/"+strEmail;
-        System.out.println("URL is " + url);
+        strEmail = edtEmail.getText().toString().trim();
+        String url = Constants.LIVEURL + "forgotPassword/email/" + strEmail;
+        LogUtils.i("URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -91,12 +91,11 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Validat
                                 if (signIn_status.equals("Success")) {
 
                                     Toast.makeText(ForgotPasswordActivity.this, "Link has been sent to your given mail ID", Toast.LENGTH_SHORT).show();
-                                    Intent Map=new Intent(getApplicationContext(),SigninActivity_.class);
+                                    Intent Map = new Intent(getApplicationContext(), SigninActivity_.class);
                                     Map.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(Map);
                                     finish();
-                                }
-                                else if (signIn_status.equals("Fail")) {
+                                } else if (signIn_status.equals("Fail")) {
                                     //stopAnim();
                                     Toast.makeText(ForgotPasswordActivity.this, "Email has not registered!!", Toast.LENGTH_SHORT).show();
                                 }
@@ -111,7 +110,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Validat
             @Override
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
-                if(error instanceof NoConnectionError) {
+                if (error instanceof NoConnectionError) {
                     // stopAnim();
                     Toast.makeText(ForgotPasswordActivity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -126,8 +125,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Validat
     }
 
     @Override
-    public void onValidationFailed(List<ValidationError> errors)
-    {
+    public void onValidationFailed(List<ValidationError> errors) {
         for (ValidationError error : errors) {
             View view = error.getView();
             String message = error.getCollatedErrorMessage(this);

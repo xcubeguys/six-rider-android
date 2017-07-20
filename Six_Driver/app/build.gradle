@@ -44,6 +44,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        dev {
+            buildConfigField "boolean", "PRINT_LOG", 'true'
+        }
+        playstore {
+            buildConfigField "boolean", "PRINT_LOG", 'false'
+        }
+    }
+
     useLibrary 'org.apache.http.legacy'
 }
 

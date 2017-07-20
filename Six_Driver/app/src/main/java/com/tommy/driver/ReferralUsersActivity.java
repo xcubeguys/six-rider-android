@@ -25,6 +25,7 @@ import com.tommy.driver.adapter.Constants;
 import com.tommy.driver.adapter.FontChangeCrawler;
 import com.tommy.driver.adapter.ReferralUsersListAdapter;
 import com.tommy.driver.adapter.YourTrips;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 @EActivity(R.layout.activity_referral_users)
 public class ReferralUsersActivity extends AppCompatActivity {
 
-    private ArrayList<YourTrips> usersListItems= new ArrayList<>();
+    private ArrayList<YourTrips> usersListItems = new ArrayList<>();
     private ReferralUsersListAdapter usersListsAdapter;
     ProgressDialog progressDialog;
     String userID;
@@ -56,15 +57,14 @@ public class ReferralUsersActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @AfterViews
-    void Create()
-    {
+    void Create() {
         //Change Font to Whole View
         FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
         fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("driverid", null);
-        System.out.println("User ID in YourTrips" + userID);
+        LogUtils.i("User ID in YourTrips" + userID);
 
         LinearLayoutManager verticalLayoutmanager
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -77,39 +77,39 @@ public class ReferralUsersActivity extends AppCompatActivity {
     }
 
     @Click(R.id.backButton)
-    void goBack(){
+    void goBack() {
         finish();
     }
 
     private void displayYourTrips() {
         showDialog();
-        final String url = Constants.LIVEURL_REQUEST+"getReferralUserList/user_id/"+userID;
-        System.out.println("User list URL==>"+url);
+        final String url = Constants.LIVEURL_REQUEST + "getReferralUserList/user_id/" + userID;
+        LogUtils.i("User list URL==>" + url);
         final JsonArrayRequest tripListReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 
                 dismissDialog();
-                System.out.println("response length="+response.length());
+                LogUtils.i("response length=" + response.length());
                 //jsonArray=response;
                 for (int i = 0; i < response.length(); i++) {
                     try {
 
                         JSONObject jsonObject = response.getJSONObject(i);
-                        System.out.println("Status from user list" + jsonObject.optString("status"));
+                        LogUtils.i("Status from user list" + jsonObject.optString("status"));
 
-                        if(jsonObject.optString("status").equals("Success")) {
+                        if (jsonObject.optString("status").equals("Success")) {
                             YourTrips trips = new YourTrips();
 
                             usersLists.setVisibility(View.VISIBLE);
                             emptyLayout.setVisibility(View.GONE);
-                            String name =jsonObject.optString("first_name")+" "+jsonObject.optString("last_name");
-                            name=name.replaceAll("%20"," ");
+                            String name = jsonObject.optString("first_name") + " " + jsonObject.optString("last_name");
+                            name = name.replaceAll("%20", " ");
                             trips.setUserName(name);
                             trips.setUserImage(jsonObject.optString("profile_pic"));
                             String userType = jsonObject.optString("user_type");
-                            if(userType.matches("Driver"))
-                                trips.setUserType(userType+" "+jsonObject.optString("category"));
+                            if (userType.matches("Driver"))
+                                trips.setUserType(userType + " " + jsonObject.optString("category"));
                             else
                                 trips.setUserType(userType);
 
@@ -134,7 +134,8 @@ public class ReferralUsersActivity extends AppCompatActivity {
                 dismissDialog();
                 if (volleyError instanceof NoConnectionError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-                } if(volleyError instanceof TimeoutError){
+                }
+                if (volleyError instanceof TimeoutError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -144,12 +145,12 @@ public class ReferralUsersActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(tripListReq);
     }
 
-    public void onBackPressed(){
+    public void onBackPressed() {
         finish();
     }
 
-    public void showDialog(){
-        progressDialog= new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setMessage("Loading...");
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -157,9 +158,9 @@ public class ReferralUsersActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing()) {
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }

@@ -30,6 +30,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.tommy.driver.adapter.Constants;
 import com.tommy.driver.adapter.FontChangeCrawler;
 import com.tommy.driver.adapter.RoundImageTransform;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -45,12 +46,12 @@ import java.io.FileInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-@EActivity (R.layout.activity_image_upload)
+@EActivity(R.layout.activity_image_upload)
 public class ImageUpload extends MyBaseActivity {
 
     Uri mCapturedImageURI;
     private static final int CAMERA_REQUEST = 1;
-    String picturePath,profImage;
+    String picturePath, profImage;
 
     @ViewById(R.id.txtArcane)
     ImageView profImg;
@@ -58,7 +59,7 @@ public class ImageUpload extends MyBaseActivity {
     @ViewById(R.id.btnTakePhoto)
     Button next;
 
-    String strEmail,strFirstName,strLastName,strPassword,strConfirmPassword,strCity,strMobile,strCountyCode,strProfileImage,strnickname,strNumOfPassenger,strVehiclemake,strVehiclemodel,strVehicleyear,strVehiclemileage;
+    String strEmail, strFirstName, strLastName, strPassword, strConfirmPassword, strCity, strMobile, strCountyCode, strProfileImage, strnickname, strNumOfPassenger, strVehiclemake, strVehiclemodel, strVehicleyear, strVehiclemileage;
     String strreferral;
 
     @AfterViews
@@ -76,7 +77,7 @@ public class ImageUpload extends MyBaseActivity {
         strEmail = i.getStringExtra("Email");
         strnickname = i.getStringExtra("nick_name");
 //        strNumOfPassenger=i.getStringExtra("num_of_passenger");
-//        System.out.println("Number of passanger in ImageUpload"+strNumOfPassenger);
+//        LogUtils.i("Number of passanger in ImageUpload"+strNumOfPassenger);
 
         profImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +143,7 @@ public class ImageUpload extends MyBaseActivity {
         }
     }
 
-    private void start_camera(){
+    private void start_camera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Image File name");
         mCapturedImageURI = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -157,7 +158,7 @@ public class ImageUpload extends MyBaseActivity {
     void signinPage() {
         if (profImg.getDrawable() != null) {
 
-            System.out.println("GOING TO DOCUMENT UPLOAD" + "FNAME==" + strFirstName + " " + "LNAME==>" + strLastName + " " + "MOBILE==" + strMobile + " " + "PASSWORD==" + strPassword + " " + "CITY==" + strCity + " " + "COUNTRY CODE==" + strCountyCode);
+            LogUtils.i("GOING TO DOCUMENT UPLOAD" + "FNAME==" + strFirstName + " " + "LNAME==>" + strLastName + " " + "MOBILE==" + strMobile + " " + "PASSWORD==" + strPassword + " " + "CITY==" + strCity + " " + "COUNTRY CODE==" + strCountyCode);
 
             //if(!profImage.isEmpty()&&!profImage.matches("")){
             Intent signin = new Intent(this, DocUpload_Activity_.class);
@@ -176,7 +177,7 @@ public class ImageUpload extends MyBaseActivity {
 //            signin.putExtra("num_of_passenger",strNumOfPassenger);
             startActivity(signin);
 
-            System.out.println("IMAGE UPLOAD PAGE" + "FNAME==" + strFirstName + " " + "LNAME==>" + strLastName + " " + "MOBILE==" + strMobile + " " + "PASSWORD==" + strPassword + " " + "CITY==" + strCity + " " + "COUNTRY CODE==" + strCountyCode + "IMAGE PROFILEE==" + strProfileImage);
+            LogUtils.i("IMAGE UPLOAD PAGE" + "FNAME==" + strFirstName + " " + "LNAME==>" + strLastName + " " + "MOBILE==" + strMobile + " " + "PASSWORD==" + strPassword + " " + "CITY==" + strCity + " " + "COUNTRY CODE==" + strCountyCode + "IMAGE PROFILEE==" + strProfileImage);
            /* }
           else{
                 Toast.makeText(ImageUpload.this, R.string.attachPhoto, Toast.LENGTH_SHORT).show();
@@ -184,7 +185,7 @@ public class ImageUpload extends MyBaseActivity {
 
 
         }*/
-        }  else{
+        } else {
             android.support.v7.app.AlertDialog.Builder builder =
                     new android.support.v7.app.AlertDialog.Builder(ImageUpload.this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(getString(R.string.option));
@@ -234,7 +235,7 @@ public class ImageUpload extends MyBaseActivity {
 
     @Click({R.id.back})
     void back() {
-       finish();
+        finish();
     }
 
     @Override
@@ -251,7 +252,7 @@ public class ImageUpload extends MyBaseActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
 
             picturePath = getRealPathFromURI(mCapturedImageURI);
-            System.out.println("CAMERA IMAGE"+picturePath);
+            LogUtils.i("CAMERA IMAGE" + picturePath);
             profImg.setScaleType(ImageView.ScaleType.FIT_XY);
 
             Glide.with(ImageUpload.this)
@@ -270,28 +271,27 @@ public class ImageUpload extends MyBaseActivity {
 
             if (Glide.isSetup()) {
                 next.setText("Next");
-            }
-            else{
+            } else {
                 next.setText(getResources().getString(R.string.take_photo));
             }
             new ImageuploadTask(this).execute();
         }
 
-        System.out.println("Request Code+requestCode" + "Result Code" + resultCode + "data" + data);
+        LogUtils.i("Request Code+requestCode" + "Result Code" + resultCode + "data" + data);
 
         if (requestCode == 100 && resultCode == Activity.RESULT_OK && null != data) {
 
             Uri selectedImage = data.getData();
             if (Build.VERSION.SDK_INT >= 19) {
                 if (selectedImage != null && !selectedImage.toString().equals("null")) {
-                    System.out.println("greater 19:" + "kitkat");
+                    LogUtils.i("greater 19:" + "kitkat");
                     picturePath = getImagePath(selectedImage);
-                    System.out.println("mSelectedFissslssePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslssePath res" + picturePath);
 
                 } else {
-                    System.out.println("greater 19:" + "not kitkat");
+                    LogUtils.i("greater 19:" + "not kitkat");
                     picturePath = getPathOfImage(selectedImage);
-                    System.out.println("mSelectedFissslePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslePath res" + picturePath);
                 }
             }
 
@@ -317,8 +317,7 @@ public class ImageUpload extends MyBaseActivity {
 
             if (Glide.isSetup()) {
                 next.setText("Next");
-            }
-            else{
+            } else {
                 next.setText(getResources().getString(R.string.take_photo));
             }
             new ImageuploadTask(this).execute();
@@ -352,30 +351,24 @@ public class ImageUpload extends MyBaseActivity {
         mCapturedImageURI = savedInstanceState.getParcelable("picUri");
     }
 
-    public String getRealPathFromURI(Uri contentUri)
-    {
-        try
-        {
+    public String getRealPathFromURI(Uri contentUri) {
+        try {
             String[] proj = {MediaStore.Images.Media.DATA};
             Cursor cursor = managedQuery(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return contentUri.getPath();
         }
     }
 
 
-    private class ImageuploadTask extends AsyncTask<String, Void, Boolean>
-    {
+    private class ImageuploadTask extends AsyncTask<String, Void, Boolean> {
         private ProgressDialog dialog;
         private ImageUpload activity;
 
-        ImageuploadTask(ImageUpload activity)
-        {
+        ImageuploadTask(ImageUpload activity) {
             this.activity = activity;
             context = activity;
             dialog = new ProgressDialog(context);
@@ -383,8 +376,7 @@ public class ImageUpload extends MyBaseActivity {
 
         private Context context;
 
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             dialog = new ProgressDialog(context);
             dialog.setMessage("Uploading...");
             dialog.setIndeterminate(false);
@@ -396,11 +388,9 @@ public class ImageUpload extends MyBaseActivity {
         }
 
         @Override
-        protected void onPostExecute(final Boolean success)
-        {
-            if (dialog != null && dialog.isShowing())
-            {
-                if(!activity.isFinishing() && !activity.isDestroyed()){
+        protected void onPostExecute(final Boolean success) {
+            if (dialog != null && dialog.isShowing()) {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
                     try {
                         dialog.dismiss();
                     } catch (Exception e) {
@@ -411,13 +401,12 @@ public class ImageUpload extends MyBaseActivity {
         }
 
         @Override
-        protected Boolean doInBackground(final String... args)
-        {
+        protected Boolean doInBackground(final String... args) {
             try {
                 // ... processing ...
                 Upload_Server();
                 return true;
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.e("Schedule", "UpdateSchedule failed", e);
                 return false;
             }
@@ -427,8 +416,8 @@ public class ImageUpload extends MyBaseActivity {
 
     protected void Upload_Server() {
         // TODO Auto-generated method stub
-        System.out.println("After call progress");
-        try{
+        LogUtils.i("After call progress");
+        try {
 
             Log.e("Image Upload", "Inside Upload");
 
@@ -438,14 +427,14 @@ public class ImageUpload extends MyBaseActivity {
             String pathToOurFile = picturePath;
             //	  String pathToOurFile1 = imagepathcam;
 
-            System.out.println("Before Image Upload"+picturePath);
+            LogUtils.i("Before Image Upload" + picturePath);
 
-            String urlServer= Constants.LIVEURL+"imageUpload/";
-            System.out.println("URL SETVER"+urlServer);
-            System.out.println("After Image Upload"+picturePath);
+            String urlServer = Constants.LIVEURL + "imageUpload/";
+            LogUtils.i("URL SETVER" + urlServer);
+            LogUtils.i("After Image Upload" + picturePath);
             String lineEnd = "\r\n";
             String twoHyphens = "--";
-            String boundary =  "*****";
+            String boundary = "*****";
 
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
@@ -456,8 +445,8 @@ public class ImageUpload extends MyBaseActivity {
 
             URL url = new URL(urlServer);
             connection = (HttpURLConnection) url.openConnection();
-            System.out.println("URL is "+url);
-            System.out.println("connection is "+connection);
+            LogUtils.i("URL is " + url);
+            LogUtils.i("connection is " + connection);
             // Allow Inputs & Outputs
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -467,11 +456,11 @@ public class ImageUpload extends MyBaseActivity {
             connection.setRequestMethod("POST");
 
             connection.setRequestProperty("Connection", "Keep-Alive");
-            connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
+            connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
 
-            outputStream = new DataOutputStream( connection.getOutputStream() );
+            outputStream = new DataOutputStream(connection.getOutputStream());
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-            outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile +"\"" + lineEnd);
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile + "\"" + lineEnd);
             outputStream.writeBytes(lineEnd);
 
             bytesAvailable = fileInputStream.available();
@@ -481,8 +470,7 @@ public class ImageUpload extends MyBaseActivity {
             // Read file
             bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-            while (bytesRead > 0)
-            {
+            while (bytesRead > 0) {
                 outputStream.write(buffer, 0, bufferSize);
                 bytesAvailable = fileInputStream.available();
                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
@@ -496,39 +484,36 @@ public class ImageUpload extends MyBaseActivity {
             String serverResponseMessage = connection.getResponseMessage();
 
 
-            System.out.println("image"+serverResponseMessage);
+            LogUtils.i("image" + serverResponseMessage);
 
             fileInputStream.close();
             outputStream.flush();
             outputStream.close();
 
             DataInputStream inputStream1;
-            inputStream1 = new DataInputStream (connection.getInputStream());
+            inputStream1 = new DataInputStream(connection.getInputStream());
             String str;
-            String Str1_imageurl="";
+            String Str1_imageurl = "";
 
-            while ((  str = inputStream1.readLine()) != null)
-            {
-                Log.e("Debug","Server Response "+str);
+            while ((str = inputStream1.readLine()) != null) {
+                Log.e("Debug", "Server Response " + str);
 
                 Str1_imageurl = str;
-                Log.e("Debug","Server Response String imageurl"+str);
+                Log.e("Debug", "Server Response String imageurl" + str);
             }
             inputStream1.close();
-            System.out.println("image url"+Str1_imageurl);
+            LogUtils.i("image url" + Str1_imageurl);
 
             //get the image url and store
-            profImage=Str1_imageurl.trim();
+            profImage = Str1_imageurl.trim();
             JSONArray array = new JSONArray(profImage);
-            JSONObject jsonObj  = array.getJSONObject(0);
-            System.out.println("image name"+jsonObj.getString("image_name"));
+            JSONObject jsonObj = array.getJSONObject(0);
+            LogUtils.i("image name" + jsonObj.getString("image_name"));
 
-            strProfileImage=jsonObj.optString("image_name");
+            strProfileImage = jsonObj.optString("image_name");
 
-            System.out.println("Profile Picture Path"+profImage);
-        }
-
-        catch(Exception e){
+            LogUtils.i("Profile Picture Path" + profImage);
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
@@ -548,7 +533,7 @@ public class ImageUpload extends MyBaseActivity {
                     null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
             cursor.moveToFirst();
             path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            System.out.println("path111:" + path);
+            LogUtils.i("path111:" + path);
             cursor.close();
         } catch (Exception e) {
 
@@ -559,7 +544,7 @@ public class ImageUpload extends MyBaseActivity {
     private String getPathOfImage(Uri uri) {
         String wholeID = DocumentsContract.getDocumentId(uri);
 
-        System.out.println("WholeId:" + wholeID);
+        LogUtils.i("WholeId:" + wholeID);
 
         // Split at colon, use second item in the array
         String id = wholeID.split(":")[1];
@@ -581,7 +566,7 @@ public class ImageUpload extends MyBaseActivity {
             filePath = cursor.getString(columnIndex);
         }
 
-        System.out.println("File Path1:" + filePath);
+        LogUtils.i("File Path1:" + filePath);
         cursor.close();
         return filePath;
     }

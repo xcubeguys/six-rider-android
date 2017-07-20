@@ -149,6 +149,7 @@ import com.tommy.driver.adapter.Services;
 import com.tommy.driver.services.GoogleLocationService;
 import com.tommy.driver.services.LocationUpdateListener;
 import com.tommy.driver.services.WidgetService;
+import com.tommy.driver.utils.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -365,7 +366,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         initializeTTS();
 
-        System.out.print("distance in oncreate" + strTotalDistance);
+        LogUtils.i("distance in oncreate" + strTotalDistance);
 
         // setup markers
         this.tollMarkersMap = new HashMap<>();
@@ -391,7 +392,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
            /* getState.putString("tripstate", tripState);
             getState.apply();*/
         }
-        System.out.println("Tripstate" + tripState);
+        LogUtils.i("Tripstate" + tripState);
         Constants.MAP_ISSHOWING = true;
 
         startService(new Intent(getBaseContext(), Services.class).setPackage(this.getPackageName()));
@@ -433,8 +434,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         driverId = prefs.getString("driverid", null);
         drivername = prefs.getString("drivername", null);
         strCategory = prefs.getString("carcategory", null);
-        System.out.println("driverid In MAPP" + driverId);
-        System.out.println("driverNAMEand CAR In MAPP" + drivername + strCategory);
+        LogUtils.i("driverid In MAPP" + driverId);
+        LogUtils.i("driverNAMEand CAR In MAPP" + drivername + strCategory);
 
         SharedPreferences onlinecheckprefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         onlinecheck = onlinecheckprefs.getString("onlinestatus", null);
@@ -461,7 +462,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference().child("drivers_location"));
         }
 
-        System.out.println("Category user " + strCategory);
+        LogUtils.i("Category user " + strCategory);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -673,7 +674,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 googleMap.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println("Lat and Lng"+routeLat+","+routeLng);
+                        LogUtils.i("Lat and Lng"+routeLat+","+routeLng);
                         dialog.dismiss();
                         selectedDrawable="googleMap";
                         editor.putString("navigationMode",selectedDrawable);
@@ -829,10 +830,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     if (tempTripWithName == null || tempTripWithName.equals("null") || tempTripWithName.equals("")) {
                         if (tripIDs != null && !tripIDs.isEmpty()) {
                             tempTripWithName = tripIDs.get(tripIDs.size() - 1);
-                            System.out.println("enter the null validation condition");
+                            LogUtils.i("enter the null validation condition");
                         }
                     }
-                    System.out.println("enter the null validation condition" + tempTripWithName);
+                    LogUtils.i("enter the null validation condition" + tempTripWithName);
 
                     //gettripID();
 
@@ -841,7 +842,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     if (mCurrentLocation != null) {
                         latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-                        System.out.println("INSIDE ENDTRIP CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+                        LogUtils.i("INSIDE ENDTRIP CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(latLng)                              // Sets the center of the map to current location
                                 .zoom(Constants.MAP_ZOOM_SIZE)
@@ -881,7 +882,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         i = (int) (long) diffMinutes;
 
-                        System.out.println("THe time difference" + diffMinutes);
+                        LogUtils.i("THe time difference" + diffMinutes);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -949,7 +950,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        System.out.println("trip status or state in oncreate====>" + tripState);
+        LogUtils.i("trip status or state in oncreate====>" + tripState);
 
         if (tripState.matches("requestAccept")) { //1
             tripID = state.getString("tripID", null);
@@ -1020,7 +1021,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void updateLocation(Location location) {
                 if (location != null) {
-                    System.out.println("updated location in the listener %1$s %2$s" + location.getLatitude() + location.getLongitude());
+                    LogUtils.i("updated location in the listener %1$s %2$s" + location.getLatitude() + location.getLongitude());
                     updateLocationToFirebase(location);
                 }
             }
@@ -1038,7 +1039,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             public void onTaskRun(long past_time, String rendered_time) {
                 // Change UI or do something with past_time and rendered_time.
                 // It will NOT block the UI thread.
-                System.out.println("Playing Audio");
+                LogUtils.i("Playing Audio");
                 playAudio();
             }
         });*/
@@ -1082,7 +1083,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             Map singleUser = (Map) entry.getValue();
 
             //phoneNumbers.add((String) singleUser.get("driverid"));
-            System.out.println("Coordinates====>" + singleUser.get("Coordinates"));
+            LogUtils.i("Coordinates====>" + singleUser.get("Coordinates"));
 
             //String Coordinates = String.valueOf(singleUser.get("Coordinates")).trim();
             ArrayList Coordinates = (ArrayList) singleUser.get("Coordinates");
@@ -1122,8 +1123,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 previousPoints = orginLocation;
 
-                System.out.println("size of the lat and long==>" + latlngs.size());
-                System.out.println("value of the lat and long==>" + latlngs);
+                LogUtils.i("size of the lat and long==>" + latlngs.size());
+                LogUtils.i("value of the lat and long==>" + latlngs);
 
                 for (LatLng position : latlngs) {
 
@@ -1133,7 +1134,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
 
-        System.out.println("collected routs are ====>" + points);
+        LogUtils.i("collected routs are ====>" + points);
     }
 
     public void tollFee() {
@@ -1214,10 +1215,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         int j = 0;
         double strTotal;
 
-        System.out.println("Toll Fees in the add toll==>" + tollfee);
+        LogUtils.i("Toll Fees in the add toll==>" + tollfee);
 
         if (tollfrees != null) {
-            System.out.println("Toll Fees in the add toll if==>" + tollfee);
+            LogUtils.i("Toll Fees in the add toll if==>" + tollfee);
 
             if (isDouble(tollAmount)) {
 
@@ -1229,10 +1230,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             strTotal = Double.parseDouble(convertToDecimal(strTotal));
-            System.out.println("double (UP)++ : " + strTotal); //output 20.30
+            LogUtils.i("double (UP)++ : " + strTotal); //output 20.30
 
             for (String temp : tollfrees) {
-                System.out.println("Toll Fees in the add toll foreach==>" + tollfee);
+                LogUtils.i("Toll Fees in the add toll foreach==>" + tollfee);
                 updatedfirebase(temp, strTotal);
                 System.out.println(temp + "trips ids in looping" + j++);
             }
@@ -1245,7 +1246,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void getCarCategoryrDetails() {
         String url = Constants.CATEGORY_LIVE_URL + "Settings/getCategory";
-        System.out.println(" CATEGOR URL is " + url);
+        LogUtils.i(" CATEGOR URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -1259,8 +1260,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 strCategoryId = signIn_jsonobj.optString("categoryId");
                                 String strWebCategory = signIn_jsonobj.optString("categoryname");
                                 strCategoryName[i] = signIn_jsonobj.optString("categoryname");
-                                System.out.println("Current category" + strCategory);
-                                System.out.println("Web category" + strWebCategory);
+                                LogUtils.i("Current category" + strCategory);
+                                LogUtils.i("Web category" + strWebCategory);
 
 
                                 if (strCategory.equals(strWebCategory)) {
@@ -1273,11 +1274,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                     strtaxpercentage = signIn_jsonobj.optString("tax_percentage");
                                     strDropPrice = signIn_jsonobj.optString("drop_price");
 
-                                    System.out.println("Price per KM " + strWebprice_km);
-                                    System.out.println("Price Per Min" + strwebpricepermin);
-                                    System.out.println("Max Size " + strwebmaxsize);
-                                    System.out.println("Price Fare " + strwebpricefare);
-                                    System.out.println("Drop Prce " + strDropPrice);
+                                    LogUtils.i("Price per KM " + strWebprice_km);
+                                    LogUtils.i("Price Per Min" + strwebpricepermin);
+                                    LogUtils.i("Max Size " + strwebmaxsize);
+                                    LogUtils.i("Price Fare " + strwebpricefare);
+                                    LogUtils.i("Drop Prce " + strDropPrice);
                                 }
 
                             } catch (Exception e) {
@@ -1295,7 +1296,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("no internet");
+                    LogUtils.i("no internet");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
@@ -1312,7 +1313,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     private void getKeys() {
 
         String url = Constants.CATEGORY_LIVE_URL + "settings/getdetails";
-        System.out.println(" CATEGOR URL is " + url);
+        LogUtils.i(" CATEGOR URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -1338,7 +1339,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.print("no internet");
+                    LogUtils.i("no internet");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
@@ -1357,7 +1358,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         String[] tripidArray = tempTripWithName.split(":");
         String Tripid = tripidArray[0];
 
-        System.out.println("Inside the updatedriverRating===>" + Tripid);
+        LogUtils.i("Inside the updatedriverRating===>" + Tripid);
 
         getRiderID(Tripid);
         dialog = new Dialog(Map_Activity.this);
@@ -1402,8 +1403,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        System.out.println("Rider First Name dialog==>" + riderFirstName);
-        System.out.println("Rider Last Name dialog==>" + riderLastName);
+        LogUtils.i("Rider First Name dialog==>" + riderFirstName);
+        LogUtils.i("Rider Last Name dialog==>" + riderLastName);
 
         if (riderFirstName != null && !riderFirstName.isEmpty()) {
             ridername.setText(riderFirstName + " " + riderLastName);
@@ -1436,7 +1437,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onClick(DialogInterface dialog1, int which) {
                         tripID = state.getString("tripID", null);
-                        System.out.println("THE TRIP ID IS You Click Cancel" + tripID);
+                        LogUtils.i("THE TRIP ID IS You Click Cancel" + tripID);
                       /*  //DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId).child("accept");
                         DatabaseReference databaseReference3 = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID);
                         Map<String, Object> taskMap2 = new HashMap<>();
@@ -1448,18 +1449,18 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         if (tempTripWithName == null || tempTripWithName.equals("null") || tempTripWithName.equals("")) {
                             if (tripIDs != null && !tripIDs.isEmpty()) {
                                 tempTripWithName = tripIDs.get(tripIDs.size() - 1);
-                                System.out.println("enter the null validation condition");
+                                LogUtils.i("enter the null validation condition");
                             }
 
                         }
                         if (tripIDs != null) {
                             tripIDs.remove(tempTripWithName);
                         }
-                        System.out.println("Trip with Name in cancel request showCancelDialog" + tempTripWithName);
+                        LogUtils.i("Trip with Name in cancel request showCancelDialog" + tempTripWithName);
                         String[] tripidArray = tempTripWithName.split(":");
                         String Tripid = tripidArray[0];
 
-                        System.out.println("Trip Size in cancel request" + tripIDs.size() + Tripid);
+                        LogUtils.i("Trip Size in cancel request" + tripIDs.size() + Tripid);
                         strCacnelStatus = "drivercliked";
                         checktripcancelstatus();
                         clearFirebaseData();
@@ -1472,7 +1473,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         /*if (tripIDs.size() < 1) {
                             getCancelState();
-                            System.out.println("Trip Size" + tripIDs.size());
+                            LogUtils.i("Trip Size" + tripIDs.size());
                             endTripLayout.setVisibility(View.GONE);
                             bottomBar.setVisibility(View.VISIBLE);
                             toolbarLayout.setVisibility(View.VISIBLE);
@@ -1488,7 +1489,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             if (mCurrentLocation != null) {
                                 LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-                                System.out.println("INSIDE ENDTRIP CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+                                LogUtils.i("INSIDE ENDTRIP CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                                 CameraPosition cameraPosition = new CameraPosition.Builder()
                                         .target(latLng)                              // Sets the center of the map to current location
                                         .zoom(15)
@@ -1600,7 +1601,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     //showdialog when rider cancel the request
     private void showCancelDialog() {
         try {
-            System.out.println("Driver ID in cancel listener" + driverId);
+            LogUtils.i("Driver ID in cancel listener" + driverId);
             canceltripreference = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId).child("cancel_trip_id");
             canceltripreference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -1614,7 +1615,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    System.out.println("IN ONCANCEL ERROR" + databaseError);
+                    LogUtils.i("IN ONCANCEL ERROR" + databaseError);
                 }
             });
         } catch (Exception e) {
@@ -1628,7 +1629,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         Map<String, Object> taskMap = new HashMap<>();
         taskMap.put("cancel_trip_id", "0");
         databaseReference.updateChildren(taskMap);
-        System.out.println("Status In CANCEL" + status);
+        LogUtils.i("Status In CANCEL" + status);
         // Toast.makeText(Map_Activity.this, "Rider Canceled the trip", Toast.LENGTH_SHORT).show();
         final android.support.v7.app.AlertDialog.Builder builder =
                 new android.support.v7.app.AlertDialog.Builder(Map_Activity.this, R.style.AppCompatAlertDialogStyle);
@@ -1664,7 +1665,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         SharedPreferences prefs = mContext.getSharedPreferences("preferencename", 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(arrayName + "_size", array.size());
-        System.out.println("INSIDE THE SAVE ARRAY SIZE " + array.size());
+        LogUtils.i("INSIDE THE SAVE ARRAY SIZE " + array.size());
         for (int i = 0; i < array.size(); i++)
             editor.putString(arrayName + "_" + i, array.get(i));
         editor.apply();
@@ -1678,14 +1679,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         for (int i = 0; i < size; i++)
             data.add(prefs.getString(arrayName + "_" + i, null));
 
-        System.out.println("INSIDE THE LOAD ARRAY" + data);
+        LogUtils.i("INSIDE THE LOAD ARRAY" + data);
 
         return data;
     }
 
     private void cancelTrip() {
         String url = Constants.LIVEURL_REQUEST + "updateTrips/trip_id/" + tripID + "/trip_status/cancel/accept_status/5/distance/0/total_amount/0/user_id/" + driverId;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -1693,7 +1694,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onResponse(JSONArray response) {
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
-                            System.out.println("Cancelled the trip!!");
+                            LogUtils.i("Cancelled the trip!!");
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -1701,7 +1702,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("no internet");
+                    LogUtils.i("no internet");
                     // stopAnim();
                     // Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -1716,7 +1717,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void checkphonenumber() {
         String url = Constants.LIVEURL + "editProfile/user_id/" + driverId;
-        System.out.println(" Checkphone URL is " + url);
+        LogUtils.i(" Checkphone URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -1758,7 +1759,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 onlineLay.setEnabled(true);
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("no internet");
+                    LogUtils.i("no internet");
                     // stopAnim();
                     // Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -1862,8 +1863,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (driverId != null && tripID != null) {
             //tripID=state.getString("tripID",null);
-            System.out.println("Inside the save  distance===>" + tripID);
-            System.out.println("Inside the save rider id in firebase===>" + riderID);
+            LogUtils.i("Inside the save  distance===>" + tripID);
+            LogUtils.i("Inside the save rider id in firebase===>" + riderID);
             if (!tripID.equals("0") && !tripID.equals("empty")) {
                 ratingRef = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID);
                 Map<String, Object> updates = new HashMap<>();
@@ -1877,21 +1878,21 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 updates.put("rider_rating", "0");
                 updates.put("driver_rating", "0");
                 updates.put("tollfee", "0");
-                System.out.println("Total price" + strTotalPrice);
+                LogUtils.i("Total price" + strTotalPrice);
 
                 ratingRef.setValue(updates, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        System.out.println("DATA SAVED SUCCESSFULLY");
+                        LogUtils.i("DATA SAVED SUCCESSFULLY");
                         if (databaseError != null) {
-                            System.out.println("DATA SAVED SUCCESSFULLY");
+                            LogUtils.i("DATA SAVED SUCCESSFULLY");
                         }
                     }
                 });
             }
 
         } else {
-            System.out.println("Inside Else driverid or tripid is empty");
+            LogUtils.i("Inside Else driverid or tripid is empty");
         }
     }
 
@@ -1914,7 +1915,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void getCancelState() {
-        System.out.println("Trip size in get cancel state" + tripIDs + "SIZE" + tripIDs.size());
+        LogUtils.i("Trip size in get cancel state" + tripIDs + "SIZE" + tripIDs.size());
         if (tripIDs.isEmpty() || tripIDs.size() == 0) {
 
             mMap.clear();
@@ -1931,7 +1932,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             if (mCurrentLocation != null) {
                 LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-                System.out.println("INSIDE ENDTRIP CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+                LogUtils.i("INSIDE ENDTRIP CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(latLng)                              // Sets the center of the map to current location
                         .zoom(Constants.MAP_ZOOM_SIZE)
@@ -1977,13 +1978,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 Map<String, Object> updates = new HashMap<>();
                 updates.put("Distance", strTotalDistance);
                 updates.put("Price", strTotalPrice);
-                System.out.println("Total price" + strTotalPrice);
+                LogUtils.i("Total price" + strTotalPrice);
 
                 ref.updateChildren(updates); //change
 
             }
             /*tripID = state.getString("tripID", null);
-            System.out.println("Inside the save  distance===>" + tripID);
+            LogUtils.i("Inside the save  distance===>" + tripID);
 */
 
         }
@@ -1992,27 +1993,27 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     private void updateDriverRating(String driverRating) {
         if (tempTripWithName != null) {
   /*          tripID = state.getString("tripID", null);
-            System.out.println("Inside the save  distance===>" + tripID);*/
+            LogUtils.i("Inside the save  distance===>" + tripID);*/
             String[] tripidArray = tempTripWithName.split(":");
             String Tripid = tripidArray[0];
 
-            System.out.println("Inside the updatedriverRating===>" + Tripid);
+            LogUtils.i("Inside the updatedriverRating===>" + Tripid);
             if (Tripid != null && !Tripid.isEmpty()) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("trips_data").child(Tripid);
                 Map<String, Object> updates = new HashMap<>();
                 updates.put("driver_rating", driverRating);
 
-                System.out.println("Total rating" + driverRating);
-                System.out.println("Update through ref" + driverRating);
+                LogUtils.i("Total rating" + driverRating);
+                LogUtils.i("Update through ref" + driverRating);
                 ref.updateChildren(updates);
             }
 
 
            /* if (ratingRef != null) {
-                System.out.println("Update through ratingref" + driverRating);
+                LogUtils.i("Update through ratingref" + driverRating);
                 ratingRef.updateChildren(updates);
             } else {
-                System.out.println("Update through ref" + driverRating);
+                LogUtils.i("Update through ref" + driverRating);
                 ref.updateChildren(updates);
             }*/
         }
@@ -2020,7 +2021,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void getRating() {
         //tripID = state.getString("tripID", null);
-        System.out.println("Inside the getdriverRating===>" + tripID);
+        LogUtils.i("Inside the getdriverRating===>" + tripID);
 
         flexibleRatingBar = (FlexibleRatingBar) dialogTripSummary.findViewById(R.id.flexibleRatingBar);
         ratingReference = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID + "/rider_rating");
@@ -2031,7 +2032,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     ratingInt = dataSnapshot.getValue().toString();
                     if (ratingInt != null && !ratingInt.isEmpty()) {
                         try {
-                            System.out.println("DATASNAPSHOTTT Rattinggggg" + ratingInt);
+                            LogUtils.i("DATASNAPSHOTTT Rattinggggg" + ratingInt);
                             Float rating = Float.parseFloat(ratingInt);
                             flexibleRatingBar.setRating(rating);
                         } catch (Exception e) {
@@ -2065,16 +2066,16 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         String[] tripidArray = tempTripWithName.split(":");
         String Tripid = tripidArray[0];
         System.out.println(tripID + "trips ids" + Tripid);
-        System.out.println("trips idsamount" + getTotalPrice());
+        LogUtils.i("trips idsamount" + getTotalPrice());
         String url = Constants.LIVEURL_REQUEST + "updateTrips/trip_id/" + Tripid + "/trip_status/end/accept_status/4/distance/" + strTotalDistance + "/categoryId/" + strCategoryId + "/user_id/" + driverId + "/drop_address/" + endAddress + "/end_lat/" + endLat + "/end_long/" + endLng;
-        System.out.println(" ONLINE URL is " + url);
-        Log.i("wow", "end trip url formed = "+url);
+        LogUtils.i(" ONLINE URL is " + url);
+        LogUtils.i("end trip url formed = " + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.i("wow", "end trip response = "+response.toString());
+                        LogUtils.i("end trip response = " + response.toString());
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -2086,9 +2087,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 strLat = jsonArray.getString("lat");
                                 strLng = jsonArray.getString("long");
 
-                                System.out.println("fffffff" + riderID);
-                                System.out.println("latitiudee OF DESTINATION" + strLat);
-                                System.out.println("longitude OF DESTINATION" + strLng);
+                                LogUtils.i("fffffff" + riderID);
+                                LogUtils.i("latitiudee OF DESTINATION" + strLat);
+                                LogUtils.i("longitude OF DESTINATION" + strLng);
 
                                 //getCompleteAddressString(double_lat, double_lng);
                                 getRiderDetails();
@@ -2103,11 +2104,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("wow", "end trip error response = "+error.networkResponse);
+                LogUtils.i("end trip error response = " + error.networkResponse);
                 onlineLay.setEnabled(true);
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("no internet");
+                    LogUtils.i("no internet");
                     // stopAnim();
                     // Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -2122,7 +2123,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void startUpdateTrip() {
         String url = Constants.LIVEURL_REQUEST + "updateTrips/trip_id/" + tripID + "/trip_status/on/accept_status/3/total_amount/0/user_id/" + driverId;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -2150,9 +2151,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                         double double_lat = Double.parseDouble(strLat);
                                         double double_lng = Double.parseDouble(strLng);
 
-                                        System.out.println("fffffff" + riderID);
-                                        System.out.println("latitiudee OF DESTINATION" + strLat);
-                                        System.out.println("longitude OF DESTINATION" + strLng);
+                                        LogUtils.i("fffffff" + riderID);
+                                        LogUtils.i("latitiudee OF DESTINATION" + strLat);
+                                        LogUtils.i("longitude OF DESTINATION" + strLng);
 
                                         destLocation = new LatLng(double_lat, double_lng);
                                         if (mCurrentLocation != null)
@@ -2161,7 +2162,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                         if (orginLocation != null && destLocation != null) {
                                             if (latlngs != null) {
 
-                                                System.out.println("The latlngs are" + latlngs);
+                                                LogUtils.i("The latlngs are" + latlngs);
                                                 GoogleDirection.withServerKey(google_api_key)
                                                         .from(orginLocation)
                                                         .to(destLocation)
@@ -2200,7 +2201,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 onlineLay.setEnabled(true);
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("else");
+                    LogUtils.i("else");
                     // stopAnim();
                     //   Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -2217,7 +2218,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         //http://demo.cogzidel.com/arcane_lite/requests/updateTrips/trip_id/5858fd6b49ad6a3708b7acd9/trip_status/on/accept_status/2
         String url = Constants.LIVEURL_REQUEST + "updateTrips/trip_id/" + tripID + "/trip_status/off/accept_status/2/total_amount/0/user_id/" + driverId;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -2237,17 +2238,17 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 double double_lat = Double.parseDouble(strLat);
                                 double double_lng = Double.parseDouble(strLng);
 
-                                System.out.println("fffffff" + riderID);
-                                System.out.println("latitiudee" + strLat);
-                                System.out.println("longitude" + strLng);
+                                LogUtils.i("fffffff" + riderID);
+                                LogUtils.i("latitiudee" + strLat);
+                                LogUtils.i("longitude" + strLng);
 
                                 strsetValue = "coming_arrive";
 
                                 //check the drop listener has lat lng
                                 try {
 
-                                    System.out.println("latitiudee" + strLat);
-                                    System.out.println("longitude" + strLng);
+                                    LogUtils.i("latitiudee" + strLat);
+                                    LogUtils.i("longitude" + strLng);
 
                                     destLocation = new LatLng(double_lat, double_lng);
 
@@ -2282,7 +2283,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 onlineLay.setEnabled(true);
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("no internet");
+                    LogUtils.i("no internet");
                     // stopAnim();
                 }
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
@@ -2296,7 +2297,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void upDateRequest(Double lat, Double lng) {
         String url = Constants.LIVEURL_REQUEST + "updateRequest/request_id/" + reqID + "/driver_id/" + driverId + "/request_status/accept/" + "lat/" + lat + "/long/" + lng;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -2323,8 +2324,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                         double double_lat = Double.parseDouble(strLat);
                                         double double_lng = Double.parseDouble(strLng);
 
-                                        System.out.println("latitiudee" + strLat);
-                                        System.out.println("longitude" + strLng);
+                                        LogUtils.i("latitiudee" + strLat);
+                                        LogUtils.i("longitude" + strLng);
 
                                         destLocation = new LatLng(double_lat, double_lng);
 
@@ -2359,7 +2360,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 onlineLay.setEnabled(true);
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.print("no internet");
+                    LogUtils.i("no internet");
                     // stopAnim();
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -2375,7 +2376,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     private void getRiderDetails() {
 
         final String url = Constants.LIVEURL_RIDER + "editProfile/user_id/" + riderID;
-        System.out.println("RiderProfileURL==>" + url);
+        LogUtils.i("RiderProfileURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -2394,8 +2395,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             riderFirstName = riderFirstName.replaceAll("%20", " ");
                             riderLastName = riderLastName.replaceAll("%20", " ");
 
-                            System.out.println("Rider First Name old==>" + riderFirstName);
-                            System.out.println("Rider Last Name old==>" + riderLastName);
+                            LogUtils.i("Rider First Name old==>" + riderFirstName);
+                            LogUtils.i("Rider Last Name old==>" + riderLastName);
 
                             if (riderLastName.matches("null"))
                                 riderLastName = " ";
@@ -2420,7 +2421,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             }
                             //     dismissDialog();
                         } else {
-                            System.out.println("inside else");
+                            LogUtils.i("inside else");
 //                            Toast.makeText(getApplicationContext(), message,Toast.LENGTH_SHORT).show();
                             // dismissDialog();
                         }
@@ -2540,7 +2541,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             });
         } catch (Exception e) {
-            System.out.println("Exception" + e);
+            LogUtils.i("Exception" + e);
         }
 
         d = new Dialog(Map_Activity.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -2581,14 +2582,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         checkPermission();
-        System.out.println("INSIDE MAPREADY");
+        LogUtils.i("INSIDE MAPREADY");
 
         mCurrentLocation = getFusedLocation();
 
         if (mCurrentLocation != null) {
             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-            System.out.println("INSIDE LOCAION CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+            LogUtils.i("INSIDE LOCAION CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)                              // Sets the center of the map to current location
@@ -2623,7 +2624,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     startLocationUpdates();
 
                 } else {
-                    System.out.println("INSIDE request permission");
+                    LogUtils.i("INSIDE request permission");
                     // permission denied, boo! Disable the functionality that depends on this permission.
                 }
             }
@@ -2658,14 +2659,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     //Get map of users in datasnapshot
                     if (dataSnapshot.getValue() != null) {
 
-                        System.out.println("response ===>" + dataSnapshot.toString());
+                        LogUtils.i("response ===>" + dataSnapshot.toString());
 
                         Object onlineStatusObj = dataSnapshot.child("online_status").getValue();
                         Object proofStatusObj = dataSnapshot.child("proof_status").getValue();
                         String onlineStatus, proofStatus;
 
-                        System.out.println("response onlineStatus===>" + onlineStatusObj);
-                        System.out.println("response proofStatus===>" + proofStatusObj);
+                        LogUtils.i("response onlineStatus===>" + onlineStatusObj);
+                        LogUtils.i("response proofStatus===>" + proofStatusObj);
 
 
                         if (proofStatusObj != null) {
@@ -2749,14 +2750,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     //Get map of users in datasnapshot
                     if (dataSnapshot.getValue() != null) {
 
-                        System.out.println("response ===>" + dataSnapshot.toString());
+                        LogUtils.i("response ===>" + dataSnapshot.toString());
 
                         Object onlineStatusObj = dataSnapshot.child("online_status").getValue();
                         Object proofStatusObj = dataSnapshot.child("proof_status").getValue();
                         String onlineStatus, proofStatus;
 
-                        System.out.println("response onlineStatus===>" + onlineStatusObj);
-                        System.out.println("response proofStatus===>" + proofStatusObj);
+                        LogUtils.i("response onlineStatus===>" + onlineStatusObj);
+                        LogUtils.i("response proofStatus===>" + proofStatusObj);
 
 
                         if (proofStatusObj != null) {
@@ -2810,7 +2811,6 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void goOfflineFB() {
-        Log.i("wow", "clicked online 3");
         setOnlineButtunStatus(false);
         onlineTxt.setText(R.string.go_online);
         stopService(new Intent(getBaseContext(), Services.class).setPackage(this.getPackageName()));
@@ -2831,7 +2831,6 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void goOnlineFB() {
-        Log.i("wow", "clicked online 4");
         setOnlineButtunStatus(true);
         onlineTxt.setText(R.string.go_offline);
         startService(new Intent(getBaseContext(), Services.class).setPackage(this.getPackageName()));
@@ -2868,14 +2867,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void getProofStatus() {
         try {
-            System.out.println("Driver Id In Proof" + driverId);
+            LogUtils.i("Driver Id In Proof" + driverId);
             proofstatusref = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId).child("proof_status");
             proofstatusref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getValue() != null) {
                         String proofstatus = dataSnapshot.getValue().toString();
-                        System.out.println("Driver ProofStatus " + proofstatus);
+                        LogUtils.i("Driver ProofStatus " + proofstatus);
                         if (!proofstatus.isEmpty() && proofstatus.length() != 0) {
                             if (proofstatus.matches("Accepted")) {
 
@@ -2901,7 +2900,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
-                    System.out.print("error==>" + String.valueOf(databaseError));
+                    LogUtils.i("error==>" + String.valueOf(databaseError));
                 }
             });
         } catch (Exception e) {
@@ -2931,9 +2930,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             ref.setValue(updates, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    System.out.println("DATA SAVED SUCCESSFULLY");
+                    LogUtils.i("DATA SAVED SUCCESSFULLY");
                     if (databaseError != null) {
-                        System.out.println("DATA SAVED SUCCESSFULLY");
+                        LogUtils.i("DATA SAVED SUCCESSFULLY");
                     }
                     getProofStatus();
                 }
@@ -2960,7 +2959,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         onlineLay.setEnabled(false);
 
         String url = Constants.LIVEURL + "updateOnlineStatus/userid/" + driverId + "/online_status/" + online + "/online_duration/" + duration;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -3005,7 +3004,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 onlineLay.setEnabled(true);
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("no internet");
+                    LogUtils.i("no internet");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
@@ -3128,7 +3127,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         //checkTolls(location);
 
-        System.out.println("location Changed===>" + location.getLatitude() + "  " + location.getLongitude());
+        LogUtils.i("location Changed===>" + location.getLatitude() + "  " + location.getLongitude());
 
         updateLocationFDBrMongoDB(location);
 
@@ -3136,14 +3135,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         float curPosBearing;
 
         if (mCurrentLocation != null) {
-            System.out.println("ONLOCATIOn CHANGE bearing" + mCurrentLocation.getBearing());
+            LogUtils.i("ONLOCATIOn CHANGE bearing" + mCurrentLocation.getBearing());
             curPos = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             curPosBearing = mCurrentLocation.getBearing();
 
         } else {
             curPos = new LatLng(location.getLatitude(), location.getLongitude());
             curPosBearing = location.getBearing();
-            System.out.println("location null");
+            LogUtils.i("location null");
         }
 
         mCurrentLocation = location;
@@ -3170,7 +3169,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         // mMap.clear();
         if (mCurrentLocation != null) {
 
-            System.out.println("INSIDE LOCAION CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+            LogUtils.i("INSIDE LOCAION CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
             //polyline:
             if (destLocation != null) {
                 if (tripStatus != null && tripStatus.matches("end")) {
@@ -3181,7 +3180,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     //GoogleDirection.withServerKey(getString(R.string.direction_api_key))
                     if (latlngs != null) {
 
-                        System.out.println("The latlngs cordinates are" + latlngs);
+                        LogUtils.i("The latlngs cordinates are" + latlngs);
                         GoogleDirection.withServerKey(google_api_key)
                                 .from(new LatLng(location.getLatitude(), location.getLongitude()))
                                 .to(destLocation)
@@ -3202,7 +3201,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 if (mMap != null) {
                     try {
 
-                        System.out.println("Key moved ===>" + mCurrentLocation.getSpeed());
+                        LogUtils.i("Key moved ===>" + mCurrentLocation.getSpeed());
                         //mMap.clear();
 
                         zoomCameraToPosition(curPos);
@@ -3230,15 +3229,15 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                     double[] endValues = new double[]{curPos.latitude, curPos.longitude};
 
-                                    System.out.println("Start location===>" + startValues[0] + "  " + startValues[1]);
-                                    System.out.println("end location===>" + endValues[0] + "  " + endValues[1]);
+                                    LogUtils.i("Start location===>" + startValues[0] + "  " + startValues[1]);
+                                    LogUtils.i("end location===>" + endValues[0] + "  " + endValues[1]);
 
-                                    System.out.println("inside locationchange bearing" + mCurrentLocation.getBearing());
+                                    LogUtils.i("inside locationchange bearing" + mCurrentLocation.getBearing());
 
                                     animateMarkerTo(currentLocMarker, startValues, endValues, mCurrentLocation.getBearing());
 
                                 } else {
-                                    System.out.println("outside locationchange bearing" + mCurrentLocation.getBearing());
+                                    LogUtils.i("outside locationchange bearing" + mCurrentLocation.getBearing());
                                     if (mCurrentLocation.getBearing() == 0.0)
                                         currentLocMarker.setRotation(previousBearing);
                                     else
@@ -3317,7 +3316,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         //rotateMarker(marker,bearing,mMap);
 
         float rotate = getRotate(new LatLng(startValues[0], startValues[1]), new LatLng(endValues[0], endValues[1]));
-        System.out.println("Rotate===>" + rotate);
+        LogUtils.i("Rotate===>" + rotate);
         //marker.setRotation(360 - rotate + myMap.getCameraPosition().bearing);
         if (mCurrentLocation.getBearing() == 0.0)
             marker.setRotation(previousBearing);
@@ -3344,10 +3343,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             // Map_Activity.time.setText("Total Time: " + diff + " minutes");
             if (speed > 0.0)
-                System.out.println("Speedd===>" + new DecimalFormat("0.00").format(speed) + " km/hr");
+                LogUtils.i("Speedd===>" + new DecimalFormat("0.00").format(speed) + " km/hr");
                 //speed.setText("Current speed: " + new DecimalFormat("#.##").format(speed) + " km/hr");
             else {
-                System.out.println("else Speedd===>");
+                LogUtils.i("else Speedd===>");
                 // Toast.makeText(Map_Activity.this, "DISTANCE in Map==>"+new DecimalFormat("#.###").format(distance) + " Km's.", Toast.LENGTH_SHORT).show();
             }
 
@@ -3355,9 +3354,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             if (distance > 0) {
 
                 strTotalDistance = new DecimalFormat("0.0##").format(distance);
-                System.out.println("TOTAL DISTANCE+++>" + strTotalDistance);
+                LogUtils.i("TOTAL DISTANCE+++>" + strTotalDistance);
                 //SavePref.saveInt(context,"TotalDistance", strDistance);
-                System.out.println("Distance in shared preference==>in mappppp" + strTotalDistance);
+                LogUtils.i("Distance in shared preference==>in mappppp" + strTotalDistance);
             } else {
                 strTotalDistance = String.valueOf(distance);
             }
@@ -3403,7 +3402,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     reqID = dataSnapshot.getValue().toString();
-                    System.out.println("DATASNAPSHOTTT" + reqID);
+                    LogUtils.i("DATASNAPSHOTTT" + reqID);
                     regID();
                 }
 
@@ -3433,7 +3432,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         reqID = String.valueOf(requestID);
 
-                        System.out.println("Request ID: request ID from firebase==>" + reqID);
+                        LogUtils.i("Request ID: request ID from firebase==>" + reqID);
                         regID();
                     }
                 }
@@ -3476,7 +3475,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 if (!dataSnapshot.getValue().toString().equals("0")) {
                     //tripID = dataSnapshot.getValue().toString();
                     tripIDWithName = dataSnapshot.getValue().toString();
-                    System.out.println("THE TRIP ID FROM FBASE" + tripIDWithName);
+                    LogUtils.i("THE TRIP ID FROM FBASE" + tripIDWithName);
 
                     if (tripIDWithName.isEmpty() && tripIDWithName.length() == 0) {
 
@@ -3500,17 +3499,17 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         tripID = Tripid;
 
 
-                        System.out.println("Trips List Firebase before" + tripIDs + "SIZE" + tripIDs.size());
-                        System.out.println("TripID Firebase" + tripID);
-                        System.out.println("TripID riderFirstName" + riderFirstNameService);
+                        LogUtils.i("Trips List Firebase before" + tripIDs + "SIZE" + tripIDs.size());
+                        LogUtils.i("TripID Firebase" + tripID);
+                        LogUtils.i("TripID riderFirstName" + riderFirstNameService);
                                /* if(riderFirstName==null || riderFirstName.isEmpty() || riderFirstName.equals("null"))
                                 {
-                                    System.out.println("Rider ID"+riderID);
+                                    LogUtils.i("Rider ID"+riderID);
                                     if(riderID!=null){
                                         getRiderName(riderID);
                                     }
                                     riderFirstName=riderFirstNameService;
-                                    System.out.println("Insiide Service" + riderFirstNameService);
+                                    LogUtils.i("Insiide Service" + riderFirstNameService);
                                 }*/
 
                         if (tripIDs.size() == 0) {
@@ -3523,29 +3522,29 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 tripIDs.add(tripIDWithName);
                                 //Collections.reverse(tripIDs);
 
-                                System.out.println("trip id inside===>" + tripID);
-                                System.out.println("trip id inside===>" + riderFirstName);
-                                System.out.println("trip id inside===>" + tripIDs);
+                                LogUtils.i("trip id inside===>" + tripID);
+                                LogUtils.i("trip id inside===>" + riderFirstName);
+                                LogUtils.i("trip id inside===>" + tripIDs);
                             } else {
-                                System.out.println("trip id outside===>" + tripID);
+                                LogUtils.i("trip id outside===>" + tripID);
                             }
                         }
-                        System.out.println("Trips List Firebase after" + tripIDs);
+                        LogUtils.i("Trips List Firebase after" + tripIDs);
 
                         Set<String> hs = new LinkedHashSet<>();
                         hs.addAll(tripIDs);
                         tripIDs.clear();
                         tripIDs.addAll(hs);
-                        System.out.println("before Trips List" + tripIDs);
+                        LogUtils.i("before Trips List" + tripIDs);
                                 /*Collections.reverse(tripIDs);*/
-                        System.out.println("after Trips List" + tripIDs);
+                        LogUtils.i("after Trips List" + tripIDs);
 
-                        //                        System.out.println("Trips List Firebase cleared" + tripIDs.get(0));
+                        //                        LogUtils.i("Trips List Firebase cleared" + tripIDs.get(0));
 
                         newMap.put(riderFirstName, tripID);
-                        System.out.println("Trips List" + tripIDs);
-                        System.out.println("Trips List" + tripIDs.size());
-                        System.out.println("Trips hash map List" + newMap);
+                        LogUtils.i("Trips List" + tripIDs);
+                        LogUtils.i("Trips List" + tripIDs.size());
+                        LogUtils.i("Trips hash map List" + newMap);
 
                         createDistanceFireBase();
 
@@ -3580,7 +3579,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         Object reqStatusObj = dataSnapshot.child("status").getValue();
 
-        System.out.println("Request status response ===>" + reqStatusObj);
+        LogUtils.i("Request status response ===>" + reqStatusObj);
         String reqStatus = "0";
 
         if (reqStatusObj != null)
@@ -3597,7 +3596,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     return;
                 } else {
                     excecuteonce = true;
-                    System.out.println("Driver id in show dialog==>" + driverId);
+                    LogUtils.i("Driver id in show dialog==>" + driverId);
                     generateNotification(getApplicationContext(), "New Request Arrived");
                     playRequestTone();
                 }
@@ -3694,7 +3693,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         final FlexibleRatingBar driverRatingBar = (FlexibleRatingBar) dialogTripSummary.findViewById(R.id.driver_ratingBar);
 
         currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-        System.out.println("CRRENT DATE TIME" + currentDateTimeString);
+        LogUtils.i("CRRENT DATE TIME" + currentDateTimeString);
         // textView is the TextView view that should display it
         editor.putString("lastTripTime", currentDateTimeString);
         editor.apply();
@@ -3704,7 +3703,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         if (tempTripWithName != null) {
             String[] tripidArray = tempTripWithName.split(":");
             Tripid = tripidArray[0];
-            System.out.println("strtoolfee" + Tripid + "tripsids" + tripID);
+            LogUtils.i("strtoolfee" + Tripid + "tripsids" + tripID);
             tollfrees.remove(Tripid);
             saveArray(tollfrees, "tolltripidarray", getApplicationContext());
         }
@@ -3717,7 +3716,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     String strtoolfee = dataSnapshot.getValue().toString();
-                    System.out.println("fire base tool fees" + strtoolfee);
+                    LogUtils.i("fire base tool fees" + strtoolfee);
                     // toolsamount=strtoolfee;
                     setToll(strtoolfee);
 
@@ -3733,7 +3732,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-        System.out.println("list size==>" + String.valueOf(tripIDs.size()));
+        LogUtils.i("list size==>" + String.valueOf(tripIDs.size()));
 
         if (tripIDs.isEmpty()) {
 
@@ -3752,7 +3751,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         ratingcheck = "update";
                     } else if (ratingcheck.equals("update")) {
                         String rating = String.valueOf(rateValue);
-                        System.out.println("rating of driver app" + rating);
+                        LogUtils.i("rating of driver app" + rating);
                         updateDriverRating(rating);
                         int ratingInt = Math.round(rateValue);
                         switch (ratingInt) {
@@ -3802,8 +3801,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 surgePrice = null;
 
                 tripIDs.remove(tempTripWithName);
-                System.out.println("Trip with Name" + tempTripWithName);
-                System.out.println("Trip Size" + tripIDs.size());
+                LogUtils.i("Trip with Name" + tempTripWithName);
+                LogUtils.i("Trip Size" + tripIDs.size());
                 saveArray(tripIDs, "tripidarray", getApplicationContext());
 
 
@@ -3821,7 +3820,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     tripIDs.clear();
                     getState.putString("tripstate", "endClicked");
                     //mMap.clear();
-                    System.out.println("Trip Size" + tripIDs.size());
+                    LogUtils.i("Trip Size" + tripIDs.size());
                     endTripLayout.setVisibility(View.GONE);
                     bottomBar.setVisibility(View.VISIBLE);
                     toolbarLayout.setVisibility(View.VISIBLE);
@@ -3860,7 +3859,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     if (mCurrentLocation != null) {
                         LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-                        System.out.println("INSIDE ENDTRIP CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+                        LogUtils.i("INSIDE ENDTRIP CHANGE" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(latLng)                              // Sets the center of the map to current location
                                 .zoom(Constants.MAP_ZOOM_SIZE)
@@ -3897,7 +3896,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     String[] tripidArray = tripIDs.get(0).split(":");
                     String Tripid = tripidArray[0];
                     String userName = tripidArray[1].replaceAll("%20", " ");
-                    System.out.println("INSIDE TRIP 1" + Tripid + userName);
+                    LogUtils.i("INSIDE TRIP 1" + Tripid + userName);
 
                     tripID = Tripid;
 
@@ -3916,7 +3915,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     String[] tripidArray1 = tripIDs.get(tripIDs.size() - 1).split(":");
                     String Tripid1 = tripidArray1[0];
                     String userName1 = tripidArray1[1];
-                    System.out.println("Last Trip ID " + Tripid1 + userName1);
+                    LogUtils.i("Last Trip ID " + Tripid1 + userName1);
 
                     getstatusfromfirebase(Tripid1);
                 }
@@ -3932,13 +3931,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         double strWebprice;
 
         if (strCategory != null) {
-            System.out.println("Price per KM in fare" + strWebprice_km);
-            System.out.println("Price Per Min in fare" + strwebpricepermin);
-            System.out.println("Max Size in fare" + strwebmaxsize);
-            System.out.println("Price Fare in fare" + strwebpricefare);
-            System.out.println("Total Distance in fare" + strTotalDistance);
-            System.out.println("Total minutes in fare" + totalminutes);
-            System.out.println("TollFee through out the trip" + getToll());
+            LogUtils.i("Price per KM in fare" + strWebprice_km);
+            LogUtils.i("Price Per Min in fare" + strwebpricepermin);
+            LogUtils.i("Max Size in fare" + strwebmaxsize);
+            LogUtils.i("Price Fare in fare" + strwebpricefare);
+            LogUtils.i("Total Distance in fare" + strTotalDistance);
+            LogUtils.i("Total minutes in fare" + totalminutes);
+            LogUtils.i("TollFee through out the trip" + getToll());
             float tolDistance;
 
             if (strTotalDistance == null) {
@@ -3947,8 +3946,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     double intWebPriceFare, intWebPricePerMin, web_price_fare;
 
-                    System.out.println("after par web price fare ===>" + strwebpricefare);
-                    System.out.println("after par web price min===>" + strwebpricepermin);
+                    LogUtils.i("after par web price fare ===>" + strwebpricefare);
+                    LogUtils.i("after par web price min===>" + strwebpricepermin);
 
                     if (isDouble(strwebpricefare)) {
 
@@ -3969,13 +3968,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     web_price_fare = intWebPriceFare + intWebPricePerMin;
 
-                    System.out.println("after par web price fare ===>" + intWebPriceFare);
-                    System.out.println("after par web price min===>" + intWebPricePerMin);
-                    System.out.println("without round ===>" + web_price_fare);
+                    LogUtils.i("after par web price fare ===>" + intWebPriceFare);
+                    LogUtils.i("after par web price min===>" + intWebPricePerMin);
+                    LogUtils.i("without round ===>" + web_price_fare);
 
                     DecimalFormat df2 = new DecimalFormat("0.00");
                     //df2.setRoundingMode(RoundingMode.UP);
-                    System.out.println("after round ===>" + df2.format(web_price_fare));
+                    LogUtils.i("after round ===>" + df2.format(web_price_fare));
 
 
                     web_price_fare = Double.parseDouble(df2.format(web_price_fare));
@@ -4005,10 +4004,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 tolDistance = Float.parseFloat(strTotalDistance);
                 strWebprice = Double.parseDouble(strWebprice_km);
-                System.out.println("Total minutes in fare" + totalminutes);
+                LogUtils.i("Total minutes in fare" + totalminutes);
                 try {
                     double totalAmount;
-                    System.out.println("tool fee added" + getToll());
+                    LogUtils.i("tool fee added" + getToll());
 
                     if (getToll() != null && !getToll().isEmpty()) {
                         totalAmount = (tolDistance * strWebprice) + Float.parseFloat(String.valueOf(strwebpricefare)) + Double.parseDouble(getToll()) + Double.parseDouble(strbookfee);
@@ -4017,13 +4016,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     }
 
                     //totalAmount=totalAmount+Integer.parseInt(getToll());
-                    System.out.println("Before adding totalminute TTTTTTTTTTTTTTTTTTT" + totalAmount);
+                    LogUtils.i("Before adding totalminute TTTTTTTTTTTTTTTTTTT" + totalAmount);
                     totalAmount = totalAmount + totalminutes * Float.parseFloat(String.valueOf(strwebpricepermin));
-                    System.out.println("TTTTTTTTTTTTTTTTTTT" + totalAmount);
-                    System.out.println("TTTTTTTTTTTTTTTTTTT" + Float.parseFloat(String.valueOf(strwebpricepermin)));
+                    LogUtils.i("TTTTTTTTTTTTTTTTTTT" + totalAmount);
+                    LogUtils.i("TTTTTTTTTTTTTTTTTTT" + Float.parseFloat(String.valueOf(strwebpricepermin)));
 
-                    System.out.println("Calcu distanve" + tolDistance);
-                    System.out.println("calculated total price" + strWebprice);
+                    LogUtils.i("Calcu distanve" + tolDistance);
+                    LogUtils.i("calculated total price" + strWebprice);
 
                     if (airportamt != 0.0) {
                         totalAmount = totalAmount + airportamt;
@@ -4033,7 +4032,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     try {
                         taxpercent = (totalAmount * (Double.parseDouble(strtaxpercentage) / 100.0f));
                         taxaddamount = totalAmount + taxpercent;
-                        System.out.println("After adding tax percentage of" + taxpercent + "to" + taxaddamount);
+                        LogUtils.i("After adding tax percentage of" + taxpercent + "to" + taxaddamount);
                         totalAmount = taxaddamount;
                     } catch (Exception e) {
                         taxpercent = 0.0;
@@ -4048,7 +4047,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             k = (totalAmount * (Double.parseDouble(surgeprice) / 100.0f));
                             surgeaddamount = totalAmount + k;
                             // Toast.makeText(Map_Activity.this, "Surge price percentage of "+surgeprice+" was added", Toast.LENGTH_SHORT).show();
-                            System.out.println("After adding surge price of" + k + "to" + surgeaddamount);
+                            LogUtils.i("After adding surge price of" + k + "to" + surgeaddamount);
                             totalAmount = surgeaddamount;
                         } catch (Exception e) {
                             // Toast.makeText(Map_Activity.this, "Surge added failed"+e, Toast.LENGTH_SHORT).show();
@@ -4071,12 +4070,12 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     totalAmount = totalAmount + getWaypointTotal() * dropPrice;
 
-                    System.out.println("The total amount inside waypoint" + getWaypointTotal() * dropPrice);
+                    LogUtils.i("The total amount inside waypoint" + getWaypointTotal() * dropPrice);
 
-                    System.out.println("Total Amount too be displayed" + totalAmount);
-                    System.out.println("Price Fare in fare" + strwebpricefare);
+                    LogUtils.i("Total Amount too be displayed" + totalAmount);
+                    LogUtils.i("Price Fare in fare" + strwebpricefare);
                     String strCalculatedDistance = String.valueOf(totalAmount);
-                    System.out.println("Total calu===" + strCalculatedDistance);
+                    LogUtils.i("Total calu===" + strCalculatedDistance);
                     double d = Double.parseDouble(String.valueOf(strCalculatedDistance));
                     strTotalPrice = convertToDecimal(d);
                     txtTotalDistance.setText("Total Distance : " + strTotalDistance + " KM");
@@ -4096,7 +4095,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     public String convertToDecimal(Double amount) {
 
         if (amount > 0) {
-            System.out.println("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
+            LogUtils.i("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
             //df2.setRoundingMode(RoundingMode.UP);
             return new DecimalFormat("0.00").format(amount);
         } else {
@@ -4194,7 +4193,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     public void checktripcancelstatus() {
         try {
             //checkTripCancelRef = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId + "/accept/status");
-            System.out.println("INSIDE THE CANCEL" + tripID);
+            LogUtils.i("INSIDE THE CANCEL" + tripID);
             checkTripCancelRef = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID + "/status");
 
             checkTripCancelRef.addValueEventListener(new ValueEventListener() {
@@ -4211,7 +4210,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                     if (strCacnelStatus != null) {
                                         if (strCacnelStatus.equals("drivercliked")) {
                                             //strCacnelStatus = "mt";
-                                            System.out.println("Trip ID Size inside Empty " + tripIDs.size());
+                                            LogUtils.i("Trip ID Size inside Empty " + tripIDs.size());
 
                                       /*  if(tripIDs.size()==0) {
 
@@ -4224,7 +4223,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     */
 
                                         } else {
-                                            System.out.println("Trip ID Size" + tripIDs.size());
+                                            LogUtils.i("Trip ID Size" + tripIDs.size());
                                             generateNotification(getApplicationContext(), "Rider Cancelled the Trip");
                                             excecutecancelonce = false;
                                             getState.putString("tripstate", "endClicked");
@@ -4233,7 +4232,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                         }
 
                                     } else {
-                                        System.out.println("Trip ID Size" + tripIDs.size());
+                                        LogUtils.i("Trip ID Size" + tripIDs.size());
                                         generateNotification(getApplicationContext(), "Rider Cancelled the Trip");
                                         excecutecancelonce = false;
                                         getState.putString("tripstate", "endClicked");
@@ -4259,7 +4258,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void clearTripState(String tripid) {
         //changes on(17/3/2017)
-        System.out.println("THE TRIP ID IS You Click Cancel" + tripid);
+        LogUtils.i("THE TRIP ID IS You Click Cancel" + tripid);
         DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripid);
 
         Map<String, Object> taskMap2 = new HashMap<>();
@@ -4352,10 +4351,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     Object pickupAddress = dataSnapshot.child("pickupAddress").getValue();
                     Object estFare = dataSnapshot.child("estFare").getValue();
 
-                    System.out.println("distance response ===>" + distance);
-                    System.out.println("dropAddress response ===>" + dropAddress);
-                    System.out.println("ETA response ===>" + ETA);
-                    System.out.println("pickupAddress response ===>" + pickupAddress);
+                    LogUtils.i("distance response ===>" + distance);
+                    LogUtils.i("dropAddress response ===>" + dropAddress);
+                    LogUtils.i("ETA response ===>" + ETA);
+                    LogUtils.i("pickupAddress response ===>" + pickupAddress);
 
                     //set views
                     try {
@@ -4454,12 +4453,12 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
             String mapBitmapString = prefs.getString("mapImage", null);
 
-            System.out.println("am in else of bitmap");
+            LogUtils.i("am in else of bitmap");
             mapBitmap = StringToBitMap(mapBitmapString);
 
             if (mapBitmap != null) {
 
-                System.out.println("am in else of bitmap1");
+                LogUtils.i("am in else of bitmap1");
 
                 setMapImage(mapBitmap);
             }
@@ -4587,7 +4586,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     //generateNotifications
     private void generateNotification(Context context, final String message) {
-        System.out.println("INSIDE COUNT ZERO");
+        LogUtils.i("INSIDE COUNT ZERO");
         //Some Vars
         final int NOTIFICATION_ID = 1; //this can be any int
         String title = "SIX Driver";
@@ -4623,7 +4622,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     if (removingMarkerPoint != null) {
 
                         tollMarkersMap.remove(removingMarkerPoint);
-                        System.out.println("Lis of postion!!!!!" + tollMarkersMap);
+                        LogUtils.i("Lis of postion!!!!!" + tollMarkersMap);
                         removingMarkerPoint = null;
                     }
                 }
@@ -4697,7 +4696,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 //Update current location in Firebase
                 updateLocationToFirebase(location);
                 if (tripState.matches("endClicked")) {
-                    System.out.println("trip state in update location==>" + tripState);
+                    LogUtils.i("trip state in update location==>" + tripState);
                     getUpdateLocation(location.getLatitude(), location.getLongitude());
                 }
                 //Updating the current location to Database
@@ -4726,7 +4725,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     //Updating the current location to Database
                     //getUpdateLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                     //new getUpdateLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()).execute();
-                    System.out.println("location which is updated in==>" + mCurrentLocation.getLatitude() + "<====>" + mCurrentLocation.getLongitude());
+                    LogUtils.i("location which is updated in==>" + mCurrentLocation.getLatitude() + "<====>" + mCurrentLocation.getLongitude());
                     this.geoFire.setLocation(driverId, new GeoLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), previousBearing, new GeoFire.CompletionListener() {
                         //this.geoFire.offlineLocation(driverId, new GeoLocation(0.0, 0.0), new GeoFire.CompletionListener() {
                         @Override
@@ -4734,7 +4733,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             if (error != null) {
                                 System.err.println("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                             } else {
-                                System.out.println("Online Location saved on server successfully!");
+                                LogUtils.i("Online Location saved on server successfully!");
                             }
                         }
                     });
@@ -4748,7 +4747,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             if (error != null) {
                                 System.err.println("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                             } else {
-                                System.out.println("Offline Location saved on server successfully!");
+                                LogUtils.i("Offline Location saved on server successfully!");
                             }
                         }
                     });
@@ -4760,7 +4759,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         if (error != null) {
                             System.err.println("There was an error saving the location to GeoFire: " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
                         } else {
-                            System.out.println("Offline Location saved on server successfully!");
+                            LogUtils.i("Offline Location saved on server successfully!");
                         }
                     }
                 });
@@ -4783,7 +4782,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onDirectionFailure(Throwable t) {
-        System.out.println("DIRECTION " + t);
+        LogUtils.i("DIRECTION " + t);
     }
 
     public void onDirectionSuccessMarkerPlacing(Direction direction) {
@@ -4829,8 +4828,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     double[] endValues = new double[]{curPos.latitude, curPos.longitude};
 
-                    System.out.println("Start location===>" + startValues[0] + "  " + startValues[1]);
-                    System.out.println("end location===>" + endValues[0] + "  " + endValues[1]);
+                    LogUtils.i("Start location===>" + startValues[0] + "  " + startValues[1]);
+                    LogUtils.i("end location===>" + endValues[0] + "  " + endValues[1]);
 
 
                     animateMarkerTo(currentLocMarker, startValues, endValues, mCurrentLocation.getBearing());
@@ -4853,7 +4852,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             prevLatLng = new LatLng(curPos.latitude, curPos.longitude);
 
-            System.out.println("direction list===>" + direction);
+            LogUtils.i("direction list===>" + direction);
             List<Leg> leg = direction.getRouteList().get(0).getLegList();
             step = leg.get(0).getStepList();
 
@@ -4934,7 +4933,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     pickUPrDropMarker.remove();
 
                 // before loop:
-                System.out.println("destLocation location ===>" + destLocation);
+                LogUtils.i("destLocation location ===>" + destLocation);
                 pickUPrDropMarker = mMap.addMarker(new MarkerOptions().position(destLocation).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_dropoff)));
 
 
@@ -4943,7 +4942,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 if (pickUPrDropMarker != null)
                     pickUPrDropMarker.remove();
 
-                System.out.println("destLocation location ===>" + destLocation);
+                LogUtils.i("destLocation location ===>" + destLocation);
                 pickUPrDropMarker = mMap.addMarker(new MarkerOptions().position(destLocation).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_pickup)));
 
             }
@@ -4996,7 +4995,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onStart() {
         super.onStart();
-        System.out.print("inside the on start");
+        LogUtils.i("inside the on start");
         active = true;
         Constants.MAP_ISSHOWING = true;
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -5156,11 +5155,11 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         tripID = temptripID;
         getRiderID(tripID);
-        System.out.println("driver id====>" + driverId);
-        System.out.println("trip id====>" + tripID);
+        LogUtils.i("driver id====>" + driverId);
+        LogUtils.i("trip id====>" + tripID);
 
         if (tripID != null) {
-            System.out.println("trip id statussss====>" + tripID);
+            LogUtils.i("trip id statussss====>" + tripID);
             //final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverID).child("accept").child("status");
             tripsdataRef = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID).child("status");
             tripsdataListen = tripsdataRef.addValueEventListener(new ValueEventListener() {
@@ -5168,7 +5167,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getValue() != null) {
                         String status = dataSnapshot.getValue().toString();
-                        System.out.println("Status from Firebase====>status" + status);
+                        LogUtils.i("Status from Firebase====>status" + status);
                         if (status != null) {
 
 
@@ -5176,7 +5175,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 case "1":
 
-                                    System.out.println("accept state trip id in status 1 ===>" + tripID);
+                                    LogUtils.i("accept state trip id in status 1 ===>" + tripID);
 
                                     getAcceptState();
                                     getTerminal(riderID);
@@ -5186,7 +5185,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 case "2":
 
                                     tripID = temptripID;
-                                    System.out.println("arrive now clicked trip id in status 2 ===>" + tripID);
+                                    LogUtils.i("arrive now clicked trip id in status 2 ===>" + tripID);
                                     getStartState();
                                     getTerminal(riderID);
                                     break;
@@ -5198,7 +5197,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                     if (riderID != null)
                                         ref.child("riders_location").child(riderID).child("pickup_terminal").setValue("None");
                                     tripID = temptripID;
-                                    System.out.println("start clicked trip id in status 3 ===>" + tripID);
+                                    LogUtils.i("start clicked trip id in status 3 ===>" + tripID);
                                     getOnTripState();
 
                                     break;
@@ -5206,7 +5205,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 case "4":
 
-                                    System.out.print("end trip");
+                                    LogUtils.i("end trip");
                                     if (tripsdataListen != null)
                                         tripsdataRef.removeEventListener(tripsdataListen);
 
@@ -5216,12 +5215,12 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 case "5":
 
-                                    System.out.print("trip cancel state");
+                                    LogUtils.i("trip cancel state");
                                     if (excecutecancelonce) {
-                                        System.out.println("Inside excecute once" + excecutecancelonce);
+                                        LogUtils.i("Inside excecute once" + excecutecancelonce);
                                         return;
                                     } else {
-                                        System.out.println("Inside excecute once" + excecutecancelonce);
+                                        LogUtils.i("Inside excecute once" + excecutecancelonce);
                                         excecutecancelonce = true;
                                         checktripcancelstatus();
                                     }
@@ -5245,7 +5244,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             });
         } /*else {
-            System.out.println("trip id is null====>");
+            LogUtils.i("trip id is null====>");
         }*/
     }
 
@@ -5278,8 +5277,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             String Tripid = tripidArray[0];
             String userName = tripidArray[1].replaceAll("%20", " ");
 
-            System.out.println("TripID Split" + Tripid);
-            System.out.println("Username Split" + userName);
+            LogUtils.i("TripID Split" + Tripid);
+            LogUtils.i("Username Split" + userName);
             dynamicButtons[i] = new TextView(Map_Activity.this);
             dynamicButtons[i].setText("Trip " + (i + 1));
             dynamicButtons[i].setPadding(5, 5, 5, 5);
@@ -5295,10 +5294,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             dynamic.addView(dynamicButtons[i]); // dynamic is the container of the buttons
             if (userName == null || userName.equals("null")) {
-                System.out.println("Username RIDERFIRST" + riderFirstName);
-                System.out.println("Username NOT NULL" + userName);
+                LogUtils.i("Username RIDERFIRST" + riderFirstName);
+                LogUtils.i("Username NOT NULL" + userName);
                 userName = riderFirstName.replaceAll("%20", " ");
-                System.out.println("Username NOT NULL" + userName);
+                LogUtils.i("Username NOT NULL" + userName);
             }
             current_rider.setText(userName);
             btnArriveNow.setEnabled(true);
@@ -5318,8 +5317,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             String Tripid = tripidArray[0];
             String userName = tripidArray[1].replaceAll("%20", " ");
 
-            System.out.println("TripID Split" + Tripid);
-            System.out.println("Username Split" + userName);
+            LogUtils.i("TripID Split" + Tripid);
+            LogUtils.i("Username Split" + userName);
             dynamicButtons1[j] = new TextView(Map_Activity.this);
             dynamicButtons1[j].setText("Trip " + (j + 1));
             dynamicButtons1[j].setPadding(5, 5, 5, 5);
@@ -5334,10 +5333,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             dynamic1.addView(dynamicButtons1[j]); // dynamic is the container of the buttons
             //dynamic1.addView(dynamicButtons[i]); // dynamic is the container of the buttons
             if (userName == null || userName.equals("null")) {
-                System.out.println("Username RIDERFIRST" + riderFirstName);
-                System.out.println("Username NOT NULL" + userName);
+                LogUtils.i("Username RIDERFIRST" + riderFirstName);
+                LogUtils.i("Username NOT NULL" + userName);
                 userName = riderFirstName;
-                System.out.println("Username NOT NULL" + userName);
+                LogUtils.i("Username NOT NULL" + userName);
             }
             current_rider1.setText(userName);
         }
@@ -5353,8 +5352,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             String Tripid = tripidArray[0];
             String userName = tripidArray[1].replaceAll("%20", " ");
 
-            System.out.println("TripID Split" + Tripid);
-            System.out.println("Username Split" + userName);
+            LogUtils.i("TripID Split" + Tripid);
+            LogUtils.i("Username Split" + userName);
             dynamicButtons2[k] = new TextView(Map_Activity.this);
             dynamicButtons2[k].setText("Trip " + (k + 1));
             dynamicButtons2[k].setPadding(5, 5, 5, 5);
@@ -5369,10 +5368,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             dynamic2.addView(dynamicButtons2[k]); // dynamic is the container of the buttons
             //dynamic1.addView(dynamicButtons[i]); // dynamic is the container of the buttons
             if (userName == null || userName.equals("null")) {
-                System.out.println("Username RIDERFIRST" + riderFirstName);
-                System.out.println("Username NOT NULL" + userName);
+                LogUtils.i("Username RIDERFIRST" + riderFirstName);
+                LogUtils.i("Username NOT NULL" + userName);
                 userName = riderFirstName;
-                System.out.println("Username NOT NULL" + userName);
+                LogUtils.i("Username NOT NULL" + userName);
             }
             current_rider2.setText(userName);
 
@@ -5394,10 +5393,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     private void getRiderID(final String tripID) {
 
 
-        System.out.println("trip id====>" + tripID);
+        LogUtils.i("trip id====>" + tripID);
 
         if (tripID != null) {
-            System.out.println("trip id====>" + tripID);
+            LogUtils.i("trip id====>" + tripID);
             //final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverID).child("accept").child("status");
             final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID).child("riderid");
             databaseReference.addValueEventListener(new ValueEventListener() {
@@ -5405,7 +5404,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getValue() != null) {
                         String riderid = dataSnapshot.getValue().toString();
-                        System.out.println("Status from Firebase====>rider id" + riderid);
+                        LogUtils.i("Status from Firebase====>rider id" + riderid);
                         if (riderid != null) {
                             riderID = riderid;
                             //  getRetrofitArray(riderid);
@@ -5425,14 +5424,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             });
         } /*else {
-            System.out.println("trip id is null====>");
+            LogUtils.i("trip id is null====>");
         }*/
     }
 
     private void getRiderDetailsOnMultipleTrips(String riderID) {
 
         final String url = Constants.LIVEURL_RIDER + "editProfile/user_id/" + riderID;
-        System.out.println("RiderProfileURL==>" + url);
+        LogUtils.i("RiderProfileURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -5450,8 +5449,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             riderFirstName = riderFirstName.replaceAll("%20", " ");
                             riderLastName = riderLastName.replaceAll("%20", " ");
 
-                            System.out.println("Rider First Name new==>" + riderFirstName);
-                            System.out.println("Rider Last Name new==>" + riderLastName);
+                            LogUtils.i("Rider First Name new==>" + riderFirstName);
+                            LogUtils.i("Rider Last Name new==>" + riderLastName);
                             if (riderLastName.matches("null"))
                                 riderLastName = " ";
 
@@ -5476,7 +5475,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             }
                             //     dismissDialog();
                         } else {
-                            System.out.println("inside else");
+                            LogUtils.i("inside else");
 //                            Toast.makeText(getApplicationContext(), message,Toast.LENGTH_SHORT).show();
                             // dismissDialog();
                         }
@@ -5579,7 +5578,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void updatedfirebase(final String currenttrips, final double values) {
 
-        System.out.println("currenttrips" + currenttrips + "values");
+        LogUtils.i("currenttrips" + currenttrips + "values");
 
         try {
             tollfeereference = FirebaseDatabase.getInstance().getReference().child("trips_data").child(currenttrips).child("tollfee");
@@ -5595,7 +5594,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                         sumofamount = convertToDecimal(Double.parseDouble(sumofamount));
 
-                        System.out.println("two values==>" + String.format("Value of a: %.2f", Double.parseDouble(sumofamount)));
+                        LogUtils.i("two values==>" + String.format("Value of a: %.2f", Double.parseDouble(sumofamount)));
                     } else {
 
                         sumofamount = convertToDecimal(values + Double.parseDouble(tollspre));
@@ -5690,7 +5689,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     protected void getUpdateLocation(Double lat, Double lng) {
 
         String url = Constants.LIVEURL + "updateLocation/userid/" + driverId + "/lat/" + lat + "/long/" + lng;
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -5706,10 +5705,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 if (signIn_status.equals("Success")) {
 
-                                    System.out.println("Location Updated!!");
+                                    LogUtils.i("Location Updated!!");
 
                                 } else if (signIn_status.equals("Fail")) {
-                                    System.out.println("fail");
+                                    LogUtils.i("fail");
                                 }
 
                             } catch (JSONException e) {
@@ -5725,7 +5724,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 onlineLay.setEnabled(true);
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.println("fail");
+                    LogUtils.i("fail");
                     // stopAnim();
                     //      Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -5791,18 +5790,18 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     JSONObject geometry = tolllist.getJSONObject("geometry");
                     JSONArray latlng = geometry.getJSONArray("coordinates");
 
-                    //System.out.println("feature===>"+latlng.getDouble(1)+"   "+latlng.getDouble(0));
+                    //LogUtils.i("feature===>"+latlng.getDouble(1)+"   "+latlng.getDouble(0));
                     final LatLng tollposOG = new LatLng(latlng.getDouble(1), latlng.getDouble(0));
 
                     if (isLocationOnPath(tollposOG, directionPositionList, true, 5)) {
 
-                        System.out.println("Testing Location: Yeah Did it...");
+                        LogUtils.i("Testing Location: Yeah Did it...");
                         JSONObject properties = tolllist.getJSONObject("properties");
                         final String Name = properties.optString("Name");
                         final String ZoneID = properties.optString("ZoneID");
 
                         Marker tempmarkertoll = this.tollMarkersMap.get(tollposOG);
-                        System.out.println("Testing Location: " + tempmarkertoll);
+                        LogUtils.i("Testing Location: " + tempmarkertoll);
 
                         if (tempmarkertoll == null) {
 
@@ -5838,13 +5837,13 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (tollMarkersMap != null) {
             try {
-                System.out.println("Lis of postion!!" + tollMarkersMap);
+                LogUtils.i("Lis of postion!!" + tollMarkersMap);
                 //for (LatLng point : listOfTollPos) {
                 for (LatLng point : tollMarkersMap.keySet()) {
-                    System.out.println("keys on the map===>" + point);
+                    LogUtils.i("keys on the map===>" + point);
                     if (CalculationByDistance(new LatLng(location.getLatitude(), location.getLongitude()), point) < .02) {
 
-                        System.out.println("Bingoooo!!" + point.latitude + " " + point.longitude);
+                        LogUtils.i("Bingoooo!!" + point.latitude + " " + point.longitude);
                         Marker m = tollMarkersMap.get(point);
                         String name = "None", ZoneID = "None", previousZoneID = "None";
                         if (m != null) {
@@ -5875,12 +5874,12 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         CircleOptions circleOptions = new CircleOptions().center(position).radius(radiusInMeters).fillColor(shadeColor).strokeColor(strokeColor).strokeWidth(8);
         mCircle = mMap.addCircle(circleOptions);
-        System.out.println("am marking...");*/
+        LogUtils.i("am marking...");*/
 
         //tollMarker = this.tollMarkersMap.get(Name);
 
-        System.out.println("toll marker length====>" + tollMarkersMap.size());
-        System.out.println("toll marker length====>" + tollMarkersMap);
+        LogUtils.i("toll marker length====>" + tollMarkersMap.size());
+        LogUtils.i("toll marker length====>" + tollMarkersMap);
 
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_erp))
@@ -5917,9 +5916,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             public void onResponse(@NonNull Call<List<Contributor>> call, @NonNull retrofit2.Response<List<Contributor>> response) {
                 try {
                     List<Contributor> RequestData = response.body();
-                    System.out.println("Response " + RequestData);
+                    LogUtils.i("Response " + RequestData);
                     if (RequestData != null) {
-                        System.out.println("Response Size" + RequestData.size());
+                        LogUtils.i("Response Size" + RequestData.size());
                     }
                     if (RequestData != null) {
                         for (int i = 0; i < RequestData.size(); i++) {
@@ -5927,14 +5926,14 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                             if (status.equals("Success")) {
                                 surgePrice = RequestData.get(i).getPercentage();
                                 driverCompanyName = RequestData.get(i).getCompanyName();
-                                System.out.println("The Price was" + surgePrice);
-                                System.out.println("Company name was" + driverCompanyName);
+                                LogUtils.i("The Price was" + surgePrice);
+                                LogUtils.i("Company name was" + driverCompanyName);
                                 if (!driverCompanyName.matches("None")) {
                                     driverCompanyFee = RequestData.get(i).getCompanyFee();
                                 } else {
                                     driverCompanyFee = "0";
                                 }
-                                System.out.println("Company Fee is" + driverCompanyFee);
+                                LogUtils.i("Company Fee is" + driverCompanyFee);
 
                                 checkWaypointCount(surgePrice, minutes);
 
@@ -5942,19 +5941,19 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                 k = 0.0;
 
                                 driverCompanyName = RequestData.get(i).getCompanyName();
-                                System.out.println("Company name was" + driverCompanyName);
+                                LogUtils.i("Company name was" + driverCompanyName);
                                 if (!driverCompanyName.matches("None")) {
                                     driverCompanyFee = RequestData.get(i).getCompanyFee();
                                 } else {
                                     driverCompanyFee = "0";
                                 }
-                                System.out.println("Company Fee is" + driverCompanyFee);
+                                LogUtils.i("Company Fee is" + driverCompanyFee);
 
                                 checkWaypointCount("0", minutes);
                             }
 
 
-                            System.out.println("the driver company" + driverCompanyName + driverCompanyFee);
+                            LogUtils.i("the driver company" + driverCompanyName + driverCompanyFee);
                             /*if(driverCompanyFee!=null && driverCompanyName!=null){
 
                                 if(!driverCompanyFee.equals("0")){
@@ -5997,22 +5996,22 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        System.out.println("Location Provoider:" + " Fused Location");
+        LogUtils.i("Location Provoider:" + " Fused Location");
 
         if (mCurrentLocation == null) {
 
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            System.out.println("Location Provoider:" + " Fused Location Fail: GPS Location");
+            LogUtils.i("Location Provoider:" + " Fused Location Fail: GPS Location");
 
             if (locationManager != null) {
 
                 //To avoid duplicate listener
                 try {
                     locationManager.removeUpdates(this);
-                    System.out.print("remove location listener success");
+                    LogUtils.i("remove location listener success");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    System.out.print("remove location listener failed");
+                    LogUtils.i("remove location listener failed");
                 }
 
                 locationManager.requestLocationUpdates(
@@ -6024,7 +6023,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 if (mCurrentLocation == null) {
 
-                    System.out.println("Location Provoider:" + " GPS Location Fail: Network Location");
+                    LogUtils.i("Location Provoider:" + " GPS Location Fail: Network Location");
 
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
@@ -6041,7 +6040,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void startAction(String description) {
 
-        System.out.println("in the distance setting==>");
+        LogUtils.i("in the distance setting==>");
         try {
 
             navcard.setVisibility(View.VISIBLE);
@@ -6185,10 +6184,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void stopPlaying() {
 
-        System.out.println("Am stoping function");
+        LogUtils.i("Am stoping function");
 
         if (requstingTone.isPlaying()) {
-            System.out.println("Am stoped");
+            LogUtils.i("Am stoped");
             requstingTone.stop();
             requstingTone.reset();
         }
@@ -6209,7 +6208,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         if (dataSnapshot.getValue() != null) {
                             String status = dataSnapshot.getValue().toString();
                             if (status != null) {
-                                System.out.println("The drop lat lng from listener" + status);
+                                LogUtils.i("The drop lat lng from listener" + status);
                                 String[] lat1ong = status.split(",");
 
                                 String latitude = lat1ong[0];
@@ -6432,7 +6431,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         selectedDrawable = prefs.getString("navigationMode", null);
 
-        System.out.println("Lat and Lng" + routeLat + "," + routeLng);
+        LogUtils.i("Lat and Lng" + routeLat + "," + routeLng);
 
         if (selectedDrawable != null) {
 
@@ -6535,7 +6534,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     if (dataSnapshot.getValue() != null) {
                         String status = dataSnapshot.getValue().toString();
                         if (status != null) {
-                            System.out.println("The drop lat lng from listener" + status);
+                            LogUtils.i("The drop lat lng from listener" + status);
 
                             if (!status.matches("None")) {
 
@@ -6568,9 +6567,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
             Date CurrentDateTime = dateTimefarmat.parse(strCurrentDateTime);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-            System.out.println("Date: " + dateFormat.format(CurrentDateTime));
-            System.out.println("Time: " + timeFormat.format(CurrentDateTime));
-            System.out.println("Date and Time: " + dateFormat.format(CurrentDateTime) + " " + timeFormat.format(CurrentDateTime));
+            LogUtils.i("Date: " + dateFormat.format(CurrentDateTime));
+            LogUtils.i("Time: " + timeFormat.format(CurrentDateTime));
+            LogUtils.i("Date and Time: " + dateFormat.format(CurrentDateTime) + " " + timeFormat.format(CurrentDateTime));
 
             return strCurrentDateTime;
 
@@ -6602,9 +6601,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     onlineDuration = endDate.getTime() - startDate.getTime();
 
-                    System.out.println("startDate : " + startDate);
-                    System.out.println("endDate : " + endDate);
-                    System.out.println("different : " + onlineDuration);
+                    LogUtils.i("startDate : " + startDate);
+                    LogUtils.i("endDate : " + endDate);
+                    LogUtils.i("different : " + onlineDuration);
 
                     return onlineDuration;
 
@@ -6666,7 +6665,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void getRoutePoints(LatLng origin, LatLng dest) {
 
-        System.out.println("origin route==>" + origin + " dest route==>" + dest);
+        LogUtils.i("origin route==>" + origin + " dest route==>" + dest);
 
         // Getting URL to the Google Directions API
         String url = getDirectionsUrl(origin, dest);
@@ -6821,7 +6820,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     points.add(position);
 
                 }
-                System.out.println("collected routs are in back ====>" + points);
+                LogUtils.i("collected routs are in back ====>" + points);
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(5);
@@ -6860,7 +6859,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         Marker waypointmarker = mMap.addMarker(new MarkerOptions().position(position));
 
                         if (position.equals(destLocation)) {
-                            System.out.println("am here..." + position);
+                            LogUtils.i("am here..." + position);
                             waypointmarker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_dropoff));
                         } else {
                             waypointmarker.setIcon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, countMarker, String.valueOf(count))));
@@ -6877,7 +6876,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
             this.wayPaintsPolyline.put(i++, mulPoly);
 
-            System.out.println("final points are===>" + points);
+            LogUtils.i("final points are===>" + points);
         }
     }
 
@@ -6905,7 +6904,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     public void PlaceType(String latlng) {
         final String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latlng + "&radius=1000&types=airport&key=" + google_api_key;
 
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonObjectRequest movieReq = new JsonObjectRequest(url, null,
@@ -6918,7 +6917,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         try {
 
                             String status = response.getString("status");
-                            System.out.println("status responce====>" + status);
+                            LogUtils.i("status responce====>" + status);
 
 
                             if (status.matches("OK")) {
@@ -6931,7 +6930,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 String placeType = types.optString(0);
 
-                                System.out.println("Airport PlaceType==>" + placeType);
+                                LogUtils.i("Airport PlaceType==>" + placeType);
 
                                 if (placeType.matches("airport")) {
 
@@ -6944,17 +6943,17 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 String error_msg = response.getString("error_message");
 
-                                System.out.println("The Error message in invalidreq" + error_msg);
+                                LogUtils.i("The Error message in invalidreq" + error_msg);
 
                             } else if (status.matches("REQUEST_DENIED")) {
 
                                 String error_msg = response.getString("error_message");
 
-                                System.out.println("The Error message in reqdenied" + error_msg);
+                                LogUtils.i("The Error message in reqdenied" + error_msg);
 
                             } else {
 
-                                System.out.println("Execption on Getting Airport Type");
+                                LogUtils.i("Execption on Getting Airport Type");
                             }
 
                         } catch (JSONException e) {
@@ -6983,9 +6982,9 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void fetchERPDeatils(String ERPresponse, String curZoneID, String curVehiType) {
 
-        System.out.println("Response for ERP in Post Exe ===>" + ERPresponse);
-        System.out.println("Current Zone ID===>" + curZoneID);
-        System.out.println("Current vehicle Type===>" + curVehiType);
+        LogUtils.i("Response for ERP in Post Exe ===>" + ERPresponse);
+        LogUtils.i("Current Zone ID===>" + curZoneID);
+        LogUtils.i("Current vehicle Type===>" + curVehiType);
 
         if (ERPresponse != null) {
             // Parsing json
@@ -6995,7 +6994,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                 JSONArray valueArray = response.getJSONArray("value");
 
-                System.out.println("length of the value array==>" + valueArray.length());
+                LogUtils.i("length of the value array==>" + valueArray.length());
 
                 int lenthOfArray = valueArray.length();
 
@@ -7018,8 +7017,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     currentTime = timeFormat.format(CurrentDateTime);
 
-                    System.out.println("Date: " + dayOfTheWeek);
-                    System.out.println("Time: " + timeFormat.format(CurrentDateTime));
+                    LogUtils.i("Date: " + dayOfTheWeek);
+                    LogUtils.i("Time: " + timeFormat.format(CurrentDateTime));
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -7038,16 +7037,16 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
                     if (dayOfTheWeek != null & currentTime != null)
                         if (DayType.matches(dayOfTheWeek) & curZoneID.matches(ZoneID) & VehicleType.matches(curVehiType)) {
-                            System.out.println("inside zone id");
+                            LogUtils.i("inside zone id");
 
                             if (isTimeLiesBetweenTwotimes(StartTime, EndTime, currentTime)) {
 
-                                System.out.println("Response for items Objects===>" + itemsObjects);
-                                System.out.println("Current Time===>" + currentTime);
+                                LogUtils.i("Response for items Objects===>" + itemsObjects);
+                                LogUtils.i("Current Time===>" + currentTime);
 
                                 String tollChargeAmount = itemsObjects.getString("ChargeAmount");
 
-                                System.out.println("Charge Amount===>" + tollChargeAmount);
+                                LogUtils.i("Charge Amount===>" + tollChargeAmount);
 
                                 Toast.makeText(Map_Activity.this, tollChargeAmount, Toast.LENGTH_SHORT).show();
 
@@ -7077,7 +7076,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                     ERP_SKIP_COUNT = 0;
                 } else {
 
-                    System.out.print("lenthOfArray" + lenthOfArray);
+                    LogUtils.i("lenthOfArray" + lenthOfArray);
                     Toast.makeText(Map_Activity.this, "Nothing Found", Toast.LENGTH_SHORT).show();
                     ERP_SKIP_COUNT = 0;
                 }
@@ -7131,7 +7130,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         textToSpeech = new TextToSpeech(Map_Activity.this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                System.out.println("text to speach status====>" + status);
+                LogUtils.i("text to speach status====>" + status);
                 if (status != TextToSpeech.ERROR) {
                     try {
                         textToSpeech.setLanguage(Locale.US);
@@ -7187,7 +7186,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void setOnlineButtunStatus(boolean value) {
 
-        System.out.println("Last Status in boolean===>" + value);
+        LogUtils.i("Last Status in boolean===>" + value);
         editor.putBoolean("goOnline", value);
         editor.apply();
 

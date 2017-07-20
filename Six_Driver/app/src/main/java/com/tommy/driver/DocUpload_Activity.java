@@ -59,6 +59,7 @@ import com.tommy.driver.adapter.AppController;
 import com.tommy.driver.adapter.BulletTextUtil;
 import com.tommy.driver.adapter.Constants;
 import com.tommy.driver.adapter.FontChangeCrawler;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
@@ -307,13 +308,13 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
         strNickName = i.getStringExtra("nick_name");
         strreferral = i.getStringExtra("referral");
 
-        System.out.println("strreferral====" + strreferral);
-        System.out.println("strVehiclemake====" + strVehiclemake);
-        System.out.println("strVehiclemodel====" + strVehiclemodel);
-        System.out.println("strVehicleyear====" + strVehicleyear);
-        System.out.println("strVehiclemileage====" + strVehiclemileage);
+        LogUtils.i("strreferral====" + strreferral);
+        LogUtils.i("strVehiclemake====" + strVehiclemake);
+        LogUtils.i("strVehiclemodel====" + strVehiclemodel);
+        LogUtils.i("strVehicleyear====" + strVehicleyear);
+        LogUtils.i("strVehiclemileage====" + strVehiclemileage);
 
-        System.out.println("DOCUMENT PAGEE " + "FNAME==" + strFirstName + " " + "LNAME==>" + strLastName + " " + "MOBILE==" + strMobile + " " + "PASSWORD==" + strPassword + " " + "CITY==" + strCity + " " + "PROFILE PICTUREE" + strProfileImage);
+        LogUtils.i("DOCUMENT PAGEE " + "FNAME==" + strFirstName + " " + "LNAME==>" + strLastName + " " + "MOBILE==" + strMobile + " " + "PASSWORD==" + strPassword + " " + "CITY==" + strCity + " " + "PROFILE PICTUREE" + strProfileImage);
         getCategoryDetails();
 
         editor = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE).edit();
@@ -372,7 +373,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
     private void getCategoryDetails() {
 
         final String url = Constants.CATEGORY_LIVE_URL + "Settings/getCategory";
-        System.out.println("URL is" + url);
+        LogUtils.i("URL is" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -387,7 +388,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                                 Log.d("OUTPUT IS", strCarCategory);
                                 carcategory[0] = "Select car category";
                                 carcategory[i + 1] = strCarCategory;
-                                System.out.println("CATEGORY" + carcategory[i]);
+                                LogUtils.i("CATEGORY" + carcategory[i]);
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(DocUpload_Activity.this, R.layout.spinner_item, carcategory);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinnerCategory.setAdapter(adapter);
@@ -445,7 +446,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                 url = url + "/referral_code/" + strreferralcode;
             }
         }
-        System.out.println("Driver SignUp URL==>" + url);
+        LogUtils.i("Driver SignUp URL==>" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -468,7 +469,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                                         saveInFirebase();
                                     }
 
-                                    System.out.println("THR DRIER IS" + driverID);
+                                    LogUtils.i("THR DRIER IS" + driverID);
                                     driverFirstName = register_status.optString("first_name");
                                     driverLastName = register_status.optString("last_name");
                                     driverEmail = register_status.optString("email");
@@ -553,7 +554,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                 url = url + "/referral_code/" + strreferralcode;
             }
         }
-        System.out.println("Driver SignUp URL==>" + url);
+        LogUtils.i("Driver SignUp URL==>" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -577,9 +578,9 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                                         saveInFirebase();
                                     }
 
-                                    System.out.println("Uswer ID" + driverID);
+                                    LogUtils.i("Uswer ID" + driverID);
                                     driverFirstName = register_status.optString("first_name");
-                                    System.out.println("driverFirstName ID" + driverFirstName);
+                                    LogUtils.i("driverFirstName ID" + driverFirstName);
 
                                     driverLastName = register_status.optString("last_name");
                                     driverEmail = register_status.optString("email");
@@ -625,7 +626,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
 
     private void loginSuccess() {
         showDialog();
-        System.out.println("Number of passenger in DocUpload" + strNumOfPassenger);
+        LogUtils.i("Number of passenger in DocUpload" + strNumOfPassenger);
         strFirstName = strFirstName.replaceAll(" ", "%20");
         strLastName = strLastName.replaceAll(" ", "%20");
         strSelectedCategory = strSelectedCategory.trim().replaceAll(" ", "%20");
@@ -650,7 +651,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                 url = url + "/referral_code/" + strreferralcode;
             }
         }
-        System.out.println("Driver SignUp URL==>" + url);
+        LogUtils.i("Driver SignUp URL==>" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -793,17 +794,17 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
             Uri selectedImage = data.getData();
             if (Build.VERSION.SDK_INT >= 19) {
                 if (selectedImage != null && !selectedImage.toString().equals("null")) {
-                    System.out.println("greater 19:" + "kitkat");
+                    LogUtils.i("greater 19:" + "kitkat");
                     picturePath = getImagePath(selectedImage);
-                    System.out.println("mSelectedFissslssePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslssePath res" + picturePath);
 
                 } else {
-                    System.out.println("greater 19:" + "not kitkat");
+                    LogUtils.i("greater 19:" + "not kitkat");
                     picturePath = getPathOfImage(selectedImage);
-                    System.out.println("mSelectedFissslePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslePath res" + picturePath);
                 }
             }
-            System.out.println("Request Code+requestCode" + "Result Code" + resultCode + "data" + data);
+            LogUtils.i("Request Code+requestCode" + "Result Code" + resultCode + "data" + data);
             setPicturePathAndUpload();
         }
     }
@@ -913,17 +914,17 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                     byte[] encoded = Base64.encode(strreferralcode.getBytes("UTF-8"), Base64.DEFAULT);
                     strreferralcode = new String(encoded, "UTF-8");
                     strreferralcode = strreferralcode.replaceAll("=", "").trim();
-                    System.out.println("Encoding UTF" + strreferralcode);
+                    LogUtils.i("Encoding UTF" + strreferralcode);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
 
                 validatereferral(strreferralcode);
-                System.out.println("enter the condition");
+                LogUtils.i("enter the condition");
 
             } else if (strComingfrom != null) {
 
-                System.out.println("enter the condition two");
+                LogUtils.i("enter the condition two");
 
                 if (strComingfrom.matches("facebook")) {
                     faceBookLogin();
@@ -1008,7 +1009,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
 
     protected boolean Upload_Server() {
 
-        System.out.println("After call progress");
+        LogUtils.i("After call progress");
         try {
 
             Log.e("Image Upload", "Inside Upload");
@@ -1019,11 +1020,11 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
             String pathToOurFile = picturePath;
             //	  String pathToOurFile1 = imagepathcam;
 
-            System.out.println("Before Image Upload" + picturePath);
+            LogUtils.i("Before Image Upload" + picturePath);
 
             String urlServer = Constants.LIVEURL + "imageUpload";
-            System.out.println("URL SETVER" + urlServer);
-            System.out.println("After Image Upload" + picturePath);
+            LogUtils.i("URL SETVER" + urlServer);
+            LogUtils.i("After Image Upload" + picturePath);
             String lineEnd = "\r\n";
             String twoHyphens = "--";
             String boundary = "*****";
@@ -1037,8 +1038,8 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
 
             URL url = new URL(urlServer);
             connection = (HttpURLConnection) url.openConnection();
-            System.out.println("URL is " + url);
-            System.out.println("connection is " + connection);
+            LogUtils.i("URL is " + url);
+            LogUtils.i("connection is " + connection);
             // Allow Inputs & Outputs
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -1076,7 +1077,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
             //int serverResponseCode = connection.getResponseCode();
             String serverResponseMessage = connection.getResponseMessage();
 
-            System.out.println("image" + serverResponseMessage);
+            LogUtils.i("image" + serverResponseMessage);
 
             fileInputStream.close();
             outputStream.flush();
@@ -1144,9 +1145,9 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
             ref.setValue(updates, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    System.out.println("DATA SAVED SUCCESSFULLY");
+                    LogUtils.i("DATA SAVED SUCCESSFULLY");
                     if (databaseError != null) {
-                        System.out.println("DATA SAVED SUCCESSFULLY");
+                        LogUtils.i("DATA SAVED SUCCESSFULLY");
                     }
                 }
             });
@@ -1175,7 +1176,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
         showDialog();
 
         final String url = Constants.LIVEURL + "refrel_code/code/" + referralcode;
-        System.out.println("EmailExistURL==>" + url);
+        LogUtils.i("EmailExistURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -1221,7 +1222,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
 
     private void getTermsCondition() {
         final String url = Constants.CATEGORY_LIVE_URL + "Settings/termsconditions";
-        System.out.println("GetTermsURL==>" + url);
+        LogUtils.i("GetTermsURL==>" + url);
         final JsonArrayRequest infoReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -1230,7 +1231,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        System.out.println("Response from GetTerms==>" + jsonObject);
+                        LogUtils.i("Response from GetTerms==>" + jsonObject);
                         content = jsonObject.optString("value");
 
                     } catch (JSONException | NullPointerException | ArrayIndexOutOfBoundsException e) {
@@ -1242,7 +1243,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 
-                System.out.println("The ERror in url" + volleyError);
+                LogUtils.i("The ERror in url" + volleyError);
                 if (volleyError instanceof NoConnectionError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
@@ -1271,7 +1272,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                     null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
             cursor.moveToFirst();
             path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            System.out.println("path111:" + path);
+            LogUtils.i("path111:" + path);
             cursor.close();
         } catch (Exception e) {
 
@@ -1282,7 +1283,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
     private String getPathOfImage(Uri uri) {
         String wholeID = DocumentsContract.getDocumentId(uri);
 
-        System.out.println("WholeId:" + wholeID);
+        LogUtils.i("WholeId:" + wholeID);
 
         // Split at colon, use second item in the array
         String id = wholeID.split(":")[1];
@@ -1304,7 +1305,7 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
             filePath = cursor.getString(columnIndex);
         }
 
-        System.out.println("File Path1:" + filePath);
+        LogUtils.i("File Path1:" + filePath);
         cursor.close();
         return filePath;
     }

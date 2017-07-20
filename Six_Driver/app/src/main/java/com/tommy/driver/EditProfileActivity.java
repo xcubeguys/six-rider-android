@@ -1,6 +1,5 @@
 package com.tommy.driver;
 
-import android.*;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -64,6 +63,7 @@ import com.tommy.driver.adapter.AppController;
 import com.tommy.driver.adapter.Constants;
 import com.tommy.driver.adapter.FontChangeCrawler;
 import com.tommy.driver.adapter.RoundImageTransform;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -88,10 +88,10 @@ import java.util.Map;
 public class EditProfileActivity extends AppCompatActivity implements CountryCodePicker.OnCountryChangeListener, Validator.ValidationListener {
 
     Validator validator;
-    public String userID, firstName, lastName,nickName, email, mobileNumber, countryCode,referal_code, profileImage, profileImageNew="null", status, message,driverUpdateURL,vehicleMake,vehicleModel,vehicleYear,vehicleMileage,vehiclenumberplate;
+    public String userID, firstName, lastName, nickName, email, mobileNumber, countryCode, referal_code, profileImage, profileImageNew = "null", status, message, driverUpdateURL, vehicleMake, vehicleModel, vehicleYear, vehicleMileage, vehiclenumberplate;
     private static final int CAMERA_CAPTURE_IMAGE = 100;
     public static final int MEDIA_TYPE_IMAGE = 1;
-    String picturePath,profImage,strSelectedCategory,strCarCategory,strCategory,selectedMap;
+    String picturePath, profImage, strSelectedCategory, strCarCategory, strCategory, selectedMap;
     DatabaseReference requestReference, tripReference, proofstatusref;
     ProgressDialog progressDialog;
 
@@ -118,7 +118,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     @ViewById(R.id.edtFirstName)
     EditText inputFirstName;
 
-  @NotEmpty(message = "Enter last name")
+    @NotEmpty(message = "Enter last name")
     @ViewById(R.id.edtLastName)
     EditText inputLastName;
 
@@ -142,7 +142,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     @ViewById(R.id.edit_vehiclenumberplate)
     EditText inputVehicleNumberplate;
 
-     @NotEmpty(message = "Enter vehicle mileage")
+    @NotEmpty(message = "Enter vehicle mileage")
     @ViewById(R.id.edit_vehiclemileage)
     EditText inputVehiclemileage;
 
@@ -185,22 +185,20 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("driverid", null);
-        selectedMap=prefs.getString("navigationMode",null);
+        selectedMap = prefs.getString("navigationMode", null);
 
         editor = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE).edit();
 
-        spinCarCategory=(Spinner)findViewById(R.id.car_category);
+        spinCarCategory = (Spinner) findViewById(R.id.car_category);
         //userID="5857f2cdda71b462688b4567";
-        System.out.println("UserID in settings" + userID);
+        LogUtils.i("UserID in settings" + userID);
         validator = new Validator(this);
         validator.setValidationListener(this);
         ccp.setOnCountryChangeListener(this);
         //Change Font to Whole View
 
 
-
-        if(selectedMap!=null)
-        {
+        if (selectedMap != null) {
             switch (selectedMap) {
                 case "googleMap":
                     googleMapRadioButton.setChecked(true);
@@ -212,11 +210,11 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                     wazeMapRadioButton.setChecked(true);
                     break;
             }
-        }else {
+        } else {
             wazeMapRadioButton.setChecked(true);
         }
 
-        Intent i=getIntent();
+        Intent i = getIntent();
         //strCategory=i.getStringExtra("carcategory");
 
         //displayDetails();
@@ -280,19 +278,19 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 // find which radio button is selected
-                if(checkedId == R.id.inappmap) {
+                if (checkedId == R.id.inappmap) {
 
-                    editor.putString("navigationMode","inAppNavigation");
+                    editor.putString("navigationMode", "inAppNavigation");
                     editor.apply();
 
-                } else if(checkedId == R.id.googlemap) {
+                } else if (checkedId == R.id.googlemap) {
 
-                    editor.putString("navigationMode","googleMap");
+                    editor.putString("navigationMode", "googleMap");
                     editor.apply();
 
                 } else {
 
-                    editor.putString("navigationMode","wazeMap");
+                    editor.putString("navigationMode", "wazeMap");
                     editor.apply();
                 }
             }
@@ -301,25 +299,24 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
     private void getCarCategory() {
 
-        final String url=Constants.CATEGORY_LIVE_URL + "Settings/getCategory";
-        System.out.println("URL is"+url);
+        final String url = Constants.CATEGORY_LIVE_URL + "Settings/getCategory";
+        LogUtils.i("URL is" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         // Parsing json
-                        carcategory=new String[response.length()+1];
+                        carcategory = new String[response.length() + 1];
                         for (int i = 0; i < response.length(); i++) {
-                            try
-                            {
+                            try {
                                 strJsonCategory = response.getJSONObject(i);
-                                strCarCategory= strJsonCategory.optString("categoryname");
-                                Log.d("OUTPUT IS",strCarCategory);
-                                carcategory[0]="Select car category";
-                                carcategory[i+1]=strCarCategory;
-                                System.out.println("CATEGORY"+carcategory[i]);
-                                adapteradapter  = new ArrayAdapter<>(EditProfileActivity.this, R.layout.spinner_item, carcategory);
+                                strCarCategory = strJsonCategory.optString("categoryname");
+                                Log.d("OUTPUT IS", strCarCategory);
+                                carcategory[0] = "Select car category";
+                                carcategory[i + 1] = strCarCategory;
+                                LogUtils.i("CATEGORY" + carcategory[i]);
+                                adapteradapter = new ArrayAdapter<>(EditProfileActivity.this, R.layout.spinner_item, carcategory);
                                 spinCarCategory.setAdapter(adapteradapter);
 
                             } catch (JSONException e) {
@@ -333,12 +330,12 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
 
-                    Toast.makeText(getApplicationContext(),"No Intenet Connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No Intenet Connection", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof AuthFailureError) {
                 } else if (error instanceof ServerError) {
                 } else if (error instanceof NetworkError) {
 
-                    Toast.makeText(getApplicationContext(),"No Intenet", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No Intenet", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof ParseError) {
                 }
             }
@@ -350,51 +347,51 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
     public void displayDetails() {
         showDialog();
-        final String url = Constants.LIVEURL + "editProfile/user_id/"+userID;
-        System.out.println("RiderProfileURL==>"+url);
+        final String url = Constants.LIVEURL + "editProfile/user_id/" + userID;
+        LogUtils.i("RiderProfileURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 
                 dismissDialog();
-                for (int i=0;i<response.length();i++){
+                for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
                         status = jsonObject.optString("status");
                         message = jsonObject.optString("message");
 
-                        if(status.equals("Success")) {
+                        if (status.equals("Success")) {
 
-                            firstName=jsonObject.optString("firstname");
-                            lastName=jsonObject.optString("lastname");
-                            nickName=jsonObject.optString("nick_name");  ///////nick name check
-                            email=jsonObject.optString("email");
-                            mobileNumber=jsonObject.optString("mobile");
-                            profileImage=jsonObject.optString("profile_pic");
-                            countryCode=jsonObject.optString("country_code");
-                            referal_code=jsonObject.optString("refrel_code");
-                            strCategory=jsonObject.optString("category");
-                            vehicleMake=jsonObject.optString("vehicle_make");
-                            vehicleModel=jsonObject.optString("vehicle_model");
-                            vehicleYear=jsonObject.optString("vehicle_year");
-                            vehicleMileage=jsonObject.optString("vehicle_mileage");
-                            vehiclenumberplate=jsonObject.optString("number_plate");
+                            firstName = jsonObject.optString("firstname");
+                            lastName = jsonObject.optString("lastname");
+                            nickName = jsonObject.optString("nick_name");  ///////nick name check
+                            email = jsonObject.optString("email");
+                            mobileNumber = jsonObject.optString("mobile");
+                            profileImage = jsonObject.optString("profile_pic");
+                            countryCode = jsonObject.optString("country_code");
+                            referal_code = jsonObject.optString("refrel_code");
+                            strCategory = jsonObject.optString("category");
+                            vehicleMake = jsonObject.optString("vehicle_make");
+                            vehicleModel = jsonObject.optString("vehicle_model");
+                            vehicleYear = jsonObject.optString("vehicle_year");
+                            vehicleMileage = jsonObject.optString("vehicle_mileage");
+                            vehiclenumberplate = jsonObject.optString("number_plate");
 
 //                            savepreferences();
 
                             try {
-                                inputFirstName.setText(firstName.replaceAll("%20"," "));
-                                inputLastName.setText(lastName.replaceAll("%20"," "));
-                                inputNickName.setText(nickName.replaceAll("%20"," "));
+                                inputFirstName.setText(firstName.replaceAll("%20", " "));
+                                inputLastName.setText(lastName.replaceAll("%20", " "));
+                                inputNickName.setText(nickName.replaceAll("%20", " "));
                                 inputEmail.setText(email);
                                 inputMobileNumber.setText(mobileNumber);
                                 inputCountryCode.setText(countryCode);
                                 inputReferalcode.setText(referal_code);
                                 inputVehiclemileage.setText(vehicleMileage);
-                                inputVehicleNumberplate.setText(vehiclenumberplate.replaceAll("%20"," "));
+                                inputVehicleNumberplate.setText(vehiclenumberplate.replaceAll("%20", " "));
 
-                                inputVehiclemake.setText(vehicleMake.replaceAll("%20"," "));
-                                inputVehiclemodel.setText(vehicleModel.replaceAll("%20"," "));
+                                inputVehiclemake.setText(vehicleMake.replaceAll("%20", " "));
+                                inputVehiclemodel.setText(vehicleModel.replaceAll("%20", " "));
                                 inputVehicleyear.setText(vehicleYear);
 
                                 Glide.with(EditProfileActivity.this)
@@ -402,20 +399,20 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                                         .transform(new RoundImageTransform(EditProfileActivity.this))
                                         .into(edtProfileImage);
 
-                                if (strCategory!=null) {
+                                if (strCategory != null) {
 
-                                    if(!strCategory.equals("null")&&!strCategory.equals("")){
+                                    if (!strCategory.equals("null") && !strCategory.equals("")) {
                                         int spinnerPosition = adapteradapter.getPosition(strCategory);
                                         spinCarCategory.setSelection(spinnerPosition);
                                     }
                                 }
 
-                            } catch (NullPointerException e){
+                            } catch (NullPointerException e) {
                                 e.printStackTrace();
                             }
                         } else {
 //                            Toast.makeText(getApplicationContext(), message,Toast.LENGTH_SHORT).show();
-                            System.out.print("inside else");
+                            LogUtils.i("inside else");
                         }
                     } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
@@ -427,7 +424,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         dismissDialog();
-                        if (volleyError instanceof NoConnectionError){
+                        if (volleyError instanceof NoConnectionError) {
                             Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -468,8 +465,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             }
         });
 
-        builder.setNeutralButton(getString(R.string.gallery), new DialogInterface.OnClickListener()
-        {
+        builder.setNeutralButton(getString(R.string.gallery), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -479,8 +475,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             }
         });
 
-        builder.setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -505,7 +500,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         }
     }
 
-    private void start_camera(){
+    private void start_camera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Image File name");
         fileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -523,68 +518,67 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     }
 
     @Click(R.id.backButton)
-    void goBack(){
-        Intent i=new Intent(EditProfileActivity.this,SettingActivity_.class);
+    void goBack() {
+        Intent i = new Intent(EditProfileActivity.this, SettingActivity_.class);
         startActivity(i);
         finish();
     }
 
     private void updateProfile() {
 
-        firstName=inputFirstName.getText().toString().trim();
-        lastName=inputLastName.getText().toString().trim();
-        nickName=inputNickName.getText().toString().trim();
-        countryCode=inputCountryCode.getText().toString().trim();
-        mobileNumber=inputMobileNumber.getText().toString().trim();
-        referal_code=inputReferalcode.getText().toString().trim();
-        email=inputEmail.getText().toString().trim();
+        firstName = inputFirstName.getText().toString().trim();
+        lastName = inputLastName.getText().toString().trim();
+        nickName = inputNickName.getText().toString().trim();
+        countryCode = inputCountryCode.getText().toString().trim();
+        mobileNumber = inputMobileNumber.getText().toString().trim();
+        referal_code = inputReferalcode.getText().toString().trim();
+        email = inputEmail.getText().toString().trim();
 
-        vehicleMake=inputVehiclemake.getText().toString().trim();
-        vehicleModel=inputVehiclemodel.getText().toString().trim();
-        vehicleYear=inputVehicleyear.getText().toString().trim();
-        vehiclenumberplate=inputVehicleNumberplate.getText().toString().trim();
-        vehiclenumberplate = vehiclenumberplate.replaceAll(" ","%20");
-        vehicleMileage=inputVehiclemileage.getText().toString().trim();
-        vehicleMake=vehicleMake.replaceAll(" ","%20");
-        vehicleModel=vehicleModel.replaceAll(" ","%20");
+        vehicleMake = inputVehiclemake.getText().toString().trim();
+        vehicleModel = inputVehiclemodel.getText().toString().trim();
+        vehicleYear = inputVehicleyear.getText().toString().trim();
+        vehiclenumberplate = inputVehicleNumberplate.getText().toString().trim();
+        vehiclenumberplate = vehiclenumberplate.replaceAll(" ", "%20");
+        vehicleMileage = inputVehiclemileage.getText().toString().trim();
+        vehicleMake = vehicleMake.replaceAll(" ", "%20");
+        vehicleModel = vehicleModel.replaceAll(" ", "%20");
 
-        firstName=firstName.replaceAll(" ","%20");
-        lastName=lastName.replaceAll(" ","%20");
-        nickName=nickName.replaceAll(" ","%20");
+        firstName = firstName.replaceAll(" ", "%20");
+        lastName = lastName.replaceAll(" ", "%20");
+        nickName = nickName.replaceAll(" ", "%20");
 
-        strSelectedCategory=strSelectedCategory.replaceAll(" ","_");
+        strSelectedCategory = strSelectedCategory.replaceAll(" ", "_");
         //Updating the Category in Shared Preferences
         editor.putString("carcategory", strSelectedCategory);
         editor.apply();
 
         showDialog();
-        if(profileImageNew == null || profileImageNew.equals("null"))
-        {
-           driverUpdateURL = Constants.LIVEURL + "updateDetails/user_id/"+userID+"/firstname/"+firstName+"/lastname/"+lastName+"/nick_name/"+nickName+"/mobile/"+mobileNumber+"/country_code/"+countryCode+"/city/"+"madurai"+"/email/"+email+"/vehicle_make/"+vehicleMake+"/vehicle_model/"+vehicleModel+"/vehicle_year/"+vehicleYear+"/vehicle_mileage/"+vehicleMileage+"/category/"+strSelectedCategory+"/number_plate/"+vehiclenumberplate;
+        if (profileImageNew == null || profileImageNew.equals("null")) {
+            driverUpdateURL = Constants.LIVEURL + "updateDetails/user_id/" + userID + "/firstname/" + firstName + "/lastname/" + lastName + "/nick_name/" + nickName + "/mobile/" + mobileNumber + "/country_code/" + countryCode + "/city/" + "madurai" + "/email/" + email + "/vehicle_make/" + vehicleMake + "/vehicle_model/" + vehicleModel + "/vehicle_year/" + vehicleYear + "/vehicle_mileage/" + vehicleMileage + "/category/" + strSelectedCategory + "/number_plate/" + vehiclenumberplate;
         } else {
-            driverUpdateURL = Constants.LIVEURL + "updateDetails/user_id/"+userID+"/firstname/"+firstName+"/lastname/"+lastName+"/nick_name/"+nickName+"/mobile/"+mobileNumber+"/country_code/"+countryCode+"/profile_pic/"+profileImageNew+"/city/"+"madurai"+"/email/"+email+"/vehicle_make/"+vehicleMake+"/vehicle_model/"+vehicleModel+"/vehicle_year/"+vehicleYear+"/vehicle_mileage/"+vehicleMileage+"/category/"+strSelectedCategory+"/number_plate/"+vehiclenumberplate;
+            driverUpdateURL = Constants.LIVEURL + "updateDetails/user_id/" + userID + "/firstname/" + firstName + "/lastname/" + lastName + "/nick_name/" + nickName + "/mobile/" + mobileNumber + "/country_code/" + countryCode + "/profile_pic/" + profileImageNew + "/city/" + "madurai" + "/email/" + email + "/vehicle_make/" + vehicleMake + "/vehicle_model/" + vehicleModel + "/vehicle_year/" + vehicleYear + "/vehicle_mileage/" + vehicleMileage + "/category/" + strSelectedCategory + "/number_plate/" + vehiclenumberplate;
         }
-        System.out.println("RiderUpdateProfileURL==>"+driverUpdateURL);
+        LogUtils.i("RiderUpdateProfileURL==>" + driverUpdateURL);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(driverUpdateURL, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 dismissDialog();
-                for (int i=0;i<response.length();i++){
+                for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
                         status = jsonObject.optString("status");
                         message = jsonObject.optString("message");
 
-                        if(status.equals("Success")){
+                        if (status.equals("Success")) {
 //                            savepreferences();
-                            editor.putBoolean("goOnline",false);
+                            editor.putBoolean("goOnline", false);
                             editor.apply();
                             removeFireBaseDriverLocationData();
-                            Intent intent = new Intent(EditProfileActivity.this,SettingActivity_.class);
+                            Intent intent = new Intent(EditProfileActivity.this, SettingActivity_.class);
                             startActivity(intent);
                             finish();
                         } else {
-                            System.out.println("else==>");
+                            LogUtils.i("else==>");
 //                            Toast.makeText(getApplicationContext(), message,Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException | NullPointerException e) {
@@ -596,8 +590,8 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 dismissDialog();
-                if (volleyError instanceof NoConnectionError){
-                    Toast.makeText(getApplicationContext(), "No internet Connection",Toast.LENGTH_SHORT).show();
+                if (volleyError instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), "No internet Connection", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -613,7 +607,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
     private boolean validateCountryCode() {
 
-        if (inputCountryCode.getText().toString().trim().length()==0) {
+        if (inputCountryCode.getText().toString().trim().length() == 0) {
             inputCountryCode.setError("");
             inputCountryCode.setError(getString(R.string.enter_valid_cc));
             return false;
@@ -630,17 +624,13 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     }
 
     private boolean validatePhone() {
-        if(inputMobileNumber.getText().toString().trim().isEmpty()) {
+        if (inputMobileNumber.getText().toString().trim().isEmpty()) {
             inputMobileNumber.setError(getString(R.string.enter_mobile_number));
             return false;
-        }
-        else if (inputCountryCode.getText().toString().trim().isEmpty())
-        {
+        } else if (inputCountryCode.getText().toString().trim().isEmpty()) {
             inputMobileNumber.setError(getString(R.string.enter_valid_cc));
             return false;
-        }
-        else  if (!inputMobileNumber.getText().toString().trim().isEmpty())
-        {
+        } else if (!inputMobileNumber.getText().toString().trim().isEmpty()) {
             if (inputMobileNumber.getText().toString().substring(0, 1).matches("0")) {
                 inputMobileNumber.setError("Enter a valid number");
                 return false;
@@ -655,18 +645,17 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         return true;
     }
 
-    private boolean validateUsing_libphonenumber()
-    {
+    private boolean validateUsing_libphonenumber() {
         countryCode = inputCountryCode.getText().toString();
         mobileNumber = inputMobileNumber.getText().toString();
         if (validatePhone() && validateCountryCode()) {
-            System.out.println("CountryCode==>" + countryCode);
+            LogUtils.i("CountryCode==>" + countryCode);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 countryCode = countryCode.replace("+", "");
             }
-            System.out.println("SDK_VERSION==>" + Build.VERSION.SDK_INT);
-            System.out.println("SDK_VERSION_RELEASE" + Build.VERSION.RELEASE);
-            System.out.println("CountryCode1==>" + countryCode);
+            LogUtils.i("SDK_VERSION==>" + Build.VERSION.SDK_INT);
+            LogUtils.i("SDK_VERSION_RELEASE" + Build.VERSION.RELEASE);
+            LogUtils.i("CountryCode1==>" + countryCode);
             PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
             String isoCode = phoneNumberUtil.getRegionCodeForCountryCode(Integer.parseInt(countryCode));
             Phonenumber.PhoneNumber phoneNumber = null;
@@ -698,17 +687,15 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
         if (!validateCountryCode()) {
 
-        }
-        else if (!validatePhone()) {
+        } else if (!validatePhone()) {
 
         } else if (!validateUsing_libphonenumber()) {
             inputMobileNumber.setError(getString(R.string.invalid_mobile_number));
         } else {
-            System.out.println("Category"+strSelectedCategory);
-            if(strSelectedCategory!=null && !strSelectedCategory.matches("Select car category")) {
+            LogUtils.i("Category" + strSelectedCategory);
+            if (strSelectedCategory != null && !strSelectedCategory.matches("Select car category")) {
                 updateProfile();
-            }
-            else {
+            } else {
                 Toast.makeText(this, "Please select your Category", Toast.LENGTH_SHORT).show();
             }
         }
@@ -749,23 +736,21 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
             new ImageuploadTask(this).execute();
 
-        } /*else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {*/
-
-        else if (requestCode == MEDIA_TYPE_IMAGE && resultCode == RESULT_OK && null != data) {
+        } /*else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {*/ else if (requestCode == MEDIA_TYPE_IMAGE && resultCode == RESULT_OK && null != data) {
 
 //            String single_path = data.getStringExtra("single_path");
             Uri selectedImage = data.getData();
 
             if (Build.VERSION.SDK_INT >= 19) {
                 if (selectedImage != null && !selectedImage.toString().equals("null")) {
-                    System.out.println("greater 19:" + "kitkat");
+                    LogUtils.i("greater 19:" + "kitkat");
                     picturePath = getImagePath(selectedImage);
-                    System.out.println("mSelectedFissslssePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslssePath res" + picturePath);
 
                 } else {
-                    System.out.println("greater 19:" + "not kitkat");
+                    LogUtils.i("greater 19:" + "not kitkat");
                     picturePath = getPathOfImage(selectedImage);
-                    System.out.println("mSelectedFissslePath res" + picturePath);
+                    LogUtils.i("mSelectedFissslePath res" + picturePath);
                 }
             }
 
@@ -813,29 +798,23 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     }
 
 
-    public String getRealPathFromURI(Uri contentUri)
-    {
-        try
-        {
+    public String getRealPathFromURI(Uri contentUri) {
+        try {
             String[] proj = {MediaStore.Images.Media.DATA};
-            Cursor cursor =  this.getContentResolver().query(contentUri, proj, null, null, null);
+            Cursor cursor = this.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return contentUri.getPath();
         }
     }
 
-    private class ImageuploadTask extends AsyncTask<String, Void, Boolean>
-    {
+    private class ImageuploadTask extends AsyncTask<String, Void, Boolean> {
         private ProgressDialog dialog;
         private EditProfileActivity activity;
 
-        ImageuploadTask(EditProfileActivity activity)
-        {
+        ImageuploadTask(EditProfileActivity activity) {
             this.activity = activity;
             context = activity;
             dialog = new ProgressDialog(context);
@@ -856,9 +835,8 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         @Override
         protected void onPostExecute(final Boolean success) {
 
-            if (dialog != null && dialog.isShowing())
-            {
-                if(!activity.isFinishing() && !activity.isDestroyed()){
+            if (dialog != null && dialog.isShowing()) {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
                     try {
                         dialog.dismiss();
                     } catch (Exception e) {
@@ -869,22 +847,22 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         }
 
         @Override
-        protected Boolean doInBackground(final String... args)
-        {
+        protected Boolean doInBackground(final String... args) {
             try {
                 // ... processing ...
                 Upload_Server();
                 return true;
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.e("Schedule", "UpdateSchedule failed", e);
                 return false;
             }
         }
     }
+
     protected void Upload_Server() {
         // TODO Auto-generated method stub
-        System.out.println("After call progress");
-        try{
+        LogUtils.i("After call progress");
+        try {
 
             Log.e("Image Upload", "Inside Upload");
 
@@ -894,14 +872,14 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             String pathToOurFile = picturePath;
             //	  String pathToOurFile1 = imagepathcam;
 
-            System.out.println("Before Image Upload"+picturePath);
+            LogUtils.i("Before Image Upload" + picturePath);
 
-            String urlServer=Constants.LIVEURL+"imageUpload/";
-            System.out.println("URL SETVER"+urlServer);
-            System.out.println("After Image Upload"+picturePath);
+            String urlServer = Constants.LIVEURL + "imageUpload/";
+            LogUtils.i("URL SETVER" + urlServer);
+            LogUtils.i("After Image Upload" + picturePath);
             String lineEnd = "\r\n";
             String twoHyphens = "--";
-            String boundary =  "*****";
+            String boundary = "*****";
 
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
@@ -912,8 +890,8 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
             URL url = new URL(urlServer);
             connection = (HttpURLConnection) url.openConnection();
-            System.out.println("URL is "+url);
-            System.out.println("connection is "+connection);
+            LogUtils.i("URL is " + url);
+            LogUtils.i("connection is " + connection);
             // Allow Inputs & Outputs
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -923,11 +901,11 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             connection.setRequestMethod("POST");
 
             connection.setRequestProperty("Connection", "Keep-Alive");
-            connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
+            connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
 
-            outputStream = new DataOutputStream( connection.getOutputStream() );
+            outputStream = new DataOutputStream(connection.getOutputStream());
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-            outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile +"\"" + lineEnd);
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile + "\"" + lineEnd);
             outputStream.writeBytes(lineEnd);
 
             bytesAvailable = fileInputStream.available();
@@ -937,8 +915,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             // Read file
             bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-            while (bytesRead > 0)
-            {
+            while (bytesRead > 0) {
                 outputStream.write(buffer, 0, bufferSize);
                 bytesAvailable = fileInputStream.available();
                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
@@ -952,39 +929,36 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             int serverResponseCode = connection.getResponseCode();
             String serverResponseMessage = connection.getResponseMessage();
 
-            System.out.println("image"+serverResponseMessage);
+            LogUtils.i("image" + serverResponseMessage);
 
             fileInputStream.close();
             outputStream.flush();
             outputStream.close();
 
             DataInputStream inputStream1;
-            inputStream1 = new DataInputStream (connection.getInputStream());
+            inputStream1 = new DataInputStream(connection.getInputStream());
             String str;
-            String Str1_imageurl="";
+            String Str1_imageurl = "";
 
-            while ((  str = inputStream1.readLine()) != null)
-            {
-                Log.e("Debug","Server Response "+str);
+            while ((str = inputStream1.readLine()) != null) {
+                Log.e("Debug", "Server Response " + str);
 
                 Str1_imageurl = str;
-                Log.e("Debug","Server Response String imageurl"+str);
+                Log.e("Debug", "Server Response String imageurl" + str);
             }
             inputStream1.close();
-            System.out.println("image url"+Str1_imageurl);
+            LogUtils.i("image url" + Str1_imageurl);
 
             //get the image url and store
-            profImage=Str1_imageurl.trim();
+            profImage = Str1_imageurl.trim();
             JSONArray array = new JSONArray(profImage);
-            JSONObject jsonObj  = array.getJSONObject(0);
-            System.out.println("image name"+jsonObj.getString("image_name"));
+            JSONObject jsonObj = array.getJSONObject(0);
+            LogUtils.i("image name" + jsonObj.getString("image_name"));
 
-            profileImageNew=jsonObj.optString("image_name");
+            profileImageNew = jsonObj.optString("image_name");
 
-            System.out.println("Profile Picture Path"+profImage);
-        }
-
-        catch(Exception e){
+            LogUtils.i("Profile Picture Path" + profImage);
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
@@ -1000,52 +974,52 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
-            progressDialog=null;
+            progressDialog = null;
         }
     }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
 
-        Intent intent=new Intent(EditProfileActivity.this,SettingActivity_.class);
+        Intent intent = new Intent(EditProfileActivity.this, SettingActivity_.class);
         startActivity(intent);
     }
 
     public void removeFireBaseDriverLocationData() {
 
-        if(userID!=null && !userID.isEmpty()) {
+        if (userID != null && !userID.isEmpty()) {
             //Get datasnapshot at your "users" root node
-            strCategory=strCategory.replaceAll("%20"," ");
+            strCategory = strCategory.replaceAll("%20", " ");
             final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("drivers_location").child(strCategory).child(userID);
 
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            if(dataSnapshot.getValue()!=null){
-                                //Get map of users in datasnapshot
-                                //GetDriverData((Map<String,Object>) dataSnapshot.getValue());
-                                ref.removeValue();
-                            }
-                        }
+                    if (dataSnapshot.getValue() != null) {
+                        //Get map of users in datasnapshot
+                        //GetDriverData((Map<String,Object>) dataSnapshot.getValue());
+                        ref.removeValue();
+                    }
+                }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            //handle databaseError
-                        }
-                    });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    //handle databaseError
+                }
+            });
 
-            ref.removeValue(new DatabaseReference.CompletionListener()
-            {
+            ref.removeValue(new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    System.out.println("DATA DELETE SUCCESSFULLY");
+                    LogUtils.i("DATA DELETE SUCCESSFULLY");
                     insertFireBaseDriverLocationData();
-                    if(databaseError!=null){
-                        System.out.println("DATA DELETE SUCCESSFULLY WITH ERROR");
+                    if (databaseError != null) {
+                        LogUtils.i("DATA DELETE SUCCESSFULLY WITH ERROR");
                     }
                 }
             });
@@ -1055,9 +1029,9 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
     public void insertFireBaseDriverLocationData() {
 
-        if(userID!=null && !userID.isEmpty()) {
+        if (userID != null && !userID.isEmpty()) {
 
-            strSelectedCategory=strSelectedCategory.replaceAll("%20"," ");
+            strSelectedCategory = strSelectedCategory.replaceAll("%20", " ");
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("drivers_location").child(strSelectedCategory);
             //DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverID);
 
@@ -1065,17 +1039,17 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
             GeoHash geoHash = new GeoHash(location);
 
-            Map<String, Object> updateaccept= new HashMap<String, Object>();
+            Map<String, Object> updateaccept = new HashMap<String, Object>();
             updateaccept.put("g", geoHash.getGeoHashString());
             updateaccept.put("l", Arrays.asList(location.latitude, location.longitude));
 
             ref.child(userID).setValue(updateaccept, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    System.out.println("DATA SAVED SUCCESSFULLY");
+                    LogUtils.i("DATA SAVED SUCCESSFULLY");
 
-                    if(databaseError!=null){
-                        System.out.println("DATA SAVED SUCCESSFULLY WITH ERROR");
+                    if (databaseError != null) {
+                        LogUtils.i("DATA SAVED SUCCESSFULLY WITH ERROR");
                     }
                 }
             });
@@ -1084,14 +1058,14 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
 
 
     public void getProofStatus() {
-        System.out.println("Driver Id In Proof" + userID);
+        LogUtils.i("Driver Id In Proof" + userID);
         proofstatusref = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(userID).child("proof_status");
         proofstatusref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     String proofstatus = dataSnapshot.getValue().toString();
-                    System.out.println("Driver ProofStatus " + proofstatus);
+                    LogUtils.i("Driver ProofStatus " + proofstatus);
                     if (!proofstatus.isEmpty() && proofstatus.length() != 0) {
                         if (proofstatus.matches("Accepted")) {
 
@@ -1099,7 +1073,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                             inputLastName.setEnabled(false);
                             //inputNickName.setEnabled(false);
                             inputEmail.setEnabled(false);
-                            System.out.println("enter eteed ");
+                            LogUtils.i("enter eteed ");
 
 
                         } else {
@@ -1109,7 +1083,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                             inputNickName.setEnabled(true);
                             inputEmail.setEnabled(true);
 
-                            System.out.println("enter eteed gfhfhf");
+                            LogUtils.i("enter eteed gfhfhf");
                         }
                     }
                 } else {
@@ -1118,7 +1092,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                     inputLastName.setEnabled(true);
                     inputNickName.setEnabled(true);
                     inputEmail.setEnabled(true);
-                    System.out.println("enter eteed gfg");
+                    LogUtils.i("enter eteed gfg");
                 }
             }
 
@@ -1128,6 +1102,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             }
         });
     }
+
     public String getImagePath(Uri uri) {
         String path = "";
         try {
@@ -1142,7 +1117,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
                     null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
             cursor.moveToFirst();
             path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            System.out.println("path111:" + path);
+            LogUtils.i("path111:" + path);
             cursor.close();
         } catch (Exception e) {
 
@@ -1153,7 +1128,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
     private String getPathOfImage(Uri uri) {
         String wholeID = DocumentsContract.getDocumentId(uri);
 
-        System.out.println("WholeId:" + wholeID);
+        LogUtils.i("WholeId:" + wholeID);
 
         // Split at colon, use second item in the array
         String id = wholeID.split(":")[1];
@@ -1175,7 +1150,7 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             filePath = cursor.getString(columnIndex);
         }
 
-        System.out.println("File Path1:" + filePath);
+        LogUtils.i("File Path1:" + filePath);
         cursor.close();
         return filePath;
     }

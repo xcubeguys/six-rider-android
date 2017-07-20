@@ -1,11 +1,9 @@
 package com.tommy.driver.adapter;
 
-
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -13,6 +11,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tommy.driver.Map_Activity;
+import com.tommy.driver.utils.LogUtils;
 
 public class Services extends Service {
     public static final String MY_SERVICE = ".adapter.Services";
@@ -32,7 +31,7 @@ public class Services extends Service {
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         driverId = prefs.getString("driverid", null);
-        System.out.println("Driver ID in service class===>" + driverId);
+        LogUtils.i("Driver ID in service class===>" + driverId);
 
         listenListStatus();
     }
@@ -68,14 +67,14 @@ public class Services extends Service {
 
                         if (Status.matches("1")) {
 
-                            System.out.println("IS MAPSHOWING?===>" + Constants.MAP_ISSHOWING);
-                            System.out.println("Driver ID===>" + driverId);
+                            LogUtils.i("IS MAPSHOWING?===>" + Constants.MAP_ISSHOWING);
+                            LogUtils.i("Driver ID===>" + driverId);
 
                             if (!Constants.MAP_ISSHOWING) {
 
                                 if (driverId != null) {
 
-                                    System.out.println("<===== activity started =====> " + driverId);
+                                    LogUtils.i("<===== activity started =====> " + driverId);
                                     Intent intent = new Intent(Services.this, Map_Activity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);

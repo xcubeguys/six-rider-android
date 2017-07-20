@@ -49,6 +49,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.tommy.driver.adapter.AppController;
 import com.tommy.driver.adapter.Constants;
 import com.tommy.driver.adapter.FontChangeCrawler;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -59,7 +60,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -72,17 +72,17 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 @EActivity(R.layout.activity_your_trip_details)
-public class YourTripDetailsActivity extends AppCompatActivity implements DirectionCallback,OnMapReadyCallback {
+public class YourTripDetailsActivity extends AppCompatActivity implements DirectionCallback, OnMapReadyCallback {
 
-    String userID,tripID,strTripDate,strDriveName,strDriverImage,strCarName,strCarImage,strDistanceTraveled,
-            strPickupTime,strDropTime,strPickupLocation,strDropLocation,strPaymentType,strTotalAmount,strRating,strCommission,google_api_key,strCancelfee;
+    String userID, tripID, strTripDate, strDriveName, strDriverImage, strCarName, strCarImage, strDistanceTraveled,
+            strPickupTime, strDropTime, strPickupLocation, strDropLocation, strPaymentType, strTotalAmount, strRating, strCommission, google_api_key, strCancelfee;
     ProgressDialog progressDialog;
-    String strbookfee,strairportfee,strtaxpercent,strcompname,strcompfee,waypointfee="0";
-    LatLng pickuplatlng,droplatlng;
+    String strbookfee, strairportfee, strtaxpercent, strcompname, strcompfee, waypointfee = "0";
+    LatLng pickuplatlng, droplatlng;
     GoogleMap mMap;
-    Double total=0.0,feepercent,feeaddamount,taxpercent;
-    double intcommission,intcompanycom,fareamount=0.0;
-    Marker pickup,drop;
+    Double total = 0.0, feepercent, feeaddamount, taxpercent;
+    double intcommission, intcompanycom, fareamount = 0.0;
+    Marker pickup, drop;
     @ViewById(R.id.trip_date_history)
     TextView tripDate;
 
@@ -177,22 +177,23 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
     @ViewById(R.id.backButton)
     ImageButton back;
 
-    @AfterViews void yourTripDetails(){
+    @AfterViews
+    void yourTripDetails() {
         FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
         fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
 
-        SharedPreferences prefs=getSharedPreferences(Constants.MY_PREFS_NAME,MODE_PRIVATE);
-        userID=prefs.getString("userid",null);
-        System.out.println("User ID in YourTripsDetails"+userID);
+        SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
+        userID = prefs.getString("userid", null);
+        LogUtils.i("User ID in YourTripsDetails" + userID);
 
         Intent tripDetails = getIntent();
         tripID = tripDetails.getStringExtra("trip_id");
         strTripDate = tripDetails.getStringExtra("created");
-        System.out.println("Trip ID in YourTripsDetails"+tripID);
+        LogUtils.i("Trip ID in YourTripsDetails" + tripID);
 
         getKeys();
 
-        mapimg=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        mapimg = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapimg.getMapAsync(this);
         GoogleMapOptions options = new GoogleMapOptions().liteMode(true);
         MapFragment.newInstance(options);
@@ -212,8 +213,8 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
     private void getTripDetails() {
         showDialog();
-        final String url = Constants.LIVEURL_REQUEST+ "getDriverTrips/trip_id/"+tripID;
-        System.out.println("Get Trips URL==>"+url);
+        final String url = Constants.LIVEURL_REQUEST + "getDriverTrips/trip_id/" + tripID;
+        LogUtils.i("Get Trips URL==>" + url);
         final JsonArrayRequest tripListReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -226,53 +227,52 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
                         try {
                             JSONObject jsonObject = response.getJSONObject(i);
 
-                            strTripDate=getDate(Long.parseLong(jsonObject.optString("created")),"date");
-                            strDriveName=jsonObject.optString("rider_name");
-                            strDriverImage=jsonObject.optString("rider_profile");
+                            strTripDate = getDate(Long.parseLong(jsonObject.optString("created")), "date");
+                            strDriveName = jsonObject.optString("rider_name");
+                            strDriverImage = jsonObject.optString("rider_profile");
 //                            strCarImage=jsonObject.optString("");
-                            strCarName=jsonObject.optString("car_category");
-                            strDistanceTraveled=jsonObject.optString("total_distance");
-                            strPickupTime=getDate(Long.parseLong(jsonObject.optString("created")),"time");
-                            strDropTime=getDate(Long.parseLong(jsonObject.optString("update_created")),"time");
-                            strPickupLocation=jsonObject.optString("pickup_address");
-                            strDropLocation=jsonObject.optString("drop_address");
-                            strPaymentType=jsonObject.optString("payment_mode");
-                            strTotalAmount=jsonObject.optString("total_price");
-                            strCommission=jsonObject.optString("admin_commission");
-                            strcompname=jsonObject.optString("company_name");
-                            strcompfee=jsonObject.optString("company_fee");
-                            strbookfee=jsonObject.optString("book_fee");
-                            strairportfee=jsonObject.optString("airport_surge");
-                            waypointfee=jsonObject.optString("waypoint_fee");
-                            strtaxpercent=jsonObject.optString("tax_percentage");
-                            strCancelfee=jsonObject.optString("cancelation_fee");
-                            strCommission=strCommission.replaceAll(",","");
+                            strCarName = jsonObject.optString("car_category");
+                            strDistanceTraveled = jsonObject.optString("total_distance");
+                            strPickupTime = getDate(Long.parseLong(jsonObject.optString("created")), "time");
+                            strDropTime = getDate(Long.parseLong(jsonObject.optString("update_created")), "time");
+                            strPickupLocation = jsonObject.optString("pickup_address");
+                            strDropLocation = jsonObject.optString("drop_address");
+                            strPaymentType = jsonObject.optString("payment_mode");
+                            strTotalAmount = jsonObject.optString("total_price");
+                            strCommission = jsonObject.optString("admin_commission");
+                            strcompname = jsonObject.optString("company_name");
+                            strcompfee = jsonObject.optString("company_fee");
+                            strbookfee = jsonObject.optString("book_fee");
+                            strairportfee = jsonObject.optString("airport_surge");
+                            waypointfee = jsonObject.optString("waypoint_fee");
+                            strtaxpercent = jsonObject.optString("tax_percentage");
+                            strCancelfee = jsonObject.optString("cancelation_fee");
+                            strCommission = strCommission.replaceAll(",", "");
 
                             JSONObject waypointObject = jsonObject.optJSONObject("DestinationWaypoints");
 
-                            if(strTotalAmount!=null) {
-                                strTotalAmount=strTotalAmount.replaceAll("%20"," ");
-                                if(isDouble(strTotalAmount))
-                                    fareamount=Double.parseDouble(strTotalAmount);
+                            if (strTotalAmount != null) {
+                                strTotalAmount = strTotalAmount.replaceAll("%20", " ");
+                                if (isDouble(strTotalAmount))
+                                    fareamount = Double.parseDouble(strTotalAmount);
                                 else
-                                    fareamount=(double)Integer.parseInt(strTotalAmount);
+                                    fareamount = (double) Integer.parseInt(strTotalAmount);
                             }
 
-                            if(waypointObject!=null){
+                            if (waypointObject != null) {
 
                                 int wayPointItemCount = waypointObject.length();
-                                System.out.println("latitutesssss==>"+ wayPointItemCount);
+                                LogUtils.i("latitutesssss==>" + wayPointItemCount);
 
                                 wayPointLay.setVisibility(View.VISIBLE);
-                                wayPointAmt.setText("$ "+convertToDecimal(wayPointItemCount*Double.parseDouble(waypointfee)));
-                                wayPointTxt.setText(String.valueOf(wayPointItemCount)+" Additional Stops");
-                                fareamount=fareamount-wayPointItemCount*Double.parseDouble(waypointfee);
+                                wayPointAmt.setText("$ " + convertToDecimal(wayPointItemCount * Double.parseDouble(waypointfee)));
+                                wayPointTxt.setText(String.valueOf(wayPointItemCount) + " Additional Stops");
+                                fareamount = fareamount - wayPointItemCount * Double.parseDouble(waypointfee);
 
-                            }
-                            else{
+                            } else {
 
                                 wayPointLay.setVisibility(View.GONE);
-                                System.out.println("latitutesssss==> 0");
+                                LogUtils.i("latitutesssss==> 0");
                             }
 
 //                            strRating=jsonObject.optString("");
@@ -283,92 +283,88 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
                             String strLat = pickupObject.optString("lat");
                             String strLong = pickupObject.optString("long");
 
-                            System.out.println("latitute==>"+strLat+" longitute==>"+strLong);
+                            LogUtils.i("latitute==>" + strLat + " longitute==>" + strLong);
 
                             JSONObject dropObject = jsonObject.optJSONObject("destination");
                             String strdropLat = dropObject.optString("lat");
                             String strdropLong = dropObject.optString("long");
 
-                            System.out.println("latitute==>"+strLat+" longitute==>"+strLong);
-                            System.out.println("latitutedrop==>"+strdropLat+" longitutedrop==>"+strdropLong);
+                            LogUtils.i("latitute==>" + strLat + " longitute==>" + strLong);
+                            LogUtils.i("latitutedrop==>" + strdropLat + " longitutedrop==>" + strdropLong);
 
-                            if(strLong!=null & strLong!=null) {
+                            if (strLong != null & strLong != null) {
                                 pickuplatlng = new LatLng(Double.parseDouble(strLat), Double.parseDouble(strLong));
                             }
 
-                            if(strLong!=null & strLong!=null) {
+                            if (strLong != null & strLong != null) {
                                 droplatlng = new LatLng(Double.parseDouble(strdropLat), Double.parseDouble(strdropLong));
                             }
 
-                            String pickLatLng=null;
+                            String pickLatLng = null;
 
-                            if(strLong!=null & strLong!=null)
-                                pickLatLng=strLat+","+strLong;
+                            if (strLong != null & strLong != null)
+                                pickLatLng = strLat + "," + strLong;
 
 
-                            if(strTripDate!=null)
+                            if (strTripDate != null)
                                 tripDate.setText(strTripDate);
 
-                            if(strbookfee!=null && !strbookfee.equals("0")){
+                            if (strbookfee != null && !strbookfee.equals("0")) {
                                 bookfeelay.setVisibility(View.VISIBLE);
-                                bookfee.setText("$ "+strbookfee);
-                                fareamount=fareamount-Double.parseDouble(strbookfee);
-                            }
-                            else{
+                                bookfee.setText("$ " + strbookfee);
+                                fareamount = fareamount - Double.parseDouble(strbookfee);
+                            } else {
                                 bookfeelay.setVisibility(View.GONE);
                             }
 
 
-                            if(strairportfee!=null && !strairportfee.equals("0")){
-                                if(pickLatLng!=null)
-                                    if(!pickLatLng.contains("null"))
+                            if (strairportfee != null && !strairportfee.equals("0")) {
+                                if (pickLatLng != null)
+                                    if (!pickLatLng.contains("null"))
                                         PlaceType(pickLatLng);
-                            }
-                            else{
+                            } else {
                                 airportfeelay.setVisibility(View.GONE);
                             }
 
 
-                            if(strDriveName!=null) {
-                                strDriveName=strDriveName.replaceAll("%20"," ");
+                            if (strDriveName != null) {
+                                strDriveName = strDriveName.replaceAll("%20", " ");
                                 //driverName.setText(Constants.capitalizeFirstLetter(strDriveName));
                                 //driverName.setText(strDriveName);
                             }
 
 
-                            if(strDistanceTraveled!=null) {
-                                if(!strDistanceTraveled.equals("null")) {
+                            if (strDistanceTraveled != null) {
+                                if (!strDistanceTraveled.equals("null")) {
                                     strDistanceTraveled = strDistanceTraveled.replaceAll("%20", " ");
                                     distanceTraveled.setText(strDistanceTraveled + " km");
-                                }
-                                else
-                                {
+                                } else {
                                     distanceTraveled.setText("0 km");
                                 }
                             }
 
-                            if(strPickupTime!=null && strDropTime!=null) {
-                                System.out.println("THe start and end time is"+strPickupTime);
-                                duration.setText(getTripDuration(strPickupTime.replaceAll("%20"," "),strDropTime.replaceAll("%20"," ")));
+                            if (strPickupTime != null && strDropTime != null) {
+                                LogUtils.i("THe start and end time is" + strPickupTime);
+                                duration.setText(getTripDuration(strPickupTime.replaceAll("%20", " "), strDropTime.replaceAll("%20", " ")));
                             }
 
 
-                            if(strPickupLocation!=null) {
-                                strPickupLocation=strPickupLocation.replaceAll("%20"," ");
+                            if (strPickupLocation != null) {
+                                strPickupLocation = strPickupLocation.replaceAll("%20", " ");
                                 pickupLocation.setText(strPickupLocation);
                                 //pickuplatlng=getLocationFromAddress(getApplicationContext(),strPickupLocation);
                             }
 
-                            if(strDropLocation!=null) {
-                                strDropLocation=strDropLocation.replaceAll("%20"," ");
+                            if (strDropLocation != null) {
+                                strDropLocation = strDropLocation.replaceAll("%20", " ");
                                 dropLocation.setText(strDropLocation);
                                 //droplatlng=getLocationFromAddress(getApplicationContext(),strDropLocation);
                             }
 
 
-                            System.out.println("In Direction success"+pickuplatlng+droplatlng);
+                            LogUtils.i("In Direction success" + pickuplatlng + droplatlng);
 
-                            if(pickuplatlng!=null && droplatlng!=null){
+                            if (pickuplatlng != null && droplatlng != null) {
                                 GoogleDirection.withServerKey(google_api_key)
                                         .from(pickuplatlng)
                                         .to(droplatlng)
@@ -377,20 +373,19 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
                             }
 
-                            if(strtaxpercent!=null && !strtaxpercent.equals("0")){
+                            if (strtaxpercent != null && !strtaxpercent.equals("0")) {
                                 taxfeelay.setVisibility(View.VISIBLE);
-                                taxtxt.setText("Tax ("+strtaxpercent+" %)");
-                                taxpercent = (Double.parseDouble(strTotalAmount)*(Double.parseDouble(strtaxpercent)/100.0f));
-                                fareamount=fareamount-taxpercent;
-                                taxfee.setText("$ "+convertToDecimal(taxpercent));
-                            }
-                            else{
+                                taxtxt.setText("Tax (" + strtaxpercent + " %)");
+                                taxpercent = (Double.parseDouble(strTotalAmount) * (Double.parseDouble(strtaxpercent) / 100.0f));
+                                fareamount = fareamount - taxpercent;
+                                taxfee.setText("$ " + convertToDecimal(taxpercent));
+                            } else {
                                 taxfeelay.setVisibility(View.GONE);
                             }
 
-                            if(strCommission!=null){
-                                if(strcompname.equals("None")){
-                                    sixcommision.setText("-$ "+strCommission);
+                            if (strCommission != null) {
+                                if (strcompname.equals("None")) {
+                                    sixcommision.setText("-$ " + strCommission);
                                     companynamelay.setVisibility(View.GONE);
                                     if (isDouble(strCommission)) {
 
@@ -399,51 +394,47 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
                                         intcommission = (double) Integer.parseInt(strCommission);
                                     }
-                                    total=Double.parseDouble(strTotalAmount)-intcommission;
-                                    System.out.println("The total after commission"+String.valueOf(total));
-                                }
-                                else{
+                                    total = Double.parseDouble(strTotalAmount) - intcommission;
+                                    LogUtils.i("The total after commission" + String.valueOf(total));
+                                } else {
                                     commission.setText("Company fee");
-                                    sixcommision.setText("-"+strcompfee+" %");
+                                    sixcommision.setText("-" + strcompfee + " %");
                                     companynamelay.setVisibility(View.VISIBLE);
                                     companyname.setText(strcompname);
                                     try {
-                                        feepercent = (Double.parseDouble(strTotalAmount)*(Double.parseDouble(strcompfee)/100.0f));
-                                        feeaddamount=Double.parseDouble(strTotalAmount)-feepercent ;
-                                        System.out.println("After adding fee percentage of"+feepercent+"to"+feeaddamount);
-                                        total=feeaddamount;
+                                        feepercent = (Double.parseDouble(strTotalAmount) * (Double.parseDouble(strcompfee) / 100.0f));
+                                        feeaddamount = Double.parseDouble(strTotalAmount) - feepercent;
+                                        LogUtils.i("After adding fee percentage of" + feepercent + "to" + feeaddamount);
+                                        total = feeaddamount;
                                     } catch (Exception e) {
-                                        feepercent=0.0;
-                                        feeaddamount=Double.parseDouble(strTotalAmount)-feepercent;
-                                        total=feeaddamount;
+                                        feepercent = 0.0;
+                                        feeaddamount = Double.parseDouble(strTotalAmount) - feepercent;
+                                        total = feeaddamount;
                                         e.printStackTrace();
                                     }
-                                    System.out.println("The total after company commission"+String.valueOf(total));
+                                    LogUtils.i("The total after company commission" + String.valueOf(total));
                                 }
                             }
 
-                            if(total!=0.0){
-                                totalpayout.setText("$ "+convertToDecimal(total));
-                                trip_amount.setText("$ "+convertToDecimal(total));
-                            }
-                            else{
-                                totalpayout.setText("$ "+strTotalAmount);
+                            if (total != 0.0) {
+                                totalpayout.setText("$ " + convertToDecimal(total));
+                                trip_amount.setText("$ " + convertToDecimal(total));
+                            } else {
+                                totalpayout.setText("$ " + strTotalAmount);
                             }
 
-                            if(fareamount!=0.0){
-                                totalAmount.setText("$ "+convertToDecimal(fareamount));
-                            }
-                            else{
+                            if (fareamount != 0.0) {
+                                totalAmount.setText("$ " + convertToDecimal(fareamount));
+                            } else {
                                 totalAmount.setText("$0");
                             }
 
-                            if(strCancelfee!=null){
-                                if(!strCancelfee.equals("0") && fareamount!=0.0){
+                            if (strCancelfee != null) {
+                                if (!strCancelfee.equals("0") && fareamount != 0.0) {
                                     cancellay.setVisibility(View.VISIBLE);
                                     cancellayout.setVisibility(View.VISIBLE);
-                                    cancelprice.setText("$ "+convertToDecimal(fareamount));
-                                }
-                                else{
+                                    cancelprice.setText("$ " + convertToDecimal(fareamount));
+                                } else {
                                     cancellay.setVisibility(View.GONE);
                                     cancellayout.setVisibility(View.GONE);
                                 }
@@ -461,7 +452,8 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
                 dismissDialog();
                 if (volleyError instanceof NoConnectionError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-                } if (volleyError instanceof TimeoutError) {
+                }
+                if (volleyError instanceof TimeoutError) {
                     Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -477,52 +469,52 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
     }
 
     @Click(R.id.backButton)
-    void goBack(){
+    void goBack() {
         finish();
     }
 
-    private String getDate(long time,String type) {
+    private String getDate(long time, String type) {
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         TimeZone tz = TimeZone.getTimeZone("GMT");
         cal.setTimeInMillis(time * 1000);
         cal.add(Calendar.MILLISECOND, tz.getOffset(cal.getTimeInMillis()));
         SimpleDateFormat sdf;
-        if(type.equals("date")){
+        if (type.equals("date")) {
             sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-        }
-        else{
+        } else {
             sdf = new SimpleDateFormat("hh:mm:ss a");
         }
 
         Date currenTimeZone = (Date) cal.getTime();
-        System.out.println("Trip Date==>"+sdf.format(currenTimeZone));
+        LogUtils.i("Trip Date==>" + sdf.format(currenTimeZone));
         return sdf.format(currenTimeZone);
     }
 
-    public void showDialog(){
-        progressDialog= new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setMessage("Loading...");
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
     }
+
     static String formatDate(long dateInMillis) {
         Date date = new Date(dateInMillis);
         return DateFormat.getDateInstance(DateFormat.FULL).format(date);
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
-            if(!isFinishing()) {
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            if (!isFinishing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
         }
     }
 
-    public void getRating(){
-        if(tripID!=null) {
+    public void getRating() {
+        if (tripID != null) {
 
             //Get datasnapshot at your "users" root node
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("trips_data").child(tripID);
@@ -531,27 +523,27 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             //Get map of users in datasnapshot
-                            if(dataSnapshot.getValue()!=null) {
+                            if (dataSnapshot.getValue() != null) {
 
-                                System.out.println("response ===>"+dataSnapshot.toString());
+                                LogUtils.i("response ===>" + dataSnapshot.toString());
 
                                 Object tollAmount = dataSnapshot.child("tollfee").getValue();
                                 Object RiderRatings = dataSnapshot.child("rider_rating").getValue();
 
-                                System.out.println("response tollAmount===>"+tollAmount);
-                                System.out.println("response RiderRatings===>"+RiderRatings);
+                                LogUtils.i("response tollAmount===>" + tollAmount);
+                                LogUtils.i("response RiderRatings===>" + RiderRatings);
 
-                                if(tollAmount!=null){
+                                if (tollAmount != null) {
 
                                     //tollPrice.setText("$"+tollAmount);
-                                }else {
+                                } else {
 
                                     //tollPrice.setText("$0");
                                 }
 
-                                if(RiderRatings!=null){
+                                if (RiderRatings != null) {
                                     ratingBar.setRating(Float.parseFloat(String.valueOf(RiderRatings)));
-                                }else {
+                                } else {
 
                                     ratingBar.setRating(0);
                                 }
@@ -565,13 +557,13 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
                     });
         }
     }
-    public String convertToDecimal(Double amount){
 
-        if(amount>0){
-            System.out.println("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
+    public String convertToDecimal(Double amount) {
+
+        if (amount > 0) {
+            LogUtils.i("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
             return new DecimalFormat("0.00").format(amount);
-        }
-        else {
+        } else {
             return String.valueOf(0);
         }
     }
@@ -592,7 +584,7 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
             location.getLatitude();
             location.getLongitude();
 
-            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
 
         } catch (Exception ex) {
 
@@ -607,7 +599,7 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
         //http://demo.cogzideltemplates.com/tommy/settings/getdetails
         String url = Constants.CATEGORY_LIVE_URL + "settings/getdetails";
-        System.out.println(" CATEGOR URL is " + url);
+        LogUtils.i(" CATEGOR URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -633,7 +625,7 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.print("NoConnectionError");
+                    LogUtils.i("NoConnectionError");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
@@ -649,20 +641,20 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
-        if(direction.isOK()){
+        if (direction.isOK()) {
             try {
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                pickup=mMap.addMarker(new MarkerOptions().position(pickuplatlng).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_pickup)));
+                pickup = mMap.addMarker(new MarkerOptions().position(pickuplatlng).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_pickup)));
 
-                drop=mMap.addMarker(new MarkerOptions().position(droplatlng).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_dropoff)));
+                drop = mMap.addMarker(new MarkerOptions().position(droplatlng).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ub__ic_pin_dropoff)));
                 builder.include(pickup.getPosition());
                 builder.include(drop.getPosition());
                 LatLngBounds bounds = builder.build();
 
-                System.out.println("In Direction success"+direction.getStatus()+pickuplatlng+droplatlng);
+                LogUtils.i("In Direction success" + direction.getStatus() + pickuplatlng + droplatlng);
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,90));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
 
                 ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
                 mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.BLUE));
@@ -674,40 +666,40 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
     @Override
     public void onDirectionFailure(Throwable t) {
-        System.out.println("In Direction Failure"+t);
+        LogUtils.i("In Direction Failure" + t);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap=googleMap;
+        mMap = googleMap;
         getTripDetails();
     }
 
-    public String getTripDuration(String starttime,String endtime){
+    public String getTripDuration(String starttime, String endtime) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-        int days,hours=0,min=0,sec=0;
-        System.out.println("THe start and end time is"+starttime+"Endtime"+endtime);
+        int days, hours = 0, min = 0, sec = 0;
+        LogUtils.i("THe start and end time is" + starttime + "Endtime" + endtime);
         try {
             Date date1 = simpleDateFormat.parse(starttime);
             Date date2 = simpleDateFormat.parse(endtime);
 
             long difference = date2.getTime() - date1.getTime();
-            int timeInSeconds =(int) difference / 1000;
-             days = (int) (difference / (1000*60*60*24));
-             hours = (int) ((difference - (1000*60*60*24*days)) / (1000*60*60));
-             min = (int) (difference - (1000*60*60*24*days) - (1000*60*60*hours)) / (1000*60);
-             timeInSeconds = timeInSeconds - (min * 60);
-             sec=timeInSeconds;
-             hours = (hours < 0 ? -hours : hours);
-            Log.i("======= Hours"," :: "+hours+min+sec);
+            int timeInSeconds = (int) difference / 1000;
+            days = (int) (difference / (1000 * 60 * 60 * 24));
+            hours = (int) ((difference - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
+            min = (int) (difference - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
+            timeInSeconds = timeInSeconds - (min * 60);
+            sec = timeInSeconds;
+            hours = (hours < 0 ? -hours : hours);
+            Log.i("======= Hours", " :: " + hours + min + sec);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        if(min==0 && hours==0)
-            return String.valueOf(sec)+" sec";
+        if (min == 0 && hours == 0)
+            return String.valueOf(sec) + " sec";
         else
-            return String.valueOf(hours)+" hr"+" "+String.valueOf(min)+" min";
+            return String.valueOf(hours) + " hr" + " " + String.valueOf(min) + " min";
     }
 
 
@@ -715,9 +707,9 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
         //final String url="https://maps.googleapis.com/maps/api/place/details/json?placeid="+placeID+"&key="+google_api_key;
         //final String url="https://maps.googleapis.com/maps/api/geocode/json?latlng="+latlng+"&sensor=true&key="+google_api_key;
-        final String url="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+latlng+"&radius=1000&types=airport&key="+google_api_key;
+        final String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latlng + "&radius=1000&types=airport&key=" + google_api_key;
 
-        System.out.println(" ONLINE URL is " + url);
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonObjectRequest movieReq = new JsonObjectRequest(url, null,
@@ -730,7 +722,7 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
                         try {
 
                             String status = response.getString("status");
-                            System.out.println("status responce====>" + status);
+                            LogUtils.i("status responce====>" + status);
 
                             if (status.matches("OK")) {
 
@@ -740,15 +732,15 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
                                 JSONArray types = zerothPostion.optJSONArray("types");
 
-                                String placeType =types.optString(0);
+                                String placeType = types.optString(0);
 
-                                System.out.println("Airport PlaceType==>" + placeType);
+                                LogUtils.i("Airport PlaceType==>" + placeType);
 
-                                if(placeType.matches("airport")){
+                                if (placeType.matches("airport")) {
 
-                                    double airportamt= Double.parseDouble(strairportfee);
-                                    fareamount=fareamount-airportamt;
-                                    airportfee.setText("$"+convertToDecimal(airportamt) );
+                                    double airportamt = Double.parseDouble(strairportfee);
+                                    fareamount = fareamount - airportamt;
+                                    airportfee.setText("$" + convertToDecimal(airportamt));
                                     airportfeelay.setVisibility(View.VISIBLE);
                                 }
 
@@ -756,17 +748,17 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
 
                                 String error_msg = response.getString("error_message");
 
-                                System.out.println("The Error message in invalidreq"+error_msg);
+                                LogUtils.i("The Error message in invalidreq" + error_msg);
 
                             } else if (status.matches("REQUEST_DENIED")) {
 
                                 String error_msg = response.getString("error_message");
 
-                                System.out.println("The Error message in reqdenied"+error_msg);
+                                LogUtils.i("The Error message in reqdenied" + error_msg);
 
                             } else {
 
-                                System.out.println("Execption on Getting Airport Type");
+                                LogUtils.i("Execption on Getting Airport Type");
                             }
 
                         } catch (JSONException e) {
@@ -791,12 +783,14 @@ public class YourTripDetailsActivity extends AppCompatActivity implements Direct
         movieReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 1, 1.0f));
         AppController.getInstance().addToRequestQueue(movieReq);
     }
+
     public static String getCurrentTimeStamp() {
         SimpleDateFormat formDate = new SimpleDateFormat("dd-MM-yyyy");
 
         // String strDate = formDate.format(System.currentTimeMillis()); // option 1
         return formDate.format(new Date()); // option 2
     }
+
     boolean isDouble(String str) {
         try {
 

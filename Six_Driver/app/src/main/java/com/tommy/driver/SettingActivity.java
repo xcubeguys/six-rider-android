@@ -51,6 +51,7 @@ import com.tommy.driver.adapter.RiderInfo;
 import com.tommy.driver.adapter.RoundImageTransform;
 import com.tommy.driver.adapter.Services;
 import com.tommy.driver.socialshare.SocialShare;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -79,10 +80,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @EActivity(R.layout.activity_setting)
 public class SettingActivity extends AppCompatActivity {
 
-    public String userID, firstName, lastName, nickName,email, mobileNumber, countryCode, referralcode,profileImage, status, message,strCategory,drivercarcategory,vehicleMake,vehicleModel,vehicleYear,vehicleMileage,vehiclenumberplate;
-    String strSubjectCategory,strCarCategory;
+    public String userID, firstName, lastName, nickName, email, mobileNumber, countryCode, referralcode, profileImage, status, message, strCategory, drivercarcategory, vehicleMake, vehicleModel, vehicleYear, vehicleMileage, vehiclenumberplate;
+    String strSubjectCategory, strCarCategory;
     ProgressDialog progressDialog;
-    Dialog  socialShareDialog;
+    Dialog socialShareDialog;
     MaterialSpinner spinSubjectCategory;
     GeoFire geoFire;
     SharedPreferences prefs;
@@ -105,8 +106,8 @@ public class SettingActivity extends AppCompatActivity {
     @ViewById(R.id.save_button)
     Button saveButton;
 
-    @NotEmpty (message = "Enter First Name")
-    @Length (max = 15)
+    @NotEmpty(message = "Enter First Name")
+    @Length(max = 15)
     @ViewById(R.id.edtFirstName)
     EditText inputFirstName;
 
@@ -156,10 +157,10 @@ public class SettingActivity extends AppCompatActivity {
     CountryCodePicker ccp;
     SocialShare socialShare;
 
-    @Click (R.id.share)
+    @Click(R.id.share)
     void share() {
         // Build view
-        if(ContextCompat.checkSelfPermission(getBaseContext(), "android.permission.WRITE_SMS") == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getBaseContext(), "android.permission.WRITE_SMS") == PackageManager.PERMISSION_GRANTED) {
 
             final View view = socialShare.getDefaultShareUI();
             // Do something with the view, for example show in Dialog
@@ -176,26 +177,26 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     @Click(R.id.feedback_button)
-    public  void feedback(){
+    public void feedback() {
 
         getSubjectCategory();
 
-        final Dialog  dialog = new Dialog(SettingActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
+        final Dialog dialog = new Dialog(SettingActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_feedback);
         dialog.setCancelable(false);
 
         //layouts
-        ImageButton back=(ImageButton)dialog.findViewById(R.id.back);
-        final EditText feedback =(EditText) dialog.findViewById(R.id.feedback);
+        ImageButton back = (ImageButton) dialog.findViewById(R.id.back);
+        final EditText feedback = (EditText) dialog.findViewById(R.id.feedback);
         feedback.setVisibility(View.VISIBLE);
         feedback.setTypeface(Typeface.createFromAsset(getAssets(), getString(R.string.app_font)));
-        TextView titletxt=(TextView)dialog.findViewById(R.id.titletxt);
+        TextView titletxt = (TextView) dialog.findViewById(R.id.titletxt);
         titletxt.setTypeface(Typeface.createFromAsset(getAssets(), getString(R.string.app_font)));
-        TextView titletxt1=(TextView)dialog.findViewById(R.id.titletxt1);
+        TextView titletxt1 = (TextView) dialog.findViewById(R.id.titletxt1);
         titletxt1.setTypeface(Typeface.createFromAsset(getAssets(), getString(R.string.app_font)));
-        TextView continuetxt=(TextView)dialog.findViewById(R.id.Submit);
-        spinSubjectCategory=(MaterialSpinner) dialog.findViewById(R.id.subject_category);
+        TextView continuetxt = (TextView) dialog.findViewById(R.id.Submit);
+        spinSubjectCategory = (MaterialSpinner) dialog.findViewById(R.id.subject_category);
         continuetxt.setTypeface(Typeface.createFromAsset(getAssets(), getString(R.string.app_font)));
 
         //setOnclicks
@@ -209,14 +210,12 @@ public class SettingActivity extends AppCompatActivity {
         continuetxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(feedback.getText().toString().trim().length()==0){
+                if (feedback.getText().toString().trim().length() == 0) {
                     Toast.makeText(SettingActivity.this, "Enter your feedback!", Toast.LENGTH_SHORT).show();
-                }
-                else if(strSubjectCategory == null || strSubjectCategory.equals("Select a subject")) {
+                } else if (strSubjectCategory == null || strSubjectCategory.equals("Select a subject")) {
                     Toast.makeText(SettingActivity.this, "Select a subject!", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    sendfeedback(strSubjectCategory,feedback.getText().toString());
+                } else {
+                    sendfeedback(strSubjectCategory, feedback.getText().toString());
                     spinSubjectCategory.setSelectedIndex(0);
                     feedback.setText("");
                 }
@@ -243,14 +242,13 @@ public class SettingActivity extends AppCompatActivity {
         prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         userID = prefs.getString("driverid", null);
-        strCategory= prefs.getString("carcategory", null);
-        System.out.println("UserID in settings" + userID+strCategory);
+        strCategory = prefs.getString("carcategory", null);
+        LogUtils.i("UserID in settings" + userID + strCategory);
         // setup GeoFire with category
-        if(strCategory!=null && !strCategory.isEmpty()){
-            strCategory=strCategory.replaceAll("%20"," ");
+        if (strCategory != null && !strCategory.isEmpty()) {
+            strCategory = strCategory.replaceAll("%20", " ");
             geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference().child("drivers_location").child(strCategory));
-        }
-        else{
+        } else {
             geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference().child("drivers_location"));
         }
 
@@ -275,23 +273,19 @@ public class SettingActivity extends AppCompatActivity {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                 ref.child("drivers_data").child(userID).child("online_status").setValue("0");
 
-                geoFire.offlineLocation(userID, new GeoLocation(0.0,0.0), new GeoFire.CompletionListener() {
+                geoFire.offlineLocation(userID, new GeoLocation(0.0, 0.0), new GeoFire.CompletionListener() {
                     @Override
-                    public void onComplete(String key, DatabaseError error)
-                    {
-                        if (error != null)
-                        {
-                            System.out.println("Location not saved on server successfully!");
-                        } else
-                        {
-                            System.out.println("Location saved on server successfully!");
+                    public void onComplete(String key, DatabaseError error) {
+                        if (error != null) {
+                            LogUtils.i("Location not saved on server successfully!");
+                        } else {
+                            LogUtils.i("Location saved on server successfully!");
                         }
                     }
                 });
 
                 gooffline();
             }
-
 
 
         });
@@ -310,19 +304,19 @@ public class SettingActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void sendfeedback(String subject,String feedback) {
+    private void sendfeedback(String subject, String feedback) {
 
         try {
-            feedback=feedback.replaceAll("#","%23");
-            feedback= URLEncoder.encode(feedback, "UTF-8");
-            subject=subject.replaceAll("#","%23");
-            subject= URLEncoder.encode(subject, "UTF-8");
+            feedback = feedback.replaceAll("#", "%23");
+            feedback = URLEncoder.encode(feedback, "UTF-8");
+            subject = subject.replaceAll("#", "%23");
+            subject = URLEncoder.encode(subject, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        final String url = Constants.LIVEURL+ "feedback?user_id="+ userID+"&feedback="+feedback+"&subject="+subject ;
-        System.out.println("Driver Profile==>" + url);
+        final String url = Constants.LIVEURL + "feedback?user_id=" + userID + "&feedback=" + feedback + "&subject=" + subject;
+        LogUtils.i("Driver Profile==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -365,8 +359,8 @@ public class SettingActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.clear();
         editor.apply();
-        System.out.println("Driver id in clearing preference===>"+userID);
-        Intent intent=new Intent(SettingActivity.this,LaunchActivity_.class);
+        LogUtils.i("Driver id in clearing preference===>" + userID);
+        Intent intent = new Intent(SettingActivity.this, LaunchActivity_.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
@@ -375,23 +369,23 @@ public class SettingActivity extends AppCompatActivity {
     @Click(R.id.editButton)
     void editProfile() {
 
-        Intent i=new Intent(SettingActivity.this,EditProfileActivity_.class);
-        i.putExtra("firstName",firstName);
-        i.putExtra("lastName",lastName);
-        i.putExtra("nickName",nickName);
-        i.putExtra("email",email);
-        i.putExtra("mobileNumber",mobileNumber);
-        i.putExtra("profileimage",profileImage);
-        i.putExtra("carcategory",drivercarcategory);
-        i.putExtra("coutrycode",countryCode);
-        i.putExtra("refrel_code",referralcode);
+        Intent i = new Intent(SettingActivity.this, EditProfileActivity_.class);
+        i.putExtra("firstName", firstName);
+        i.putExtra("lastName", lastName);
+        i.putExtra("nickName", nickName);
+        i.putExtra("email", email);
+        i.putExtra("mobileNumber", mobileNumber);
+        i.putExtra("profileimage", profileImage);
+        i.putExtra("carcategory", drivercarcategory);
+        i.putExtra("coutrycode", countryCode);
+        i.putExtra("refrel_code", referralcode);
         startActivity(i);
         finish();
     }
 
     @Click(R.id.backButton)
-    void goBack(){
-        Intent intent=new Intent(SettingActivity.this,LaunchActivity_.class);
+    void goBack() {
+        Intent intent = new Intent(SettingActivity.this, LaunchActivity_.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
@@ -411,32 +405,32 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<List<RiderInfo>> call, @NonNull retrofit2.Response<List<RiderInfo>> response) {
 
-                try{
+                try {
                     dismissDialog();
-                    List<RiderInfo> RequestData= response.body();
+                    List<RiderInfo> RequestData = response.body();
                     if (RequestData != null) {
                         for (int i = 0; i < RequestData.size(); i++) {
-                            System.out.println("Response Size"+RequestData.size());
-                            status=RequestData.get(i).getStatus();
-                            message=RequestData.get(i).getMessage();
+                            LogUtils.i("Response Size" + RequestData.size());
+                            status = RequestData.get(i).getStatus();
+                            message = RequestData.get(i).getMessage();
 
-                            if(status != null && status.equals("Success")) {
+                            if (status != null && status.equals("Success")) {
 
-                                firstName=RequestData.get(i).getFirstname();
-                                lastName=RequestData.get(i).getLastname();
-                                email=RequestData.get(i).getEmail();
-                                mobileNumber=RequestData.get(i).getMobile();
-                                profileImage=RequestData.get(i).getProfile_pic();
-                                countryCode=RequestData.get(i).getCountry_code();
-                                drivercarcategory=RequestData.get(i).getCategory();
-                                referralcode=RequestData.get(i).getRefrel_code();
-                                nickName=RequestData.get(i).getNick_name();
+                                firstName = RequestData.get(i).getFirstname();
+                                lastName = RequestData.get(i).getLastname();
+                                email = RequestData.get(i).getEmail();
+                                mobileNumber = RequestData.get(i).getMobile();
+                                profileImage = RequestData.get(i).getProfile_pic();
+                                countryCode = RequestData.get(i).getCountry_code();
+                                drivercarcategory = RequestData.get(i).getCategory();
+                                referralcode = RequestData.get(i).getRefrel_code();
+                                nickName = RequestData.get(i).getNick_name();
 
-                                vehicleMake=RequestData.get(i).getVehicle_make();
-                                vehicleModel=RequestData.get(i).getVehicle_model();
-                                vehicleYear=RequestData.get(i).getVehicle_year();
-                                vehicleMileage=RequestData.get(i).getVehicle_mileage();
-                                vehiclenumberplate=RequestData.get(i).getNumber_plate();
+                                vehicleMake = RequestData.get(i).getVehicle_make();
+                                vehicleModel = RequestData.get(i).getVehicle_model();
+                                vehicleYear = RequestData.get(i).getVehicle_year();
+                                vehicleMileage = RequestData.get(i).getVehicle_mileage();
+                                vehiclenumberplate = RequestData.get(i).getNumber_plate();
 
                                 //savepreferences();
                                 //Share code via Social
@@ -448,12 +442,12 @@ public class SettingActivity extends AppCompatActivity {
                                             + "Download App Now  "
                                             + new URL(Constants.Play_Store_URL) + "\n\n" +
                                             getString(R.string.sms_text)
-                                            +"\n\n"+"Your Referral Code is "+referralcode+"."+"\n\n"+
+                                            + "\n\n" + "Your Referral Code is " + referralcode + "." + "\n\n" +
                                             getString(R.string.sms_text_last);
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    message = getString(R.string.sms_text)+"\n\n"+"Your Referral Code is "+referralcode+"."+"\n\n"+getString(R.string.sms_text_last);
+                                    message = getString(R.string.sms_text) + "\n\n" + "Your Referral Code is " + referralcode + "." + "\n\n" + getString(R.string.sms_text_last);
                                 }
                                 socialShare.setMessage(message);
 
@@ -464,31 +458,30 @@ public class SettingActivity extends AppCompatActivity {
                                             .transform(new RoundImageTransform(SettingActivity.this))
                                             .into(edtProfileImage);
 
-                                    inputFirstName.setText(firstName.replaceAll("%20"," "));
-                                    inputLastName.setText(lastName.replaceAll("%20"," "));
-                                    inputNickName.setText(nickName.replaceAll("%20"," "));
+                                    inputFirstName.setText(firstName.replaceAll("%20", " "));
+                                    inputLastName.setText(lastName.replaceAll("%20", " "));
+                                    inputNickName.setText(nickName.replaceAll("%20", " "));
                                     inputEmail.setText(email);
                                     inputMobileNumber.setText(mobileNumber);
                                     inputCountryCode.setText(countryCode);
-                                    carcategory.setText(drivercarcategory.replaceAll("%20"," "));
+                                    carcategory.setText(drivercarcategory.replaceAll("%20", " "));
                                     Referral_code.setText(referralcode);
-                                    editvehicleNumberplate.setText(vehiclenumberplate.replaceAll("%20"," "));
+                                    editvehicleNumberplate.setText(vehiclenumberplate.replaceAll("%20", " "));
 
-                                    inputVehiclemake.setText(vehicleMake.replaceAll("%20"," "));
-                                    inputVehiclemodel.setText(vehicleModel.replaceAll("%20"," "));
+                                    inputVehiclemake.setText(vehicleMake.replaceAll("%20", " "));
+                                    inputVehiclemodel.setText(vehicleModel.replaceAll("%20", " "));
                                     inputVehicleyear.setText(vehicleYear);
                                     inputVehiclemileage.setText(vehicleMileage);
 
-                                } catch (NullPointerException e){
+                                } catch (NullPointerException e) {
                                     e.printStackTrace();
                                 }
-                            }
-                            else{
-                                System.out.println("inside else");
+                            } else {
+                                LogUtils.i("inside else");
                             }
                         }
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -496,7 +489,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<List<RiderInfo>> call, @NonNull Throwable t) {
                 dismissDialog();
-                System.out.println("Exception"+t);
+                LogUtils.i("Exception" + t);
                 Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_SHORT).show();
             }
         });
@@ -504,10 +497,10 @@ public class SettingActivity extends AppCompatActivity {
 
     public void gooffline() {
 
-        long currentDuration=getDuration();
+        long currentDuration = getDuration();
 
-        String url = Constants.LIVEURL + "updateOnlineStatus/userid/" + userID + "/online_status/0/online_duration/"+currentDuration ;
-        System.out.println(" ONLINE URL is " + url);
+        String url = Constants.LIVEURL + "updateOnlineStatus/userid/" + userID + "/online_status/0/online_duration/" + currentDuration;
+        LogUtils.i(" ONLINE URL is " + url);
 
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
@@ -524,13 +517,12 @@ public class SettingActivity extends AppCompatActivity {
                                 String signIn_status = signIn_jsonobj.optString("status");
 
                                 if (signIn_status.equals("Success")) {
-                                    System.out.print("SettingActivity Success");
+                                    LogUtils.i("SettingActivity Success");
                                 } else if (signIn_status.equals("Fail")) {
                                     //stopAnim();
-                                    System.out.print("SettingActivity fail");
+                                    LogUtils.i("SettingActivity fail");
                                 }
-                            }
-                            catch (JSONException e) {
+                            } catch (JSONException e) {
                                 //stopAnim();
                                 e.printStackTrace();
                             }
@@ -541,7 +533,7 @@ public class SettingActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
-                    System.out.print("SettingActivity NoConnectionError");
+                    LogUtils.i("SettingActivity NoConnectionError");
                     // stopAnim();
                     //
                     //    Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
@@ -571,7 +563,7 @@ public class SettingActivity extends AppCompatActivity {
             public void run() {
 
                 try {
-                    if(!SettingActivity.this.isFinishing()) {
+                    if (!SettingActivity.this.isFinishing()) {
                         progressDialog.show();
                     }
                 } catch (Exception e) {
@@ -583,7 +575,7 @@ public class SettingActivity extends AppCompatActivity {
 
     public void dismissDialog() {
 
-        if(!SettingActivity.this.isFinishing()) {
+        if (!SettingActivity.this.isFinishing()) {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
@@ -596,9 +588,9 @@ public class SettingActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if(socialShareDialog!=null){
+        if (socialShareDialog != null) {
 
-            if(socialShareDialog.isShowing()) {
+            if (socialShareDialog.isShowing()) {
 
                 Toast.makeText(this, "Please Wait...", Toast.LENGTH_SHORT).show();
                 socialShareDialog.dismiss();
@@ -618,16 +610,16 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        Intent intent=new Intent(SettingActivity.this,Map_Activity.class);
+        Intent intent = new Intent(SettingActivity.this, Map_Activity.class);
         startActivity(intent);
     }
 
-    public long getDuration(){
+    public long getDuration() {
 
-        String tmpStartDate=prefs.getString("onlineStartDate",null);
+        String tmpStartDate = prefs.getString("onlineStartDate", null);
         long currentDuration;
 
-        if(tmpStartDate!=null){
+        if (tmpStartDate != null) {
 
             String strEndDate = getDateTime();
 
@@ -642,30 +634,30 @@ public class SettingActivity extends AppCompatActivity {
                 Date endDate = dateEndTimefarmat.parse(strEndDate);//end_date
                 Date startDate = dateStartTimefarmat.parse(tmpStartDate);//start_date
 
-                if(startDate!=null & endDate !=null){
+                if (startDate != null & endDate != null) {
 
                     currentDuration = endDate.getTime() - startDate.getTime();
 
-                    System.out.println("startDate : " + startDate);
-                    System.out.println("endDate : "+ endDate);
-                    System.out.println("different : " + currentDuration);
+                    LogUtils.i("startDate : " + startDate);
+                    LogUtils.i("endDate : " + endDate);
+                    LogUtils.i("different : " + currentDuration);
 
                     return currentDuration;
 
-                }else {
+                } else {
                     return 0;
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
                 return 0;
             }
-        }else {
+        } else {
 
             return 0;
         }
     }
 
-    private String getDateTime(){
+    private String getDateTime() {
 
         try {
             TimeZone GMT = TimeZone.getTimeZone("GMT");
@@ -678,9 +670,9 @@ public class SettingActivity extends AppCompatActivity {
             Date CurrentDateTime = dateTimefarmat.parse(strCurrentDateTime);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-            System.out.println("Date: " + dateFormat.format(CurrentDateTime));
-            System.out.println("Time: " + timeFormat.format(CurrentDateTime));
-            System.out.println("Date and Time: " + dateFormat.format(CurrentDateTime)+ " " + timeFormat.format(CurrentDateTime));
+            LogUtils.i("Date: " + dateFormat.format(CurrentDateTime));
+            LogUtils.i("Time: " + timeFormat.format(CurrentDateTime));
+            LogUtils.i("Date and Time: " + dateFormat.format(CurrentDateTime) + " " + timeFormat.format(CurrentDateTime));
 
             return strCurrentDateTime;
 
@@ -692,25 +684,24 @@ public class SettingActivity extends AppCompatActivity {
 
     private void getSubjectCategory() {
 
-        final String url=Constants.CATEGORY_LIVE_URL + "home/getsubject";
-        System.out.println("URL is"+url);
+        final String url = Constants.CATEGORY_LIVE_URL + "home/getsubject";
+        LogUtils.i("URL is" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         // Parsing json
-                        subjectcategory=new String[response.length()+1];
+                        subjectcategory = new String[response.length() + 1];
                         for (int i = 0; i < response.length(); i++) {
-                            try
-                            {
-                                JSONObject  strJsonCategory = response.getJSONObject(i);
-                                strCarCategory= strJsonCategory.optString("subject");
-                                Log.d("OUTPUT IS",strCarCategory);
-                                subjectcategory[0]="Select a subject";
-                                subjectcategory[i+1]=strCarCategory;
-                                System.out.println("CATEGORY"+subjectcategory[i]);
-                              //  adapteradapter  = new ArrayAdapter<String>(SettingActivity.this, R.layout.spinner_item, subjectcategory);
+                            try {
+                                JSONObject strJsonCategory = response.getJSONObject(i);
+                                strCarCategory = strJsonCategory.optString("subject");
+                                Log.d("OUTPUT IS", strCarCategory);
+                                subjectcategory[0] = "Select a subject";
+                                subjectcategory[i + 1] = strCarCategory;
+                                LogUtils.i("CATEGORY" + subjectcategory[i]);
+                                //  adapteradapter  = new ArrayAdapter<String>(SettingActivity.this, R.layout.spinner_item, subjectcategory);
 
                             } catch (JSONException e) {
 
@@ -724,15 +715,15 @@ public class SettingActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
 
-                    Toast.makeText(getApplicationContext(),"No Intenet Connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No Intenet Connection", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof AuthFailureError) {
-                    System.out.println("AuthFailureError");
+                    LogUtils.i("AuthFailureError");
                 } else if (error instanceof ServerError) {
-                    System.out.println("ServerError");
+                    LogUtils.i("ServerError");
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(getApplicationContext(),"No Intenet Connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No Intenet Connection", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof ParseError) {
-                    System.out.println("ParseError");
+                    LogUtils.i("ParseError");
                 }
             }
         });

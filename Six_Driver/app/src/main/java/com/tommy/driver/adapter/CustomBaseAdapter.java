@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tommy.driver.R;
+import com.tommy.driver.utils.LogUtils;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -22,11 +23,10 @@ import java.util.TimeZone;
 /**
  * Created by test on 22/5/17.
  */
-
 public class CustomBaseAdapter extends BaseAdapter {
     Context context;
     List<YourTrips> rowItems;
-    Double total=0.0;
+    Double total = 0.0;
 
     public CustomBaseAdapter(Context context, List<YourTrips> items) {
         this.context = context;
@@ -50,17 +50,16 @@ public class CustomBaseAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             holder.txtTitle = (TextView) convertView.findViewById(R.id.cashend);
-            holder.txtTime=(TextView) convertView.findViewById(R.id.timeend);
+            holder.txtTime = (TextView) convertView.findViewById(R.id.timeend);
 
             convertView.setTag(holder);
-        }
-        else {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         YourTrips rowItem = (YourTrips) getItem(position);
-        total=Double.parseDouble(rowItem.getDailycash())-Double.parseDouble(rowItem.getAdmincommission());
-        holder.txtTitle.setText("$ "+convertToDecimal(total));
+        total = Double.parseDouble(rowItem.getDailycash()) - Double.parseDouble(rowItem.getAdmincommission());
+        holder.txtTitle.setText("$ " + convertToDecimal(total));
         holder.txtTime.setText(getDate(Long.parseLong(rowItem.getEndTime())));
 
         return convertView;
@@ -72,9 +71,9 @@ public class CustomBaseAdapter extends BaseAdapter {
         cal.setTimeInMillis(time * 1000);
         cal.add(Calendar.MILLISECOND, tz.getOffset(cal.getTimeInMillis()));
         SimpleDateFormat sdf;
-            sdf = new SimpleDateFormat("hh:mm a");
+        sdf = new SimpleDateFormat("hh:mm a");
         Date currenTimeZone = (Date) cal.getTime();
-        //System.out.println("Trip Date==>"+sdf.format(currenTimeZone));
+        //LogUtils.i("Trip Date==>"+sdf.format(currenTimeZone));
         return sdf.format(currenTimeZone);
     }
 
@@ -93,13 +92,12 @@ public class CustomBaseAdapter extends BaseAdapter {
         return rowItems.indexOf(getItem(position));
     }
 
-    public String convertToDecimal(Double amount){
+    public String convertToDecimal(Double amount) {
 
-        if(amount>0){
-            System.out.println("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
+        if (amount > 0) {
+            LogUtils.i("THE AMOUNT IS" + new DecimalFormat("0.00").format(amount));
             return new DecimalFormat("0.00").format(amount);
-        }
-        else {
+        } else {
             return String.valueOf(0);
         }
     }

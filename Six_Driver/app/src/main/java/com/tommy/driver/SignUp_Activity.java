@@ -30,6 +30,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.tommy.driver.adapter.AppController;
 import com.tommy.driver.adapter.Constants;
 import com.tommy.driver.adapter.FontChangeCrawler;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -46,47 +47,47 @@ import java.util.List;
 @EActivity(R.layout.activity_signup)
 public class SignUp_Activity extends MyBaseActivity implements Validator.ValidationListener {
 
-    Boolean statusEmail=false;
-    Boolean statusMobile=false;
-    Boolean Statusreferral=false;
+    Boolean statusEmail = false;
+    Boolean statusMobile = false;
+    Boolean Statusreferral = false;
     ProgressDialog progressDialog;
 
     @NotEmpty(message = "")
     @Email(message = "Enter a valid email")
-    @ViewById (R.id.input_email)
+    @ViewById(R.id.input_email)
     EditText edtEmail;
 
     @NotEmpty(message = "Enter first name")
-    @ViewById (R.id.input_name_first)
+    @ViewById(R.id.input_name_first)
     EditText edtFirstName;
 
     @NotEmpty(message = "Enter last name")
-    @ViewById (R.id.input_name_last)
+    @ViewById(R.id.input_name_last)
     EditText edtLastName;
 
     @NotEmpty(message = "Enter nick name")
-    @ViewById (R.id.input_nickname)
+    @ViewById(R.id.input_nickname)
     EditText edtNickName;
 
     @NotEmpty(message = "Enter Mobile Number")
-    @ViewById (R.id.input_mobile)
+    @ViewById(R.id.input_mobile)
     EditText edtMobile;
 
     @NotEmpty(message = "")
-    @Length(min=8, message="Enter a minimum of 8 characters")
-    @ViewById (R.id.input_password)
+    @Length(min = 8, message = "Enter a minimum of 8 characters")
+    @ViewById(R.id.input_password)
     @Password(message = "")
     EditText edtpassword;
 
     @NotEmpty(message = "")
     // @Length(min=8, message="Enter a minimum of 8 characters")
-    @ConfirmPassword(message="Password does not match")
-    @ViewById (R.id.input_conform_password)
+    @ConfirmPassword(message = "Password does not match")
+    @ViewById(R.id.input_conform_password)
     EditText edtConPassword;
 
     @NotEmpty(message = "")
-    @Length(min=1, message="Enter City")
-    @ViewById (R.id.input_city)
+    @Length(min = 1, message = "Enter City")
+    @ViewById(R.id.input_city)
     EditText edtCity;
 
 
@@ -102,45 +103,39 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
 
 
     Validator validator;
-    String strEmail,strFirstName,strLastName,referralStatus,strPassword,strConfirmPassword,strCity,strMobile,strCountyCode,strnickname,strNumOfPassenger;
+    String strEmail, strFirstName, strLastName, referralStatus, strPassword, strConfirmPassword, strCity, strMobile, strCountyCode, strnickname, strNumOfPassenger;
     CountryCodePicker ccp;
 
 
-    @Click (R.id.back)
-    void back()
-    {
+    @Click(R.id.back)
+    void back() {
         finish();
     }
 
-    @Click (R.id.signIn)
-    void signin()
-    {
-        Intent signin=new Intent(this,SigninActivity_.class);
+    @Click(R.id.signIn)
+    void signin() {
+        Intent signin = new Intent(this, SigninActivity_.class);
         startActivity(signin);
     }
 
-    @Click (R.id.continueReg)
-    void con()
-    {
+    @Click(R.id.continueReg)
+    void con() {
         validator.validate();
     }
 
 
     @Click(R.id.input_country_code)
-    void countryCode()
-    {
+    void countryCode() {
         CountryCodeDialog.openCountryCodeDialog(ccp);//Open country code dialog
     }
 
 
-
-
     @AfterViews
-    void create(){
-        FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(),getString(R.string.app_font));
+    void create() {
+        FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
         fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
 
-        ccp =(CountryCodePicker)findViewById(R.id.ccp);
+        ccp = (CountryCodePicker) findViewById(R.id.ccp);
 
         ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
@@ -156,28 +151,28 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
     @Override
     public void onValidationSucceeded() {
 
-        strEmail=   edtEmail.getText().toString().trim();
-        strFirstName=   edtFirstName.getText().toString().trim();
-        strLastName=   edtLastName.getText().toString().trim();
-        strPassword=   edtpassword.getText().toString().trim();
-        strConfirmPassword=   edtConPassword.getText().toString().trim();
-        strCity=   edtCity.getText().toString().trim();
-        strMobile=edtMobile.getText().toString();
-        strnickname=edtNickName.getText().toString();
+        strEmail = edtEmail.getText().toString().trim();
+        strFirstName = edtFirstName.getText().toString().trim();
+        strLastName = edtLastName.getText().toString().trim();
+        strPassword = edtpassword.getText().toString().trim();
+        strConfirmPassword = edtConPassword.getText().toString().trim();
+        strCity = edtCity.getText().toString().trim();
+        strMobile = edtMobile.getText().toString();
+        strnickname = edtNickName.getText().toString();
 
-        strFirstName=strFirstName.replaceAll(" ", "%20");
-        strLastName=strLastName.replaceAll(" ","%20");
-        strCity=strCity.replaceAll(" ","%20");
-        strMobile=strMobile.replaceAll(" ","%20");
-       // strreferralcode=strreferralcode.replaceAll(" ","%20");
-        strnickname=strnickname.replaceAll(" ","%20");
+        strFirstName = strFirstName.replaceAll(" ", "%20");
+        strLastName = strLastName.replaceAll(" ", "%20");
+        strCity = strCity.replaceAll(" ", "%20");
+        strMobile = strMobile.replaceAll(" ", "%20");
+        // strreferralcode=strreferralcode.replaceAll(" ","%20");
+        strnickname = strnickname.replaceAll(" ", "%20");
 //        strCountyCode=strCountyCode.replaceAll("\\+","%2B");
-        strCountyCode=userCountryCode.getText().toString();
+        strCountyCode = userCountryCode.getText().toString();
         try {
             byte[] encoded = Base64.encode(strPassword.getBytes("UTF-8"), Base64.DEFAULT);
-            strPassword= new String(encoded, "UTF-8");
-            strPassword= strPassword.replaceAll("=","").trim();
-            System.out.println("Encoding UTF"+strPassword);
+            strPassword = new String(encoded, "UTF-8");
+            strPassword = strPassword.replaceAll("=", "").trim();
+            LogUtils.i("Encoding UTF" + strPassword);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -195,10 +190,9 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
         }
         if (!validateCountryCode()) {
 
-        }else if (!validateUsing_libphonenumber()) {
+        } else if (!validateUsing_libphonenumber()) {
             edtMobile.setError(getString(R.string.invalid_mobile_number));
-        }
-        else {
+        } else {
             //  loginEmail();
             loginPhone();
         }
@@ -209,8 +203,8 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
     private void loginPhone() {
 
         showDialog();
-        final String url= Constants.LIVEURL+"checkEmailPhone/"+"email/"+strEmail+"/mobile/"+strMobile;
-        System.out.println("Driver SignUp URL==>"+url);
+        final String url = Constants.LIVEURL + "checkEmailPhone/" + "email/" + strEmail + "/mobile/" + strMobile;
+        LogUtils.i("Driver SignUp URL==>" + url);
 
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -219,42 +213,35 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
 
                         dismissDialog();
                         // Parsing json
-                        if(response.length() > 0) {
-                            for (int i = 0; i < response.length(); i++)
-                            {
+                        if (response.length() > 0) {
+                            for (int i = 0; i < response.length(); i++) {
 
                                 try {
 
                                     JSONObject register_jsonobj = response.getJSONObject(i);
 
-                                    if(register_jsonobj.optString("status").matches("Success")) {
+                                    if (register_jsonobj.optString("status").matches("Success")) {
 
-                                        Intent editIntent=new Intent(SignUp_Activity.this,ImageUpload_.class);
-                                        editIntent.putExtra("FirstName",strFirstName);
+                                        Intent editIntent = new Intent(SignUp_Activity.this, ImageUpload_.class);
+                                        editIntent.putExtra("FirstName", strFirstName);
                                         editIntent.putExtra("LastName", strLastName);
-                                        editIntent.putExtra("Email",strEmail);
-                                        editIntent.putExtra("Password",strPassword);
-                                        editIntent.putExtra("Mobile",strMobile);
-                                        editIntent.putExtra("City",strCity);
+                                        editIntent.putExtra("Email", strEmail);
+                                        editIntent.putExtra("Password", strPassword);
+                                        editIntent.putExtra("Mobile", strMobile);
+                                        editIntent.putExtra("City", strCity);
                                         editIntent.putExtra("CountryCode", strCountyCode);
                                         editIntent.putExtra("nick_name", strnickname);
 
 //                                        editIntent.putExtra("num_of_passenger",strNumOfPassenger);
                                         startActivity(editIntent);
-                                    }
-                                    else if(register_jsonobj.optString("message").matches("Mobile exist"))
-                                    {
-                                        System.out.println("Mobile number Already exists");
+                                    } else if (register_jsonobj.optString("message").matches("Mobile exist")) {
+                                        LogUtils.i("Mobile number Already exists");
                                         edtMobile.setError("Mobile Number already exists");
-                                    }
-                                    else if(register_jsonobj.optString("message").matches("Email exist"))
-                                    {
-                                        System.out.println("Email Already exists");
+                                    } else if (register_jsonobj.optString("message").matches("Email exist")) {
+                                        LogUtils.i("Email Already exists");
                                         edtEmail.setError("Email already exists");
-                                    }
-                                    else if(register_jsonobj.optString("message").matches("Both Exits"))
-                                    {
-                                        System.out.println("Both Already exists");
+                                    } else if (register_jsonobj.optString("message").matches("Both Exits")) {
+                                        LogUtils.i("Both Already exists");
                                         edtMobile.setError("Mobile Number already exists");
                                         edtEmail.setError("Email already exists");
                                     }
@@ -281,30 +268,28 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
 
     private void loginEmail() {
         //  showDialog();
-        final String url= Constants.LIVEURL+"emailExist/"+"email/"+strEmail;
-        System.out.println("Driver SignUp URL==>" + url);
+        final String url = Constants.LIVEURL + "emailExist/" + "email/" + strEmail;
+        LogUtils.i("Driver SignUp URL==>" + url);
 
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         // Parsing json
-                        if(response.length() > 0) {
+                        if (response.length() > 0) {
                             for (int i = 0; i < response.length(); i++) {
 
                                 try {
 
                                     JSONObject register_jsonobj = response.getJSONObject(i);
 
-                                    if(register_jsonobj.optString("status").matches("Success")) {
+                                    if (register_jsonobj.optString("status").matches("Success")) {
                                         // dismissDialog();
-                                        statusEmail=true;
-                                    }
-
-                                    else if(register_jsonobj.optString("status").matches("Fail")) {
+                                        statusEmail = true;
+                                    } else if (register_jsonobj.optString("status").matches("Fail")) {
                                         // dismissDialog();
                                         edtEmail.setError("Email already exists");
-                                        System.out.println("Email Already exists");
+                                        LogUtils.i("Email Already exists");
                                     }
 
                                 } catch (JSONException e) {
@@ -361,16 +346,12 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
 
     private boolean validatePhone() {
 
-        if(edtMobile.getText().toString().trim().isEmpty()) {
+        if (edtMobile.getText().toString().trim().isEmpty()) {
             edtMobile.setError(getString(R.string.enter_mobile_number));
             return false;
-        }
-        else if (userCountryCode.getText().toString().trim().isEmpty())
-        {
+        } else if (userCountryCode.getText().toString().trim().isEmpty()) {
             return false;
-        }
-        else  if (!edtMobile.getText().toString().trim().isEmpty())
-        {
+        } else if (!edtMobile.getText().toString().trim().isEmpty()) {
             if (edtMobile.getText().toString().substring(0, 1).matches("0")) {
                 edtMobile.setError("Enter a valid number");
                 return false;
@@ -384,27 +365,27 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
         return true;
     }
 
-    private void validatereferral(String referralcode){
+    private void validatereferral(String referralcode) {
 
         showDialog();
 
-        final String url = Constants.LIVEURL + "refrel_code/code/"+referralcode;
-        System.out.println("EmailExistURL==>"+url);
+        final String url = Constants.LIVEURL + "refrel_code/code/" + referralcode;
+        LogUtils.i("EmailExistURL==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 
                 dismissDialog();
-                for (int i=0;i<response.length();i++){
+                for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
                         referralStatus = jsonObject.optString("status");
 
-                        if(referralStatus.equals("Success")){
+                        if (referralStatus.equals("Success")) {
                             loginPhone();
                         } else {
-                          // edtReferralcode.setError(getResources().getString(R.string.referral_invalid));
-                            System.out.print("inside else");
+                            // edtReferralcode.setError(getResources().getString(R.string.referral_invalid));
+                            LogUtils.i("inside else");
                         }
                     } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
@@ -415,36 +396,33 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 dismissDialog();
-                if (volleyError instanceof NoConnectionError){
-                    Toast.makeText(getApplicationContext(), "No Internet Connection",Toast.LENGTH_SHORT).show();
+                if (volleyError instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        signUpReq.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(signUpReq);
     }
 
     private boolean validateUsing_libphonenumber() {
-        if(edtMobile.getText().toString().length()<=1){
+        if (edtMobile.getText().toString().length() <= 1) {
             return false;
-        }
-        else  if (edtMobile.getText().toString().substring(0, 1).matches("0")) {
+        } else if (edtMobile.getText().toString().substring(0, 1).matches("0")) {
             edtMobile.setError("Enter a valid number");
             return false;
-        }
-        else
-        {
+        } else {
             strCountyCode = userCountryCode.getText().toString();
             strMobile = edtMobile.getText().toString();
             if (validatePhone() && validateCountryCode()) {
-                System.out.println("CountryCode==>" + strCountyCode);
+                LogUtils.i("CountryCode==>" + strCountyCode);
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     strCountyCode = strCountyCode.replace("+", "");
                 }
-                System.out.println("SDK_VERSION==>" + Build.VERSION.SDK_INT);
-                System.out.println("SDK_VERSION_RELEASE" + Build.VERSION.RELEASE);
-                System.out.println("CountryCode1==>" + strCountyCode);
+                LogUtils.i("SDK_VERSION==>" + Build.VERSION.SDK_INT);
+                LogUtils.i("SDK_VERSION_RELEASE" + Build.VERSION.RELEASE);
+                LogUtils.i("CountryCode1==>" + strCountyCode);
                 PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
                 String isoCode = phoneNumberUtil.getRegionCodeForCountryCode(Integer.parseInt(strCountyCode));
                 Phonenumber.PhoneNumber phoneNumber = null;
@@ -470,8 +448,8 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
 
     }
 
-    public void showDialog(){
-        progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -479,10 +457,10 @@ public class SignUp_Activity extends MyBaseActivity implements Validator.Validat
         progressDialog.show();
     }
 
-    public void dismissDialog(){
-        if(progressDialog!=null && progressDialog.isShowing()){
+    public void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
-            progressDialog=null;
+            progressDialog = null;
         }
     }
 }

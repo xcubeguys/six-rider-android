@@ -48,6 +48,7 @@ import com.google.android.gms.common.api.Status;
 import com.tommy.driver.adapter.AppController;
 import com.tommy.driver.adapter.Constants;
 import com.tommy.driver.adapter.FontChangeCrawler;
+import com.tommy.driver.utils.LogUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -63,13 +64,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 @EActivity(R.layout.activity_launch)
-public class LaunchActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class LaunchActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = "LaunchActivity" ;
+    private static final String TAG = "LaunchActivity";
     GoogleSignInOptions gso;
     GoogleApiClient mGoogleApiClient;
     private int GOOGLE_SIGN_IN = 100;
-    boolean doubleBackToExitPressedOnce=false;
+    boolean doubleBackToExitPressedOnce = false;
     SharedPreferences.Editor editor;
     //Facebook Declaration
     private CallbackManager callbackManager;
@@ -77,24 +78,24 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
     private AccessTokenTracker accessTokenTracker;
     private ProfileTracker profileTracker;
     Bundle parameters;
-    String driverID,driverFirstName,driverLastName,driverEmail,driverMobile,carcategory;
-    String fbEmail, fbFullName, fbFirstName, fbLastName, fbUserProfile, fbID, fbToken,driverId;
-    String googleEmail,googleFirstName, googleLastName, googleUserProfile, googleID, googleIDToken;
+    String driverID, driverFirstName, driverLastName, driverEmail, driverMobile, carcategory;
+    String fbEmail, fbFullName, fbFirstName, fbLastName, fbUserProfile, fbID, fbToken, driverId;
+    String googleEmail, googleFirstName, googleLastName, googleUserProfile, googleID, googleIDToken;
+
     @AfterViews
-    void launchActivity()
-    {
+    void launchActivity() {
         //Change Font to Whole View
         FontChangeCrawler fontChanger = new FontChangeCrawler(getAssets(), getString(R.string.app_font));
         fontChanger.replaceFonts((ViewGroup) this.findViewById(android.R.id.content));
 
         SharedPreferences prefs = getSharedPreferences(Constants.MY_PREFS_NAME, MODE_PRIVATE);
         driverId = prefs.getString("driverid", null);
-        System.out.println("driverid" + driverId);
+        LogUtils.i("driverid" + driverId);
 
-        Intent intent=getIntent();
-        String istimeout=intent.getStringExtra("timeout");
+        Intent intent = getIntent();
+        String istimeout = intent.getStringExtra("timeout");
 
-        if(istimeout!=null){
+        if (istimeout != null) {
             android.app.AlertDialog.Builder builder =
                     new AlertDialog.Builder(LaunchActivity.this, R.style.AppCompatAlertDialogStyle);
             builder.setTitle(R.string.timeout);
@@ -112,7 +113,7 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
             builder.show();
         }
 
-        if(driverId!=null) {
+        if (driverId != null) {
             Intent i = new Intent(getApplicationContext(), Map_Activity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
@@ -185,17 +186,17 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
                                             GraphResponse response) {
 
                                         if (object != null) {
-                                            System.out.println("jsonobject" + object);
+                                            LogUtils.i("jsonobject" + object);
 
                                             fbEmail = object.optString("email");
                                             fbFullName = object.optString("name");
                                             fbID = object.optString("id");
-                                            System.out.println("fb email id===>"+fbEmail);
+                                            LogUtils.i("fb email id===>" + fbEmail);
 
-                                            if(fbEmail==null){
-                                                fbEmail="Nill";
-                                            }else if(fbEmail.equals("")) {
-                                                fbEmail="Nill";
+                                            if (fbEmail == null) {
+                                                fbEmail = "Nill";
+                                            } else if (fbEmail.equals("")) {
+                                                fbEmail = "Nill";
                                             }
                                             faceBoookLogin();
                                         }
@@ -213,7 +214,7 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
 
                     @Override
                     public void onCancel() {
-                        System.out.println("Facebook Login failed!!");
+                        LogUtils.i("Facebook Login failed!!");
                         //Toast.makeText(EnrollActivity.this, "Login Cancelled by user!", Toast.LENGTH_LONG).show();
                     }
 
@@ -221,13 +222,12 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
                     public void onError(FacebookException e) {
                         Log.d("Facebooksdk", "Login with Facebook failure", e);
                         Toast.makeText(LaunchActivity.this, "An unknown network error has occured", Toast.LENGTH_LONG).show();
-                        System.out.println("Facebook Login failed!!");
+                        LogUtils.i("Facebook Login failed!!");
                     }
                 });
     }
 
-    private void faceBoookLogin()
-    {
+    private void faceBoookLogin() {
         LoginManager.getInstance().logOut();
         checkFB();
     }
@@ -243,7 +243,7 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
                 md.update(signature.toByteArray());
                 String something = new String(Base64.encode(md.digest(), 0));
                 //String something = new String(Base64.encodeBytes(md.digest()));
-                System.out.println("hash key value"+something);
+                LogUtils.i("hash key value" + something);
                 Log.e("hash key", something);
             }
         } catch (PackageManager.NameNotFoundException e1) {
@@ -256,26 +256,25 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
 
     }
 
-    private void displayMessage(Profile profile)
-    {
+    private void displayMessage(Profile profile) {
         if (profile != null) {
             //Toast.makeText(getApplicationContext(),"displaymessage",Toast.LENGTH_LONG).show();
             fbFullName = profile.getName();
             fbFirstName = profile.getFirstName();
-            fbLastName= profile.getLastName();
-            fbID= profile.getId();
-            fbUserProfile=profile.getProfilePictureUri(100,100).toString();
+            fbLastName = profile.getLastName();
+            fbID = profile.getId();
+            fbUserProfile = profile.getProfilePictureUri(100, 100).toString();
 
 
             //String email1= this.getIntent().getExtras().getString("fields");
-            //System.out.println("bundle email"+email1);
-            System.out.println("Facebook Fullname" + fbFullName);
-            System.out.println("Facebook Firstname" + fbFirstName);
-            System.out.println("Facebook Lastname" + fbLastName);
-            System.out.println("Facebook Profile" + fbUserProfile);
-            System.out.println("Facebook ID" + fbID);
-            System.out.println("Facebook Email" + fbEmail);
-            System.out.println("Facebook Access Token" + fbToken);
+            //LogUtils.i("bundle email"+email1);
+            LogUtils.i("Facebook Fullname" + fbFullName);
+            LogUtils.i("Facebook Firstname" + fbFirstName);
+            LogUtils.i("Facebook Lastname" + fbLastName);
+            LogUtils.i("Facebook Profile" + fbUserProfile);
+            LogUtils.i("Facebook ID" + fbID);
+            LogUtils.i("Facebook Email" + fbEmail);
+            LogUtils.i("Facebook Access Token" + fbToken);
             //call webservice
 
         }
@@ -287,12 +286,11 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if(data!=null){
+        if (data != null) {
             if (requestCode == GOOGLE_SIGN_IN) {
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 handleSignInResult(result);
-            }
-            else {
+            } else {
                 callbackManager.onActivityResult(requestCode, resultCode, data);
             }
         }
@@ -305,13 +303,13 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-           // Toast.makeText(this,"Successfully Logged in "+acct.getDisplayName(),Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this,"Successfully Logged in "+acct.getDisplayName(),Toast.LENGTH_SHORT).show();
             //googleFullName = acct.getDisplayName();
-            googleFirstName=acct.getGivenName();
-            googleLastName=acct.getFamilyName();
+            googleFirstName = acct.getGivenName();
+            googleLastName = acct.getFamilyName();
             googleEmail = acct.getEmail();
-            googleUserProfile= String.valueOf(acct.getPhotoUrl());
-            googleUserProfile= googleUserProfile.replaceAll("/","-__-");
+            googleUserProfile = String.valueOf(acct.getPhotoUrl());
+            googleUserProfile = googleUserProfile.replaceAll("/", "-__-");
             googleID = acct.getId();
             googleIDToken = acct.getIdToken();
             googleSignOut();
@@ -322,23 +320,21 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
         }
     }
 
-    private void callGoogleSignUp()
-    {
+    private void callGoogleSignUp() {
 
         checkGoogle();
     }
 
 
-    private void googleSignOut()
-        {
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                    new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(Status status) {
+    private void googleSignOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
 //                        Toast.makeText(getApplicationContext(),"Logged out Successfully",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
+                    }
+                });
+    }
 
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -368,20 +364,21 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     @Click({R.id.signin_button})
-    void signinPage(){
-        Intent signin=new Intent(this,SigninActivity_.class);
+    void signinPage() {
+        Intent signin = new Intent(this, SigninActivity_.class);
         startActivity(signin);
         finish();
     }
 
 
     @Click({R.id.register_button})
-    void registerPage(){
-        Intent signin=new Intent(this,SignUp_Activity_.class);
+    void registerPage() {
+        Intent signin = new Intent(this, SignUp_Activity_.class);
         startActivity(signin);
     }
+
     @Click(R.id.google_button)
-    void googleSignIn(){
+    void googleSignIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
@@ -398,62 +395,62 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
     @Click(R.id.facebook_button)
-    public void fblogin () {
+    public void fblogin() {
         LoginManager.getInstance().logOut();//Logout Facebook
         LoginManager.getInstance().logInWithReadPermissions(LaunchActivity.this, Arrays.asList("public_profile", "email"));
     }
 
-    private void checkFB(){
+    private void checkFB() {
         showProgress(getString(R.string.fb_msg));
 
         try {
-            fbUserProfile= URLEncoder.encode(fbUserProfile, "utf-8");
+            fbUserProfile = URLEncoder.encode(fbUserProfile, "utf-8");
         } catch (UnsupportedEncodingException | NullPointerException e) {
-            System.out.println("Facebook Exception "+e.toString());
+            LogUtils.i("Facebook Exception " + e.toString());
             e.printStackTrace();
         }
 
-        final String url=Constants.LIVEURL+"FBExist/fb_id/"+fbID;
+        final String url = Constants.LIVEURL + "FBExist/fb_id/" + fbID;
         //final String url= Constants.LIVEURL+"fbSignup/"+"first_name/"+fbFirstName+"/last_name/"+fbLastName+"/email/"+fbEmail+"/regid/344444444444444"+"/fb_id/"+fbID+"/license/"+""+"/insurance/"+"";
-        System.out.println("Driver SignUp URL==>"+url);
+        LogUtils.i("Driver SignUp URL==>" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
 
-                        if(!isFinishing())
+                        if (!isFinishing())
                             progressDialog.dismiss();
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
                             try {
 
-                                JSONObject register_status= response.getJSONObject(i);
-                                if(register_status.optString("status_extra").matches("Exist")) {
+                                JSONObject register_status = response.getJSONObject(i);
+                                if (register_status.optString("status_extra").matches("Exist")) {
 
-                                    driverID=register_status.optString("userid");
-                                    driverFirstName=register_status.optString("first_name");
-                                    driverLastName=register_status.optString("last_name");
-                                    driverEmail=register_status.optString("email");
-                                    driverMobile=register_status.optString("mobile");
-                                    carcategory=register_status.optString("category");
+                                    driverID = register_status.optString("userid");
+                                    driverFirstName = register_status.optString("first_name");
+                                    driverLastName = register_status.optString("last_name");
+                                    driverEmail = register_status.optString("email");
+                                    driverMobile = register_status.optString("mobile");
+                                    carcategory = register_status.optString("category");
                                     savepreferences();
 
-                                    Intent map=new Intent(getApplicationContext(),Map_Activity.class);
+                                    Intent map = new Intent(getApplicationContext(), Map_Activity.class);
                                     map.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(map);
                                     finish();
                                     Toast.makeText(LaunchActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
+                                } else {
 
-                                    System.out.println("fb email id===>"+fbEmail);
+                                    LogUtils.i("fb email id===>" + fbEmail);
 
-                                    Intent intent=new Intent(LaunchActivity.this,DocUpload_Activity_.class);
-                                    intent.putExtra("FirstName",fbFirstName);
-                                    intent.putExtra("LastName",fbLastName);
-                                    intent.putExtra("Email",fbEmail);
+                                    Intent intent = new Intent(LaunchActivity.this, DocUpload_Activity_.class);
+                                    intent.putExtra("FirstName", fbFirstName);
+                                    intent.putExtra("LastName", fbLastName);
+                                    intent.putExtra("Email", fbEmail);
                                     intent.putExtra("FbID", fbID);
                                     intent.putExtra("ProfilePicture", fbUserProfile);
                                     intent.putExtra("Comingfrom", "facebook");
@@ -470,11 +467,11 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(!isFinishing())
+                if (!isFinishing())
                     progressDialog.dismiss();
                 //protected static final String TAG = null;
-                if(error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(), "No Internet Connection",Toast.LENGTH_SHORT).show();
+                if (error instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
                     // stopAnim();
                     // Toast.makeText(DocUpload_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -487,19 +484,19 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
         AppController.getInstance().addToRequestQueue(movieReq);
     }
 
-    private void checkGoogle(){
+    private void checkGoogle() {
         showProgress(getString(R.string.google_msg));
 
-        String url= Constants.LIVEURL+"GBExist/google_id/"+googleID;
+        String url = Constants.LIVEURL + "GBExist/google_id/" + googleID;
 
-        System.out.println("Driver SignUp URL==>"+url);
+        LogUtils.i("Driver SignUp URL==>" + url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
 
-                        if(!isFinishing())
+                        if (!isFinishing())
                             progressDialog.dismiss();
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
@@ -507,35 +504,33 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
 
                                 JSONObject register_status = response.getJSONObject(i);
 
-                                if(register_status.optString("status").matches("Fail")){
+                                if (register_status.optString("status").matches("Fail")) {
 
-                                    Intent intent=new Intent(LaunchActivity.this,DocUpload_Activity_.class);
-                                    intent.putExtra("FirstName",googleFirstName);
-                                    intent.putExtra("LastName",googleLastName);
-                                    intent.putExtra("Email",googleEmail);
+                                    Intent intent = new Intent(LaunchActivity.this, DocUpload_Activity_.class);
+                                    intent.putExtra("FirstName", googleFirstName);
+                                    intent.putExtra("LastName", googleLastName);
+                                    intent.putExtra("Email", googleEmail);
                                     intent.putExtra("GoogleID", googleID);
                                     intent.putExtra("ProfilePicture", googleUserProfile);
                                     intent.putExtra("Comingfrom", "google");
 
                                     startActivity(intent);
-                                }
-                                else {
-                                    driverID=register_status.optString("userid");
-                                    driverFirstName=register_status.optString("first_name");
-                                    driverLastName=register_status.optString("last_name");
-                                    driverEmail=register_status.optString("email");
-                                    driverMobile=register_status.optString("mobile");
-                                    carcategory=register_status.optString("category");
+                                } else {
+                                    driverID = register_status.optString("userid");
+                                    driverFirstName = register_status.optString("first_name");
+                                    driverLastName = register_status.optString("last_name");
+                                    driverEmail = register_status.optString("email");
+                                    driverMobile = register_status.optString("mobile");
+                                    carcategory = register_status.optString("category");
                                     savepreferences();
 
-                                    Intent map=new Intent(getApplicationContext(),Map_Activity.class);
+                                    Intent map = new Intent(getApplicationContext(), Map_Activity.class);
                                     map.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(map);
                                     finish();
                                     Toast.makeText(LaunchActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                            catch (JSONException e) {
+                            } catch (JSONException e) {
                                 //stopAnim();
                                 e.printStackTrace();
                             }
@@ -544,11 +539,11 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(!isFinishing())
-                progressDialog.dismiss();
+                if (!isFinishing())
+                    progressDialog.dismiss();
                 //protected static final String TAG = null;
-                if(error instanceof NoConnectionError) {
-                    System.out.print("NoConnectionError");
+                if (error instanceof NoConnectionError) {
+                    LogUtils.i("NoConnectionError");
                     // stopAnim();
                     //  Toast.makeText(DocUpload_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
@@ -561,8 +556,7 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
         AppController.getInstance().addToRequestQueue(movieReq);
     }
 
-    public void savepreferences()
-    {
+    public void savepreferences() {
         editor.putString("driverid", driverID);
         editor.putString("drivername", driverFirstName);
         editor.putString("driverphonenum", driverMobile);
@@ -572,8 +566,8 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
 
     //show progress
 
-    public void showProgress(String message){
-        progressDialog= new ProgressDialog(this);
+    public void showProgress(String message) {
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(message);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
