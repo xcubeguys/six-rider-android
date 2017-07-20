@@ -290,7 +290,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     ImageView requestMapView;
     View mapView;
     String tollfee, totalprice;
-    String riderID, strsetdestination, strRiderProfile, strCategory, strPickupAddress;
+    String riderID, strsetdestination, strRiderProfile, strCategory, strCategoryId, strPickupAddress;
 
     ArrayList<String> tripIDs = new ArrayList<>();
     ArrayList<String> tollfrees = new ArrayList<>();
@@ -306,7 +306,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
     boolean doubleBackToExitPressedOnce = false;
     ProgressDialog progressDialog;
 
-    String strWebCategory, strWebprice_km, strwebpricepermin, strwebmaxsize, strwebpricefare, strCacnelStatus, strbookfee, strairportfee,
+    String strWebprice_km, strwebpricepermin, strwebmaxsize, strwebpricefare, strCacnelStatus, strbookfee, strairportfee,
             strtaxpercentage, strDropPrice;
 
     TextView trip_rider_name, txtTotalDistance, txtTripAmount, txtTripdate, companyname, companyfee;
@@ -1256,7 +1256,8 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject signIn_jsonobj = response.getJSONObject(i);
-                                strWebCategory = signIn_jsonobj.optString("categoryname");
+                                strCategoryId = signIn_jsonobj.optString("categoryId");
+                                String strWebCategory = signIn_jsonobj.optString("categoryname");
                                 strCategoryName[i] = signIn_jsonobj.optString("categoryname");
                                 System.out.println("Current category" + strCategory);
                                 System.out.println("Web category" + strWebCategory);
@@ -2065,14 +2066,15 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         String Tripid = tripidArray[0];
         System.out.println(tripID + "trips ids" + Tripid);
         System.out.println("trips idsamount" + getTotalPrice());
-        String url = Constants.LIVEURL_REQUEST + "updateTrips/trip_id/" + Tripid + "/trip_status/end/accept_status/4/distance/" + strTotalDistance + "/total_amount/" + getTotalPrice() + "/user_id/" + driverId + "/drop_address/" + endAddress + "/end_lat/" + endLat + "/end_long/" + endLng;
+        String url = Constants.LIVEURL_REQUEST + "updateTrips/trip_id/" + Tripid + "/trip_status/end/accept_status/4/distance/" + strTotalDistance + "/categoryId/" + strCategoryId + "/user_id/" + driverId + "/drop_address/" + endAddress + "/end_lat/" + endLat + "/end_long/" + endLng;
         System.out.println(" ONLINE URL is " + url);
-
+        Log.i("wow", "end trip url formed = "+url);
         // Creating volley request obj
         JsonArrayRequest movieReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        Log.i("wow", "end trip response = "+response.toString());
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -2101,6 +2103,7 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.i("wow", "end trip error response = "+error.networkResponse);
                 onlineLay.setEnabled(true);
                 //protected static final String TAG = null;
                 if (error instanceof NoConnectionError) {
@@ -3454,41 +3457,52 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
 
         try {
             // tripReference = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId).child("accept").child("trip_id");
+
+            // adding multiple value listener was creating problem and freezes the application.
+            if (tripReference != null && tripRefValueEventListener != null) {
+                tripReference.removeEventListener(tripRefValueEventListener);
+            }
             tripReference = FirebaseDatabase.getInstance().getReference().child("drivers_data").child(driverId).child("accept").child("trip_id_rider_name");
-            tripListener = tripReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null) {
-                        if (!dataSnapshot.getValue().toString().equals("0")) {
-                            //tripID = dataSnapshot.getValue().toString();
-                            tripIDWithName = dataSnapshot.getValue().toString();
-                            System.out.println("THE TRIP ID FROM FBASE" + tripIDWithName);
+            tripListener = tripReference.addValueEventListener(tripRefValueEventListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-                            if (tripIDWithName.isEmpty() && tripIDWithName.length() == 0) {
+    private ValueEventListener tripRefValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if (dataSnapshot.getValue() != null) {
+                if (!dataSnapshot.getValue().toString().equals("0")) {
+                    //tripID = dataSnapshot.getValue().toString();
+                    tripIDWithName = dataSnapshot.getValue().toString();
+                    System.out.println("THE TRIP ID FROM FBASE" + tripIDWithName);
 
-                                if (tripState.matches("btnendClicked")) {
-                                } else {
-                                    showProgressDialog();
-                                }
+                    if (tripIDWithName.isEmpty() && tripIDWithName.length() == 0) {
 
-                            } else if (tripIDWithName.matches("empty") || tripIDWithName.equals("0")) {
-                                dismissProgressDialog();
-                            } else {
-                                //tripIDs.add("58b7a6bbda71b4437a8b4567"+":"+riderFirstName);
-                                //tripIDs.add("58b7a6e4da71b4817b8b4567"+":"+riderFirstName);
+                        if (tripState.matches("btnendClicked")) {
+                        } else {
+                            showProgressDialog();
+                        }
 
-                                //tripIDs.add("58ad92c3da71b47d5f8b4567"+":"+"name2");
-                                tripIDWithName = dataSnapshot.getValue().toString();
-                                String[] tripidArray = tripIDWithName.split(":");
-                                String Tripid = tripidArray[0];
-                                riderFirstName = tripidArray[1].replaceAll("%20", " ");
+                    } else if (tripIDWithName.matches("empty") || tripIDWithName.equals("0")) {
+                        dismissProgressDialog();
+                    } else {
+                        //tripIDs.add("58b7a6bbda71b4437a8b4567"+":"+riderFirstName);
+                        //tripIDs.add("58b7a6e4da71b4817b8b4567"+":"+riderFirstName);
 
-                                tripID = Tripid;
+                        //tripIDs.add("58ad92c3da71b47d5f8b4567"+":"+"name2");
+                        tripIDWithName = dataSnapshot.getValue().toString();
+                        String[] tripidArray = tripIDWithName.split(":");
+                        String Tripid = tripidArray[0];
+                        riderFirstName = tripidArray[1].replaceAll("%20", " ");
+
+                        tripID = Tripid;
 
 
-                                System.out.println("Trips List Firebase before" + tripIDs + "SIZE" + tripIDs.size());
-                                System.out.println("TripID Firebase" + tripID);
-                                System.out.println("TripID riderFirstName" + riderFirstNameService);
+                        System.out.println("Trips List Firebase before" + tripIDs + "SIZE" + tripIDs.size());
+                        System.out.println("TripID Firebase" + tripID);
+                        System.out.println("TripID riderFirstName" + riderFirstNameService);
                                /* if(riderFirstName==null || riderFirstName.isEmpty() || riderFirstName.equals("null"))
                                 {
                                     System.out.println("Rider ID"+riderID);
@@ -3499,71 +3513,67 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
                                     System.out.println("Insiide Service" + riderFirstNameService);
                                 }*/
 
-                                if (tripIDs.size() == 0) {
-                                    tripIDs.add(tripIDWithName);
+                        if (tripIDs.size() == 0) {
+                            tripIDs.add(tripIDWithName);
                                    /* Collections.reverse(tripIDs);*/
-                                } else {
-
-                                    if (!tripIDs.contains(tripIDWithName)) {
-                                        //if(!tripIDs.contains(tripID)){
-                                        tripIDs.add(tripIDWithName);
-                                        //Collections.reverse(tripIDs);
-
-                                        System.out.println("trip id inside===>" + tripID);
-                                        System.out.println("trip id inside===>" + riderFirstName);
-                                        System.out.println("trip id inside===>" + tripIDs);
-                                    } else {
-                                        System.out.println("trip id outside===>" + tripID);
-                                    }
-                                }
-                                System.out.println("Trips List Firebase after" + tripIDs);
-
-                                Set<String> hs = new LinkedHashSet<>();
-                                hs.addAll(tripIDs);
-                                tripIDs.clear();
-                                tripIDs.addAll(hs);
-                                System.out.println("before Trips List" + tripIDs);
-                                /*Collections.reverse(tripIDs);*/
-                                System.out.println("after Trips List" + tripIDs);
-
-                                //                        System.out.println("Trips List Firebase cleared" + tripIDs.get(0));
-
-                                newMap.put(riderFirstName, tripID);
-                                System.out.println("Trips List" + tripIDs);
-                                System.out.println("Trips List" + tripIDs.size());
-                                System.out.println("Trips hash map List" + newMap);
-
-                                createDistanceFireBase();
-
-                                saveArray(tripIDs, "tripidarray", getApplicationContext());
-
-                                if (!tripID.equals("empty")) {
-                                    getState.putString("tripID", tripID);
-                                    getState.apply();
-                                }
-
-                                getstatusfromfirebase(tripID);
-                                createRidersNameList();
-                                dismissProgressDialog();
-                            }
                         } else {
-                            dismissProgressDialog();
+
+                            if (!tripIDs.contains(tripIDWithName)) {
+                                //if(!tripIDs.contains(tripID)){
+                                tripIDs.add(tripIDWithName);
+                                //Collections.reverse(tripIDs);
+
+                                System.out.println("trip id inside===>" + tripID);
+                                System.out.println("trip id inside===>" + riderFirstName);
+                                System.out.println("trip id inside===>" + tripIDs);
+                            } else {
+                                System.out.println("trip id outside===>" + tripID);
+                            }
+                        }
+                        System.out.println("Trips List Firebase after" + tripIDs);
+
+                        Set<String> hs = new LinkedHashSet<>();
+                        hs.addAll(tripIDs);
+                        tripIDs.clear();
+                        tripIDs.addAll(hs);
+                        System.out.println("before Trips List" + tripIDs);
+                                /*Collections.reverse(tripIDs);*/
+                        System.out.println("after Trips List" + tripIDs);
+
+                        //                        System.out.println("Trips List Firebase cleared" + tripIDs.get(0));
+
+                        newMap.put(riderFirstName, tripID);
+                        System.out.println("Trips List" + tripIDs);
+                        System.out.println("Trips List" + tripIDs.size());
+                        System.out.println("Trips hash map List" + newMap);
+
+                        createDistanceFireBase();
+
+                        saveArray(tripIDs, "tripidarray", getApplicationContext());
+
+                        if (!tripID.equals("empty")) {
+                            getState.putString("tripID", tripID);
+                            getState.apply();
                         }
 
-                    } else {
-                        showProgressDialog();
+                        getstatusfromfirebase(tripID);
+                        createRidersNameList();
+                        dismissProgressDialog();
                     }
+                } else {
+                    dismissProgressDialog();
                 }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+            } else {
+                showProgressDialog();
+            }
         }
-    }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -5045,6 +5055,10 @@ public class Map_Activity extends AppCompatActivity implements OnMapReadyCallbac
         handler.removeCallbacksAndMessages(null);
 
         stopTTS();
+
+        if (tripReference != null && tripRefValueEventListener != null) {
+            tripReference.removeEventListener(tripRefValueEventListener);
+        }
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
