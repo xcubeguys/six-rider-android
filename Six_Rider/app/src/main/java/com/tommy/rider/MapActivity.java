@@ -716,8 +716,35 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                         if (isNetworkAvailable()) {
                             Drawable drawable = cashButton.getBackground();
                             if (!drawable.getConstantState().equals(getResources().getDrawable(R.drawable.ub__payment_type_cash_no).getConstantState())) {
-                                dropLocationLayout.setVisibility(View.VISIBLE);
-                                sendRequest();
+                                // alert for riders that there are no child seats available currently.
+                                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
+                                builder.setTitle("Alert");
+                                builder.setMessage(R.string.alert_no_child_seats);
+                                builder.setCancelable(false);
+                                builder.setPositiveButton("Request", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        dropLocationLayout.setVisibility(View.VISIBLE);
+                                        sendRequest();
+                                    }
+
+                                });
+                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+
+                                });
+
+                                // this is been copied as existing way of displaying alert from noDriversAlert(String, String).
+                                if (!MapActivity.this.isFinishing()) {
+                                    //show dialog
+                                    builder.show();
+                                    easyTimer.stop();
+                                }
+
                             } else {
                                 alertSnackBar(getResources().getString(R.string.cash_on_hand_not_available));
                             }
@@ -4849,7 +4876,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     String status = dataSnapshot.getValue().toString();
-                    LogUtils.i("Status" + status);
+                    //LogUtils.i("Status" + status);
 
                     if (isFloat(status)) {
                         driverBearing = Float.parseFloat(status);

@@ -212,6 +212,7 @@
     <string name="valid_time">Enter valid time</string>
     <string name="selectcategory">Select any car category</string>
     <string name="cashnotavailable">Cash option not available</string>
+    <string name="alert_no_child_seats">SIXTNC, currently, does not provide child seats. Riders must provide child seats for children under 13 years of age.</string>
 
     <string-array name="expiration_picker_display_months">
         <item>Jan &#8212; 01</item>
