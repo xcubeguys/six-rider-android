@@ -164,7 +164,30 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
     Validator validator;
     Spinner spinnerCategory;
 
+    /**
+     * 0 - driver license front
+     * 1 - driver license back
+     * 2 - nric front
+     * 3 - nric back
+     * 4 - acra
+     * 5 - vehicle registration
+     * 6 - commercial insurance
+     * 7 - experience
+     * 8 - private hire
+     */
     private String uploadedImageUrls[];
+
+    /**
+     * 0 - driver license front
+     * 1 - driver license back
+     * 2 - nric front
+     * 3 - nric back
+     * 4 - acra
+     * 5 - vehicle registration
+     * 6 - commercial insurance
+     * 7 - experience
+     * 8 - private hire
+     */
     private ImageView documentsImageViews[];
 
     private void initializeViewsOfUploadImages() {
@@ -273,10 +296,10 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
         documentsImageViews[1] = driverSecondIv;
         documentsImageViews[2] = nricFirstIv;
         documentsImageViews[3] = nricSecondIv;
-        documentsImageViews[4] = vehicleRegFirstIv;
-        documentsImageViews[5] = experienceFirstIv;
-        documentsImageViews[6] = acraFirstIv;
-        documentsImageViews[7] = commercialFirstIv;
+        documentsImageViews[4] = acraFirstIv;
+        documentsImageViews[5] = vehicleRegFirstIv;
+        documentsImageViews[6] = commercialFirstIv;
+        documentsImageViews[7] = experienceFirstIv;
         documentsImageViews[8] = privateFirstIv;
     }
 
@@ -432,13 +455,13 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                 "/email/" + strEmail + "/regid/344444444444444" + "/google_id/" + strGoogleID +
                 "/license/" + uploadedImageUrls[0] + /*old - driver license front*/
                 "/license_back/" + uploadedImageUrls[1] + /*new - driver license back*/
-                "/nrci_front/" + uploadedImageUrls[2] + /*new - ncri front*/
-                "/nrci_back/" + uploadedImageUrls[3] + /*new - ncri back*/
+                "/nric_front/" + uploadedImageUrls[2] + /*new - ncri front*/
+                "/nric_back/" + uploadedImageUrls[3] + /*new - ncri back*/
                 "/ARCA/" + uploadedImageUrls[4] + /*old - arca*/
                 "/vehicle_reg/" + uploadedImageUrls[5] + /*old - vehicle registration*/
-                "/insurance/" + uploadedImageUrls[6] + /*old - vehicle insurance - but not sure whether it should be "insurance" or "commercial_pic"*/ // TODO: 14/7/17 check this
-                "/experience/" + uploadedImageUrls[7] + /*new - 1 month experience*/
-                "/private_car/" + uploadedImageUrls[8] + /*new - private hire car driver*/
+                "/commercial_pic/" + uploadedImageUrls[6] + /*old - vehicle insurance - but not sure whether it should be "insurance" or "commercial_pic"*/ // TODO: 14/7/17 check this
+                "/ph_experience/" + uploadedImageUrls[7] + /*new - 1 month experience*/
+                "/ph_hire/" + uploadedImageUrls[8] + /*new - private hire car driver*/
                 "/category/" + strSelectedCategory + "/profile_pic/" + strProfileImage + "/vehicle_make/" + strVehiclemake + "/vehicle_model/" + strVehiclemodel + "/vehicle_year/" + strVehicleyear + "/vehicle_mileage/" + strVehiclemileage + "/number_plate/" + strnumberplate;
 
         if (strreferralcode != null) {
@@ -540,13 +563,13 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                 "/nick_name/" + strFirstName + "/email/" + strEmail + "/regid/344444444444444" + "/fb_id/" + strFBID +
                 "/license/" + uploadedImageUrls[0] + /*old - driver license front*/
                 "/license_back/" + uploadedImageUrls[1] + /*new - driver license back*/
-                "/nrci_front/" + uploadedImageUrls[2] + /*new - ncri front*/
-                "/nrci_back/" + uploadedImageUrls[3] + /*new - ncri back*/
+                "/nric_front/" + uploadedImageUrls[2] + /*new - ncri front*/
+                "/nric_back/" + uploadedImageUrls[3] + /*new - ncri back*/
                 "/ARCA/" + uploadedImageUrls[4] + /*old - arca*/
                 "/vehicle_reg/" + uploadedImageUrls[5] + /*old - vehicle registration*/
-                "/insurance/" + uploadedImageUrls[6] + /*old - vehicle insurance - but not sure whether it should be "insurance" or "commercial_pic"*/ // TODO: 14/7/17 check this
-                "/experience/" + uploadedImageUrls[7] + /*new - 1 month experience*/
-                "/private_car/" + uploadedImageUrls[8] + /*new - private hire car driver*/
+                "/commercial_pic/" + uploadedImageUrls[6] + /*old - vehicle insurance - but not sure whether it should be "insurance" or "commercial_pic"*/ // TODO: 14/7/17 check this
+                "/ph_experience/" + uploadedImageUrls[7] + /*new - 1 month experience*/
+                "/ph_hire/" + uploadedImageUrls[8] + /*new - private hire car driver*/
                 "/category/" + strSelectedCategory +
                 "/vehicle_make/" + strVehiclemake + "/vehicle_model/" + strVehiclemodel + "/vehicle_year/" + strVehicleyear + "/vehicle_mileage/" + strVehiclemileage + "/number_plate/" + strnumberplate;
         if (strreferralcode != null) {
@@ -636,13 +659,13 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                 "/email/" + strEmail + "/regid/344444444444444" + "/profile_pic/" + strProfileImage +
                 "/license/" + uploadedImageUrls[0] + /*old - driver license front*/
                 "/license_back/" + uploadedImageUrls[1] + /*new - driver license back*/
-                "/nrci_front/" + uploadedImageUrls[2] + /*new - ncri front*/
-                "/nrci_back/" + uploadedImageUrls[3] + /*new - ncri back*/
+                "/nric_front/" + uploadedImageUrls[2] + /*new - ncri front*/
+                "/nric_back/" + uploadedImageUrls[3] + /*new - ncri back*/
                 "/ARCA/" + uploadedImageUrls[4] + /*old - arca*/
                 "/vehicle_reg/" + uploadedImageUrls[5] + /*old - vehicle registration*/
-                "/insurance/" + uploadedImageUrls[6] + /*old - vehicle insurance - but not sure whether it should be "insurance" or "commercial_pic"*/ // TODO: 14/7/17 check this
-                "/experience/" + uploadedImageUrls[7] + /*new - 1 month experience*/
-                "/private_car/" + uploadedImageUrls[8] + /*new - private hire car driver*/
+                "/commercial_pic/" + uploadedImageUrls[6] + /*old - vehicle insurance - but not sure whether it should be "insurance" or "commercial_pic"*/ // TODO: 14/7/17 check this
+                "/ph_experience/" + uploadedImageUrls[7] + /*new - 1 month experience*/
+                "/ph_hire/" + uploadedImageUrls[8] + /*new - private hire car driver*/
                 "/category/" + strSelectedCategory + "/passenger_count/" + strNumOfPassenger + "/vehicle_make/" + strVehiclemake +
                 "/vehicle_model/" + strVehiclemodel + "/vehicle_year/" + strVehicleyear + "/vehicle_mileage/" + strVehiclemileage + "/number_plate/" + strnumberplate;
 
@@ -785,14 +808,17 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
-            picturePath = getRealPathFromURI(mCapturedImageURI);
-            setPicturePathAndUpload();
-        }
+        if (resultCode == Activity.RESULT_OK) {
+            // result for camera picking of image
+            if (requestCode == CAMERA_REQUEST) {
+                picturePath = getRealPathFromURI(mCapturedImageURI);
+                setPicturePathAndUpload();
+            }
 
-        if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            if (Build.VERSION.SDK_INT >= 19) {
+            // result for gallery picking of image
+            if (requestCode == GALLERY_REQUEST && null != data) {
+                Uri selectedImage = data.getData();
+                /*if (Build.VERSION.SDK_INT >= 19) {*/
                 if (selectedImage != null && !selectedImage.toString().equals("null")) {
                     LogUtils.i("greater 19:" + "kitkat");
                     picturePath = getImagePath(selectedImage);
@@ -803,9 +829,10 @@ public class DocUpload_Activity extends MyBaseActivity implements Validator.Vali
                     picturePath = getPathOfImage(selectedImage);
                     LogUtils.i("mSelectedFissslePath res" + picturePath);
                 }
+                /*}*/
+                LogUtils.i("Request Code+requestCode" + "Result Code" + resultCode + "data" + data);
+                setPicturePathAndUpload();
             }
-            LogUtils.i("Request Code+requestCode" + "Result Code" + resultCode + "data" + data);
-            setPicturePathAndUpload();
         }
     }
 
