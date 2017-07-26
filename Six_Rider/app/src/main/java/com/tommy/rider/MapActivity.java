@@ -2311,11 +2311,14 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                if (check.isChecked()) {
+
+                /*if (check.isChecked()) {
                     maxShare = sharecount.getSelectedItem().toString();
                 } else {
                     maxShare = "0";
-                }
+                }*/
+                // Commented above code and hardcoding to non sharing cab booking.
+                maxShare = "0";
 
                 if (maxShare.matches("0")) {
                     rideType = "none";
