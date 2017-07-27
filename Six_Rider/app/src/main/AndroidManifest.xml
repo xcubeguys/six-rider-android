@@ -174,9 +174,14 @@
             android:theme="@style/MyMaterialTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
+        <!--Code from exiting code provided by client-->
+        <!--<meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c318f7efab8b3f74809783c46a9104fff0439e83" />-->
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="c318f7efab8b3f74809783c46a9104fff0439e83" />
+            android:value="9bfe4e6e632db702904a40db4f4186cd3e7025b0" />
 
         <activity
             android:name=".CardPaymentActivity"
