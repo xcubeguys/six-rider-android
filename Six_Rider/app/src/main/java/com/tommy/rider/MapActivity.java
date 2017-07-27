@@ -3087,12 +3087,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 } else {
                     cashButton.setBackground(getResources().getDrawable(R.drawable.ub__payment_type_cash_no));
                 }
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cashButton.setBackground(getResources().getDrawable(R.drawable.ub__payment_type_cash_no));
             }
         });
     }
