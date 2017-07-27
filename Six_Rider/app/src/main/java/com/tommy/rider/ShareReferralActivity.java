@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -155,82 +154,6 @@ public class ShareReferralActivity extends AppCompatActivity {
         new ConttactLoader().execute();
     }
 
-
-    private class ConttactLoader extends AsyncTask<Void, Void, List<SelectUser>> {
-
-        @Override
-        protected List<SelectUser> doInBackground(Void... voids) {
-
-            return mydb.getData();
-        }
-
-        @Override
-        protected void onPostExecute(List<SelectUser> selectUsers) {
-            if (!selectUsers.isEmpty()) {
-
-                suAdapter = new SelectUserAdapter(ShareReferralActivity.this, selectUsers);
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(ShareReferralActivity.this));
-                recyclerView.setAdapter(suAdapter);
-
-            }
-        }
-    }
-
-
-    public class SendMessagesThread extends Thread {
-        Handler handler;
-
-        public SendMessagesThread(Handler handler) {
-            this.handler = handler;
-        }
-
-        public void run() {
-            SmsManager smsManager = SmsManager.getDefault();
-            // Find out which contacts are selected
-            for (int i = 0; i < suAdapter.getlist().size() - 1; i++) {
-
-                Log.d("Mobile", "inside the loop " + i);
-
-                users = suAdapter.getlist().get(i);
-
-
-                if (users.getCheckedBox()) {
-
-                    notCheckedStatus = false;
-
-                    String mobile = users.getPhone().trim();
-
-                    try {
-
-                        mobile = mobile.replaceAll(" ", "");
-                        Log.d("Mobile", "message sent" + mobile);
-
-                        sendSMS(mobile, referralcode);
-
-                      /*  //smsManager.sendTextMessage(mobile, null, getString(R.string.sms_text)+" "+"Your Referral Code is "+referralcode+".", null, null);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + mobile));
-                        intent.putExtra("sms_body", getString(R.string.sms_text)+" "+"Your Referral Code is "+referralcode+".");
-                        startActivity(intent);*/
-
-                    } catch (Exception ex) {
-                        Log.d("Mobile", "Could not send message to " + mobile);
-                    }
-
-                } else {
-
-                    Log.d("Mobile", "not checked" + i);
-
-                }
-
-            }
-
-
-            Message m = handler.obtainMessage();
-            handler.sendMessage(m);
-        } // run
-    } // Thread
-
     public void sharedAlert(final String alertMsg) {
 
         android.support.v7.app.AlertDialog.Builder builder =
@@ -264,7 +187,6 @@ public class ShareReferralActivity extends AppCompatActivity {
 
         builder.show();
     }
-
 
     private void sendSMS(final String phoneNumber, final String message) {
         String SENT = "SMS_SENT";
@@ -321,6 +243,77 @@ public class ShareReferralActivity extends AppCompatActivity {
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
     }
+
+    private class ConttactLoader extends AsyncTask<Void, Void, List<SelectUser>> {
+
+        @Override
+        protected List<SelectUser> doInBackground(Void... voids) {
+
+            return mydb.getData();
+        }
+
+        @Override
+        protected void onPostExecute(List<SelectUser> selectUsers) {
+            if (!selectUsers.isEmpty()) {
+
+                suAdapter = new SelectUserAdapter(ShareReferralActivity.this, selectUsers);
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(ShareReferralActivity.this));
+                recyclerView.setAdapter(suAdapter);
+
+            }
+        }
+    }
+
+    public class SendMessagesThread extends Thread {
+        Handler handler;
+
+        public SendMessagesThread(Handler handler) {
+            this.handler = handler;
+        }
+
+        public void run() {
+            SmsManager smsManager = SmsManager.getDefault();
+            // Find out which contacts are selected
+            for (int i = 0; i < suAdapter.getlist().size() - 1; i++) {
+
+                LogUtils.d("inside the loop " + i);
+
+                users = suAdapter.getlist().get(i);
+
+
+                if (users.getCheckedBox()) {
+
+                    notCheckedStatus = false;
+
+                    String mobile = users.getPhone().trim();
+
+                    try {
+
+                        mobile = mobile.replaceAll(" ", "");
+                        LogUtils.d("mobile - message sent" + mobile);
+
+                        sendSMS(mobile, referralcode);
+
+                      /*  //smsManager.sendTextMessage(mobile, null, getString(R.string.sms_text)+" "+"Your Referral Code is "+referralcode+".", null, null);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + mobile));
+                        intent.putExtra("sms_body", getString(R.string.sms_text)+" "+"Your Referral Code is "+referralcode+".");
+                        startActivity(intent);*/
+
+                    } catch (Exception ex) {
+                        LogUtils.d("Mobile " + "Could not send message to " + mobile);
+                    }
+                } else {
+                    LogUtils.d("Mobile " + "not checked" + i);
+                }
+
+            }
+
+
+            Message m = handler.obtainMessage();
+            handler.sendMessage(m);
+        } // run
+    } // Thread
 
 
 }

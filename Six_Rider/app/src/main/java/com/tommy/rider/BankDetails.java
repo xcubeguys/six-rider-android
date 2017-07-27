@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -81,66 +80,48 @@ import static com.tommy.rider.R.id.Submit;
 
 @EActivity(R.layout.activity_bank_details)
 public class BankDetails extends AppCompatActivity implements Validator.ValidationListener, com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener {
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    private static final int CAMERA_CAPTURE_IMAGE = 100;
+    public String accname, bankname, strfirstname, strlastname, routings, branch_code, accounts, pin_code, billaddress, riderUpdateURL, status, message, stripeToken, Test_ApiKey, Live_ApiKey, is_live_stripe, stripeKey;
     String userID = null;
     boolean isValue = false, isImage = false, isImageback = false;
-
     String side = "";
-
-    @Click(R.id.back)
-    void back() {
-        finish();
-    }
-
     Validator validator;
-
-    private Uri fileUri;
-    private static final int CAMERA_CAPTURE_IMAGE = 100;
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public String accname, bankname, strfirstname, strlastname, routings, branch_code, accounts, pin_code, billaddress, riderUpdateURL, status, message, stripeToken, Test_ApiKey, Live_ApiKey, is_live_stripe, stripeKey;
     ProgressDialog progressDialog;
     String picturePath, profImage, profileImageNew = "null", strdateofbirt, strSecurityNumber;
     String stripdoc = "null", stripdocback = "null";
     com.wdullaer.materialdatetimepicker.date.DatePickerDialog dpd;
-
     @NotEmpty(message = "Enter First Name")
     @ViewById(R.id.first_name)
     EditText firstName;
-
     @NotEmpty(message = "Enter Last Name")
     @ViewById(R.id.last_name)
     EditText lastName;
-
     @NotEmpty(message = "Enter Account Name")
     @ViewById(R.id.acc_name)
     EditText acc_name;
     @NotEmpty(message = "Enter Bank Name")
     @ViewById(R.id.Bank_name)
     EditText Bank_name;
-
     @Length(max = 4, message = "Enter 4 digit Bank Code")
     @NotEmpty(message = "Enter Bank Code")
     @ViewById(R.id.bankcode)
     EditText routing;
-
     @Length(max = 3, message = "Enter 3 digit Branch Code")
     @NotEmpty(message = "Enter Branch Code")
     @ViewById(R.id.branchcode)
     EditText branchcode;
-
     //@Length(max =6, message = "Enter 6 digit pin Code")
     @NotEmpty(message = "Enter Postal Code")
     @ViewById(R.id.pincode)
     EditText pincode;
-
     @NotEmpty(message = "Enter your account number")
     @Length(max = 15, message = "Enter 15 digit Account No")
     @ViewById(R.id.account)
     EditText account;
-
     @NotEmpty(message = "Enter Billing Address")
     @ViewById(R.id.billingaddress)
     EditText billingaddress;
-
     @ViewById(R.id.Submit)
     TextView submitButton;
     /*@NotEmpty(message = "Enter Address")
@@ -149,17 +130,20 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
     @NotEmpty(message = "Enter Date of Birth")
     @ViewById(R.id.date_birth)
     EditText editdate;
-
     //@Length(min =9, message = "Enter 9 digit SSN Social Security Number")
     @NotEmpty(message = "Enter your NRIC Number")
     @ViewById(R.id.social_number)
     EditText social_number;
-
     @ViewById(R.id.profileImage)
     ImageView edtProfileImage;
-
     @ViewById(R.id.profileImageback)
     ImageView edtProfileImageback;
+    private Uri fileUri;
+
+    @Click(R.id.back)
+    void back() {
+        finish();
+    }
 
     @Click(Submit)
     void con() {
@@ -856,59 +840,8 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         editdate.setText(date);
     }
 
-    private class ImageuploadTask extends AsyncTask<String, Void, Boolean> {
-        private ProgressDialog dialog;
-        private BankDetails activity;
-
-        ImageuploadTask(BankDetails activity) {
-            this.activity = activity;
-            context = activity;
-            dialog = new ProgressDialog(context);
-        }
-
-        private Context context;
-
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(context);
-            dialog.setMessage("Uploading...");
-            dialog.setIndeterminate(false);
-            dialog.setCancelable(false);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-
-            if (dialog != null && dialog.isShowing()) {
-                if (!activity.isFinishing() && !activity.isDestroyed()) {
-                    try {
-                        dialog.dismiss();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected Boolean doInBackground(final String... args) {
-            try {
-                // ... processing ...
-                Upload_Server();
-                return true;
-            } catch (Exception e) {
-                Log.e("Schedule", "UpdateSchedule failed", e);
-                return false;
-            }
-        }
-    }
-
     protected void Upload_Server() {
-        // TODO Auto-generated method stub
         try {
-
-            Log.e("Image Upload", "Inside Upload");
 
             HttpURLConnection connection;
             DataOutputStream outputStream;
@@ -986,10 +919,10 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
             String Str1_imageurl = "";
 
             while ((str = inputStream1.readLine()) != null) {
-                Log.e("Debug", "Server Response " + str);
+                LogUtils.e("Server Response " + str);
 
                 Str1_imageurl = str;
-                Log.e("Debug", "Server Response String imageurl" + str);
+                LogUtils.e("Server Response String imageurl" + str);
             }
             inputStream1.close();
             LogUtils.i("image url" + Str1_imageurl);
@@ -1138,5 +1071,52 @@ public class BankDetails extends AppCompatActivity implements Validator.Validati
         LogUtils.i("File Path1:" + filePath);
         cursor.close();
         return filePath;
+    }
+
+    private class ImageuploadTask extends AsyncTask<String, Void, Boolean> {
+        private ProgressDialog dialog;
+        private BankDetails activity;
+        private Context context;
+
+        ImageuploadTask(BankDetails activity) {
+            this.activity = activity;
+            context = activity;
+            dialog = new ProgressDialog(context);
+        }
+
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(context);
+            dialog.setMessage("Uploading...");
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(false);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+            if (dialog != null && dialog.isShowing()) {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(final String... args) {
+            try {
+                // ... processing ...
+                Upload_Server();
+                return true;
+            } catch (Exception e) {
+                LogUtils.e("Schedule - UpdateSchedule failed " + e);
+                return false;
+            }
+        }
     }
 }

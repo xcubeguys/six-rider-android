@@ -12,7 +12,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,33 +63,24 @@ import io.card.payment.CreditCard;
 @EActivity(R.layout.activity_select_payment)
 public class PaymentSelectActivity extends AppCompatActivity {
 
+    protected static final String TAG = "PaymentSelectActivity";
     @ViewById(R.id.text_cash)
     TextView inputCash;
-
     @ViewById(R.id.text_card)
     TextView inputCard;
-
     @ViewById(R.id.text_corpid)
     TextView inputCorpID;
-
     @ViewById(R.id.cash_image)
     ImageView cashImage;
-
     Drawable tickDrawable;
-
     @ViewById(R.id.corpid_layout)
     LinearLayout corporateView;
-
     @ViewById(R.id.cash_layout)
     LinearLayout cashView;
-
     String userID;
-
     Dialog dialog;
     ProgressDialog progressDialog;
-
     boolean paymentMade = false, paymentCorporate = false;
-    protected static final String TAG = "PaymentSelectActivity";
     String corpid, Test_ApiKey, Live_ApiKey, is_live_stripe = "";
     String status, c_id;
 
@@ -272,7 +262,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.v(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", " + data + ")");
+        LogUtils.v("onActivityResult(" + requestCode + ", " + resultCode + ", " + data + ")");
 
         String outStr = "";
         //Bitmap cardTypeImage = null;
@@ -283,7 +273,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
             if (result != null) {
 
 
-                Log.i(TAG, "Set result response: " + result);
+                LogUtils.i("Set result response: " + result);
 
                 outStr += "Card number: " + result.getRedactedCardNumber() + "\n";
 
@@ -337,7 +327,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
                     }
 
                     public void onError(Exception error) {
-                        Log.d("Stripe error", error.getLocalizedMessage());
+                        LogUtils.d("Stripe error " + error.getLocalizedMessage());
                         Toast.makeText(getApplicationContext(), "Stripe error: " + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -350,7 +340,7 @@ public class PaymentSelectActivity extends AppCompatActivity {
         Bitmap card = CardIOActivity.getCapturedCardImage(data);
         //mResultImage.setImageBitmap(card);
         //mResultCardTypeImage.setImageBitmap(cardTypeImage);
-        Log.i(TAG, "Set result: " + outStr);
+        LogUtils.i("Set result: " + outStr);
     }
 
     public void printRes(String token) {

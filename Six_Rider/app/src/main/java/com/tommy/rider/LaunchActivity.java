@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -64,31 +63,24 @@ import java.util.Map;
 @EActivity(R.layout.activity_launch)
 public class LaunchActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = "LaunchActivity";
+    public Dialog dialog;
     GoogleSignInOptions gso;
     GoogleApiClient mGoogleApiClient;
-    private int GOOGLE_SIGN_IN = 100;
     Tracker mTracker;
-    //Facebook Declaration
-    private CallbackManager callbackManager;
-
-    private AccessTokenTracker accessTokenTracker;
-    private ProfileTracker profileTracker;
     Bundle parameters;
-
     String fbEmail, fbFullName, fbFirstName, fbLastName, fbUserProfile, fbID, fbToken;
     String googleEmail, googleFirstName, googleLastName, googleUserProfile, googleID, googleIDToken;
     String signInStatus, signInMessage;
-
     boolean facebookLogin = false;
-    public Dialog dialog;
     ProgressDialog progressDialog;
-
     SharedPreferences.Editor editor;
-
     String userID, userFirstName, userLastName, userEmail;
-
     boolean doubleBackToExitPressedOnce = false;
+    private int GOOGLE_SIGN_IN = 100;
+    //Facebook Declaration
+    private CallbackManager callbackManager;
+    private AccessTokenTracker accessTokenTracker;
+    private ProfileTracker profileTracker;
 
     @AfterViews
     void launchActivity() {
@@ -175,7 +167,7 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
                     profileTracker = new ProfileTracker() {
                         @Override
                         protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                            //Log.v("facebook - profile2", profile2.getFirstName());
+                            //LogUtils.v("facebook - profile2 - "+profile2.getFirstName());
                             displayMessage(profile2);
                             profileTracker.stopTracking();
                         }
@@ -184,7 +176,7 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
                 } else {
                     Profile profile = Profile.getCurrentProfile();
                     displayMessage(profile);
-                    //Log.v("facebook - profile", profile.getFirstName());
+                    //LogUtils.v("facebook - profile "+profile.getFirstName());
                 }
 
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
@@ -227,7 +219,6 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void onError(FacebookException e) {
-                Log.d("Facebooksdk", "Login with Facebook failure", e);
                 Toast.makeText(LaunchActivity.this, "An unknown network error has occured", Toast.LENGTH_LONG).show();
                 LogUtils.i("Facebook Login failed!!");
             }
@@ -257,7 +248,7 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void handleGoogleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        LogUtils.d("handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
@@ -460,14 +451,14 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
                 String something = new String(Base64.encode(md.digest(), 0));
                 //String something = new String(Base64.encodeBytes(md.digest()));
                 LogUtils.i("hash key value"+something);
-                Log.e("hash key", something);
+                LogUtils.e("hash key "+something);
             }
         } catch (PackageManager.NameNotFoundException e1) {
-            Log.e("name not found", e1.toString());
+            LogUtils.e("name not found"+e1.toString());
         } catch (NoSuchAlgorithmException e) {
-            Log.e("no such an algorithm", e.toString());
+            LogUtils.e("no such an algorithm "+e.toString());
         } catch (Exception e) {
-            Log.e("exception", e.toString());
+            LogUtils.e("exception "+e.toString());
         }
 
     }*/
@@ -582,7 +573,7 @@ public class LaunchActivity extends AppCompatActivity implements GoogleApiClient
         String name = "LaunchActivity";
 
         // [START screen_view_hit]
-        Log.i(TAG, "Setting screen name: " + name);
+        LogUtils.i("Setting screen name: " + name);
         mTracker.setScreenName("Image~" + name);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         // [END screen_view_hit]

@@ -20,7 +20,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,28 +59,21 @@ import java.util.List;
 public class SoSActivity extends AppCompatActivity implements CountryCodePicker.OnCountryChangeListener {
 
 
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
     Dialog dialog;
     ProgressDialog progressDialog;
-
     String userID;
     String contact_no1, contact_no2;
     boolean coutrycode1 = false, coutrycode2 = false;
-
     MaterialEditText inputCountryCode1, inputCountryCode2;
-
     MaterialEditText inputMobileNumber1, inputMobileNumber2;
-
     String countrycode1, countrycode2, mobileno1, mobileno2;
-
     CountryCodePicker ccp;
     String status, message;
     String contact_no1_p, contact_no2_p, contact_no1_country, contact_no2_country;
     ImageButton back;
     TextView cancel, updateContact;
-
     RelativeLayout cancelLayout, updateLayout;
-    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
-
     List<String> mobileNumbers = new ArrayList<>();
 
 
@@ -460,10 +452,10 @@ public class SoSActivity extends AppCompatActivity implements CountryCodePicker.
 
     private void requestContactPermission() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("SOSActivity", "Permission is not granted, requesting");
+            LogUtils.d("SOSActivity " + "Permission is not granted, requesting");
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.SEND_SMS}, 123);
         } else {
-            Log.d("SOSActivity", "Permission is granted");
+            LogUtils.d("SOSActivity " + "Permission is granted");
         }
     }
 
@@ -472,9 +464,9 @@ public class SoSActivity extends AppCompatActivity implements CountryCodePicker.
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 123) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("SOSActivity: ", "Permission has been granted");
+                LogUtils.d("SOSActivity: " + "Permission has been granted");
             } else {
-                Log.d("SOSActivity: ", "Permission has been denied or request cancelled");
+                LogUtils.d("SOSActivity: " + "Permission has been denied or request cancelled");
             }
         }
     }

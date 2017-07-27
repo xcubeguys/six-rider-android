@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -190,7 +189,7 @@ public class WalletActivity extends AppCompatActivity {
 
                                 wallet_jsonobj = response.getJSONObject(i);
                                 wallet_status = wallet_jsonobj.getString("status");
-                                Log.d("OUTPUT IS", wallet_status);
+                                LogUtils.d("wallet status " + wallet_status);
 
                                 if (wallet_status.matches("Success")) {
 
@@ -304,7 +303,7 @@ public class WalletActivity extends AppCompatActivity {
 
                                 update_jsonobj = response.getJSONObject(i);
                                 wallup_status = update_jsonobj.getString("status");
-                                Log.d("OUTPUT IS", wallup_status);
+                                LogUtils.d("wallup status " + wallup_status);
 
                                 if (wallup_status.matches("Success")) {
 

@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,6 +16,7 @@ import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.tommy.rider.adapter.LruBitmapCache;
+import com.tommy.rider.utils.LogUtils;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -26,11 +26,13 @@ public class AppController extends Application {
 
 	private static GoogleAnalytics sAnalytics;
 	private static Tracker sTracker;
-
+	private static AppController mInstance;
 	private RequestQueue mRequestQueue;
 	private ImageLoader mImageLoader;
 
-	private static AppController mInstance;
+	public static synchronized AppController getInstance() {
+		return mInstance;
+	}
 
 	@Override
 	public void onCreate() {
@@ -42,7 +44,7 @@ public class AppController extends Application {
 			sAnalytics = GoogleAnalytics.getInstance(this);
 
 		} catch (Exception e) {
-			Log.e(TAG, "Failed to initialize Crashlytics.");
+			LogUtils.e("Failed to initialize Crashlytics.");
 		}
 		mInstance = this;
 	}
@@ -54,10 +56,6 @@ public class AppController extends Application {
 		}
 
 		return sTracker;
-	}
-
-	public static synchronized AppController getInstance() {
-		return mInstance;
 	}
 
 	public RequestQueue getRequestQueue() {

@@ -13,7 +13,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,19 +37,14 @@ import java.util.ArrayList;
  * Created by javier on 24/04/15.
  **/
 public class SocialShare {
+    public File iamge_file;
     private Activity activity;
     private ArrayList<Integer> socialNetworks;
     private SocialImages socialImages;
-
     private String subject, message, imagePath, ReferralCode;
-
     private Uri fbphotoURI;
-
     private Bitmap bitMap;
-
     private ShareDialog shareDialog;
-
-    public File iamge_file;
 
     /* *
      * Custom social networks and custom images
@@ -97,6 +91,16 @@ public class SocialShare {
         this.activity = activity;
         socialImages = new SocialImages();
         addAllSocial();
+    }
+
+    private static void drawText(Canvas canvas, Paint paint, String text) {
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        int x = ((canvas.getWidth() / 2) - (bounds.width() / 2)) - 100;
+        int y = ((canvas.getHeight() / 2) - (bounds.height() / 2)) + 80;
+        paint.setTextSize(70);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        canvas.drawText(text, x, y, paint);
     }
 
     private void addAllSocial() {
@@ -281,7 +285,7 @@ public class SocialShare {
     private void instagramShareIntent() {
 
         if (iamge_file == null || !iamge_file.exists()) {
-            Log.e("file", "no image file at location ");
+            LogUtils.e("no image file at location ");
         } else {
             String type = "image";
             Intent share = new Intent(Intent.ACTION_SEND);
@@ -433,12 +437,12 @@ public class SocialShare {
 
         String sdPath = mFile1.getAbsolutePath() + "/" + fileName;
 
-        Log.i("hiya", "Your IMAGE ABSOLUTE PATH:-" + sdPath);
+        LogUtils.i("hiya - Your IMAGE ABSOLUTE PATH:-" + sdPath);
 
         File temp = new File(sdPath);
 
         if (!temp.exists()) {
-            Log.e("file", "no image file at location :" + sdPath);
+            LogUtils.e("no image file at location :" + sdPath);
         }
 
         return temp;
@@ -473,17 +477,6 @@ public class SocialShare {
 
         return result;
     }
-
-    private static void drawText(Canvas canvas, Paint paint, String text) {
-        Rect bounds = new Rect();
-        paint.getTextBounds(text, 0, text.length(), bounds);
-        int x = ((canvas.getWidth() / 2) - (bounds.width() / 2)) - 100;
-        int y = ((canvas.getHeight() / 2) - (bounds.height() / 2)) + 80;
-        paint.setTextSize(70);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        canvas.drawText(text, x, y, paint);
-    }
-
 
     /************
      * GETTERS & SETTERS

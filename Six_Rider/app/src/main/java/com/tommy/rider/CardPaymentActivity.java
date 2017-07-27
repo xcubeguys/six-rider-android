@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -148,7 +147,7 @@ public class CardPaymentActivity extends AppCompatActivity {
             }
 
             public void onError(Exception error) {
-                Log.d("Stripe error", error.getLocalizedMessage());
+                LogUtils.d("Stripe error " + error.getLocalizedMessage());
                 Toast.makeText(getApplicationContext(), "Stripe error: " + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 dismissDialog();
             }

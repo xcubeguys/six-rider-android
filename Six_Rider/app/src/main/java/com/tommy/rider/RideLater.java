@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -79,7 +78,6 @@ import java.util.TimeZone;
 
 
 public class RideLater extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    private static final String TAG = "Ridelater";
     TextView pickupdate, pickuptime, pickuploc, droploc;
     RelativeLayout pickup_layout, time_layout, pickup_address_layout, drop_address_layout;
     DatePickerDialog dpd;
@@ -105,6 +103,14 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
     ProgressDialog progressDialog;
     String rideLaterStatus, rideLaterMessage, request_id, carCategory;
     String strpickuploca, strdroploca, cashStatus, paymenttype;
+
+    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
+                                              CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
+        LogUtils.e(res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -357,7 +363,7 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
             String message = "Google Play Services is not available: " +
                     GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
 
-            Log.e(TAG, message);
+            LogUtils.e(message);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
     }
@@ -382,8 +388,8 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         if (resultCode == RESULT_OK) {
             // Get the user's selected place from the Intent.
             Place place = PlaceAutocomplete.getPlace(this, data);
-            Log.i(TAG, "Place Selected: " + place.getName());
-            Log.i(TAG, "Latitude Selected: " + place.getLatLng());
+            LogUtils.i("Place Selected: " + place.getName());
+            LogUtils.i("Latitude Selected: " + place.getLatLng());
 
             if (source.matches("ORIGIN")) {
                 exceptionLatLng = place.getLatLng();
@@ -447,7 +453,7 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
 
         } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             Status status = PlaceAutocomplete.getStatus(this, data);
-            Log.e(TAG, "Error: Status = " + status.toString());
+            LogUtils.e("Error: Status = " + status.toString());
         } else if (resultCode == RESULT_CANCELED) {
             // Indicates that the activity closed before a selection was made. For example if
             // the user pressed the back button.
@@ -473,14 +479,6 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
-                                              CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
-        Log.e(TAG, res.getString(R.string.place_details, name, id, address, phoneNumber,
-                websiteUri));
-        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
-                websiteUri));
     }
 
     public LatLng getLocationFromAddress1(String strAddress, String source) {
@@ -535,7 +533,7 @@ public class RideLater extends AppCompatActivity implements DatePickerDialog.OnD
                             try {
                                 strJsonCategory = response.getJSONObject(i);
                                 strCarCategory = strJsonCategory.getString("categoryname");
-                                Log.d("OUTPUT IS", strCarCategory);
+                                LogUtils.d("OUTPUT IS " + strCarCategory);
                                 carcategory[0] = "Select car category";
                                 carcategory[i + 1] = strCarCategory;
                                 LogUtils.i("CATEGORY" + carcategory[i]);

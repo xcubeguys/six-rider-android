@@ -57,7 +57,6 @@ import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,11 +197,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         OnMyLocationButtonClickListener, OnMapReadyCallback, GoogleMap.OnCameraChangeListener, FragmentDrawer.FragmentDrawerListener,
         GeoQueryEventListener, DirectionCallback, View.OnClickListener {
 
-    //Log
-    private static final String TAG = "GoogleMap";
-
     boolean doubleBackToExitPressedOnce = false;
-
     LocationManager locationManager;
 
     //CategoryLayout
@@ -237,26 +232,15 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     int categoryLength;
     SharedPreferences.Editor getState;
     String tripState, strCacnelStatus, status, surgePrice;
-    private Geocoder geocoder;
-
     MapRipple mapRipple;
-
     String[] subjectcategory;
-
-    private List<Address> addressList;
     DatabaseReference tollReference;
     ValueEventListener tollListener;
-    //Google Maps
-    private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
-    private OnLocationChangedListener mMapLocationListener = null;
     LocationRequest mLocationRequest;
     Location filterLocation, centerLoc, markerLoc;
     LatLng startLatLng, destLatLng, exceptionLatLng, pickupLatLng, destinationLatLng, center, orginlat, destlat, multiLatLng;
-
     Double originLAT, originLNG, destLAT, destLNG, newOriginLat, newOriginLng, newDestLat, newDestLng, calctotalDistance,
             newMultiLat, newMultiLng;
-
     CardView txtDriverArrivalETALayout;
     //Views
     TextView txtDriverArrivalETA, setPickupLocation, originLocation, destinationLocation, diaogDestinationLocation, lastTrip, lastTripTime,
@@ -268,75 +252,109 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     FragmentDrawer drawerFragment;
     Dialog progressBar;
     ProgressBar requestBar;
-
     Location mCurrentLocation;
-
     String maxShare, rideType, cashStatus, totalDistance_meter = "";
-
     float driverBearing = 0.0f, getBearing = 0.0f;
-
     double nearByDistanceRadius = 5;
-
     //Layouts
     RelativeLayout locationLayout, tripHistoryLayout, requestLayout, dropLocationLayout, FAB, updatedrop_location_layout;
     LinearLayout ratingLayout, categoryLayout, trip_info_layout, driverLayout, terminal_layout;
-
     //Strings
     String userID, google_api_key, driverID, tripID, requestStatus, requestID, paymentType, driverProfileName, driverProfileImage,
             pickupCountryCode, dropCountryCode, completeAddress, category, categoryId, driverDisplayName, licenseplate,
             driverFirstname, multiDestCountryCode, driverLastName, driverProfileImageAccepted, driverMobileNumber,
             tripDriverCategory, totalDuration, totalDistance, tripDriverVehicleMake, tripDriverVehicleModel, licenseplate_number,
             riderfirstname, tripTime, earnings, earnings_daily, earnings_weekly, earnings_monthly, earnings_yearly;
-
     //Firebase
     GeoQuery geoQuery;
     GeoFire geoFire;
-
     //Timer to run every 3 second
     EasyTimer easyTimer = new EasyTimer(3000);
     SharedPreferences state;
     //Int
     int count = 0;
-
-    private Map<String, Marker> markers;
-
     //check tripStatus
     boolean tripStatus = false;
-
     //progressDialog
     ProgressDialog progressDialog;
     Dialog dialog, faredialog;
-
     CheckBox check;
     Spinner sharecount;
-
     BitmapDescriptor bitmapDescriptor;
-
     LatLng prevLatLng = new LatLng(0, 0);
-
     Marker pickUPrDropMarker, myMarker;
     Polyline mPolyline;
-
     MaterialSpinner terminalSpinner, subjectspinner;
     MyBaseActivity myBaseActivity = new MyBaseActivity();
-
     String[] terminalsArray = new String[]{"Select your pickup area", "Terminal 1, Level 1 Arrivals", "Terminal 2, Level 2 Arrivals", "Terminal 3, B1 Arrivals", "Terminal 4"};
     String[] terminalOneArray = new String[]{"Select Area", "Door 4", "Door 5", "Door 6", "Door 7"};
     String[] terminalTowArray = new String[]{"Select Area", "Door 1", "Door 2", "Door 3"};
     String[] terminalThreeArray = new String[]{"Select Area", "B1 Door 1", "B1 Door 2", "B1 Door 3"};
     String[] commonTerminal = new String[]{"Select your pickup area", "Terminal 1", "Terminal 2", "Terminal 3", "Terminal 4"};
-
     Dialog dialogMultipleDestination;
-
     TextView[] mulitipleDestinationTextView;
     LatLng[] mulitiDestLatLng;
     String[] mulitiDestCountryCode, mulitiDestaddress;
-
     int numberOfDesView = 8 - 1;
-    private Tracker mTracker;
     int multiTvID;
+    private Geocoder geocoder;
+    private List<Address> addressList;
+    //Google Maps
+    private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
+    private OnLocationChangedListener mMapLocationListener = null;
+    private Map<String, Marker> markers;
+    private Tracker mTracker;
 
     //Variable for multi is latlng,countrycode,address
+
+    /**
+     * Helper method to format information about a place nicely.
+     */
+    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
+                                              CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
+        LogUtils.e(res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+    }
+
+    //generateNotifications
+    private static void generateNotification(Context context, String message) {
+
+        //Some Vars
+        final int NOTIFICATION_ID = 1; //this can be any int
+        String title = "SIX";
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        //Building the Notification
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setLargeIcon(largeIcon);
+        builder.setContentText(message);
+        builder.setContentTitle(title);
+
+        builder.setLights(Color.RED, 3000, 3000);
+        builder.setLights(Color.RED, 3000, 3000);
+        builder.setSound(uri);
+        builder.setAutoCancel(true);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        builder.getNotification().flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+
+
+        final NotificationManager notificationManager = (NotificationManager) context.getSystemService(
+                NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        final Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                notificationManager.cancel(NOTIFICATION_ID);
+                timer.cancel();
+            }
+        }, 10000, 1000);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1108,7 +1126,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
     }
 
-
     public LatLng getlatlng(Set startaddressSet) {
         int i = 0;
         String element = "0.0", element1 = "0.0";
@@ -1276,7 +1293,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
     }
 
-
     private void getCategoryInfo() {
         final String url = Constants.CATEGORY_LIVE_URL + "Settings/getCategory";
         LogUtils.i("GetCategoryURL==>" + url);
@@ -1335,7 +1351,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         AppController.getInstance().addToRequestQueue(infoReq);
     }
 
-
     public void getFareInfo(int i) {
 
         if (strMinFare[i] != null && !strMinFare[i].equals("null"))
@@ -1356,7 +1371,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         if (taxpercentage[i] != null && !taxpercentage[i].equals("null"))
             strTaxpercentage = taxpercentage[i];
     }
-
 
     private void showDriverInfoDialog() {
         dialog = new Dialog(MapActivity.this);
@@ -1594,7 +1608,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     }
 
-
     private void sendRequest() {
         setCancelStatus("0");
         if (pickupCountryCode == null && dropCountryCode == null) {
@@ -1700,10 +1713,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             this, R.raw.style));
 
             if (!success) {
-                Log.e(TAG, "Style parsing failed.");
+                LogUtils.e("Style parsing failed.");
             }
         } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
+            LogUtils.e("Can't find style. Error: ", e);
         }*/
 
     }
@@ -1824,12 +1837,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         mMapLocationListener = onLocationChangedListener;
     }
 
-
     @Override
     public void deactivate() {
         mMapLocationListener = null;
     }
-
 
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
@@ -1845,15 +1856,15 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                     strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
                 }
                 strAdd = strReturnedAddress.toString();
-                Log.w("My Current address", "" + strReturnedAddress.toString());
+                LogUtils.w("My Current address " + "" + strReturnedAddress.toString());
                 originLocation.setText(strReturnedAddress.toString());
                 getCountryName(this, LATITUDE, LONGITUDE, "ORIGIN");
             } else {
-                Log.w("My Current address", "No Address returned!");
+                LogUtils.w("My Current address " + "No Address returned!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.w("My Current address", "Cannnot get Address!");
+            LogUtils.w("My Current address " + "Cannnot get Address!");
         }
         return strAdd;
     }
@@ -1879,7 +1890,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             int kmInDec = Integer.valueOf(newFormat.format(km));
             double meter = valueResult % 1000;
             int meterInDec = Integer.valueOf(newFormat.format(meter));
-            Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+            LogUtils.i("Radius Value " + valueResult + "   KM  " + kmInDec
                     + " Meter   " + meterInDec);
 
             return Radius * c;
@@ -1950,11 +1961,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             String message = "Google Play Services is not available: " +
                     GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
 
-            Log.e(TAG, message);
+            LogUtils.e(message);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
     }
-
 
     public LatLng getLocationFromAddress1(String strAddress, String source) {
         LogUtils.i("Address" + strAddress);
@@ -2004,14 +2014,13 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         return p1;
     }
 
-
     public void setAddress(Intent data, int resultCode, String source) {
 
         if (resultCode == RESULT_OK) {
             // Get the user's selected place from the Intent.
             Place place = PlaceAutocomplete.getPlace(this, data);
-            Log.i(TAG, "Place Selected: " + place.getName());
-            Log.i(TAG, "Latitude Selected: " + place.getLatLng());
+            LogUtils.i("Place Selected: " + place.getName());
+            LogUtils.i("Latitude Selected: " + place.getLatLng());
 
             if (source.matches("ORIGIN")) {
                 exceptionLatLng = place.getLatLng();
@@ -2146,25 +2155,13 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
         } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             Status status = PlaceAutocomplete.getStatus(this, data);
-            Log.e(TAG, "Error: Status = " + status.toString());
+            LogUtils.e("Error: Status = " + status.toString());
         } else if (resultCode == RESULT_CANCELED) {
             // Indicates that the activity closed before a selection was made. For example if
             // the user pressed the back button.
             LogUtils.i("Canceled by user");
         }
     }
-
-    /**
-     * Helper method to format information about a place nicely.
-     */
-    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
-                                              CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
-        Log.e(TAG, res.getString(R.string.place_details, name, id, address, phoneNumber,
-                websiteUri));
-        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
-                websiteUri));
-    }
-
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
@@ -2343,6 +2340,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
                                 requestStatus = jsonObject.optString("request_status");
                                 requestID = jsonObject.optString("request_id");
+                                String estFareFromSetRequest = jsonObject.optString("est_fare");
                                 LogUtils.i("requestStatus" + requestStatus);
                                 LogUtils.i("requestID" + requestID);
 
@@ -2350,7 +2348,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                                 getState.putString("tripreqid", requestID);
                                 getState.apply();
 
-                                processRequest(requestID);
+                                processRequest(requestID, estFareFromSetRequest);
                                 //Set a runnable task every 3 seconds
                                 AsynchTaskTimer(requestID, "normal_request");
 
@@ -2387,9 +2385,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     }
 
     //Sending requests to Available drivers
-    private void processRequest(String requestID) {
+    private void processRequest(String requestID, String estFareFromSetRequest) {
 
-        String estimate = "0";
+        //String estimate = "0";
+        String estimate = estFareFromSetRequest;
         if (orginlat != null || destlat != null) {
             LogUtils.i("The pick up and drop " + destlat);
             calctotalDistance = CalculationByDistance(center, destlat);
@@ -2403,15 +2402,15 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         LogUtils.i("Pickup strAirportfee" + strAirportfee);
         LogUtils.i("Pickup strTaxpercentage" + strTaxpercentage);
 
-        if (calctotalDistance != null && calctotalDistance != 0.0)
-            estimate = calculateEstimate(calctotalDistance, calcPriceKM, calcPriceMin, calcBaseFare, strBookfee, strAirportfee, strTaxpercentage);
+        if (estimate == null) {
+            if (calctotalDistance != null && calctotalDistance != 0.0)
+                estimate = calculateEstimate(calctotalDistance, calcPriceKM, calcPriceMin, calcBaseFare, strBookfee, strAirportfee, strTaxpercentage);
 
-        if (estimate.isEmpty() || estimate.equals(""))
-            estimate = "0";
-
+            if (estimate.isEmpty() || estimate.equals(""))
+                estimate = "0";
+        }
 
         final String url = Constants.REQUEST_URL + "processRequest/request_id/" + requestID + "/est_fare/" + estimate;
-
 
         LogUtils.i("process Request ID==>" + url);
         final JsonArrayRequest signUpReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
@@ -2569,18 +2568,17 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                         }
                     }
                 } catch (Exception e) {
-                    Log.d("onResponse", "There is an error");
+                    LogUtils.d("There is an error");
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<List<RequestInfo>> call, Throwable t) {
-                Log.d("onResponse", "There is an error ONFAILURE");
+                LogUtils.d("There is an error ONFAILURE");
             }
         });
     }
-
 
     //get Request status
     private void getTripID(String requestID) {
@@ -2903,7 +2901,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
     }
 
-
     private void getKeys() {
 
         //http://demo.cogzideltemplates.com/tommy/settings/getdetails
@@ -3001,7 +2998,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     }
 
-
     private void showDriverCancelDialog(String message) {
         android.support.v7.app.AlertDialog.Builder builder =
                 new android.support.v7.app.AlertDialog.Builder(MapActivity.this, R.style.AppCompatAlertDialogStyle);
@@ -3036,7 +3032,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             builder.show();
         }
     }
-
 
     //Payment Type Listener
     private void getPaymentReference() {
@@ -3102,7 +3097,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         });
     }
 
-
     private void updatecancelTrip() {
 
         String url = Constants.REQUEST_URL + "updateTrips/trip_id/" + tripID + "/trip_status/cancel/accept_status/5/distance/0/user_id/" + userID;
@@ -3136,7 +3130,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                     // stopAnim();
                     // Toast.makeText(Map_Activity.this, "An unknown network error has occured", Toast.LENGTH_SHORT).show();
                 }
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                LogUtils.d("Error: " + error.getMessage());
             }
         });
 
@@ -3339,7 +3333,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         signUpReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 1, 1.0f));
         AppController.getInstance().addToRequestQueue(signUpReq);
     }
-
 
     //Set cancel Request
     public void cancelRequest(String requestID) {
@@ -3695,12 +3688,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
     }
 
-
     @Override
     public void onDirectionFailure(Throwable t) {
 
     }
-
 
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
@@ -3878,7 +3869,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     }
 
-
     private float getBearing(LatLng begin, LatLng end) {
         double lat = Math.abs(begin.latitude - end.latitude);
         double lng = Math.abs(begin.longitude - end.longitude);
@@ -3894,7 +3884,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
         return -1;
     }
-
 
     @Override
     public void onGeoQueryReady() {
@@ -3991,10 +3980,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
     }
 
-    public void setCategory(String carcategory) {
-        this.carCategory = carcategory;
-    }
-
     public String getCategory() {
         if (category != null) {
             LogUtils.i("strCategory=" + carCategory);
@@ -4005,13 +3990,16 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
     }
 
-    public void setGeofire(GeoFire geofire) {
-        this.geoFire = geofire;
+    public void setCategory(String carcategory) {
+        this.carCategory = carcategory;
     }
-
 
     public GeoFire getGeofire() {
         return geoFire;
+    }
+
+    public void setGeofire(GeoFire geofire) {
+        this.geoFire = geofire;
     }
 
     //get Instant location updates form Driver
@@ -4129,7 +4117,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -4168,44 +4155,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         }
     }
 
-
-    //generateNotifications
-    private static void generateNotification(Context context, String message) {
-
-        //Some Vars
-        final int NOTIFICATION_ID = 1; //this can be any int
-        String title = "SIX";
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        //Building the Notification
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setLargeIcon(largeIcon);
-        builder.setContentText(message);
-        builder.setContentTitle(title);
-
-        builder.setLights(Color.RED, 3000, 3000);
-        builder.setLights(Color.RED, 3000, 3000);
-        builder.setSound(uri);
-        builder.setAutoCancel(true);
-        builder.setPriority(Notification.PRIORITY_HIGH);
-        builder.getNotification().flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-
-
-        final NotificationManager notificationManager = (NotificationManager) context.getSystemService(
-                NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-        final Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                notificationManager.cancel(NOTIFICATION_ID);
-                timer.cancel();
-            }
-        }, 10000, 1000);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -4221,72 +4170,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     public void onClick(View v) {
 
         placeAddress(v.getId());
-    }
-
-    private class GetLocationAsync extends AsyncTask<String, Void, String> {
-
-        double x, y;
-        StringBuilder str;
-
-        public GetLocationAsync(double latitude, double longitude) {
-            // TODO Auto-generated constructor stub
-            x = latitude;
-            y = longitude;
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @SuppressLint("NewApi")
-        @Override
-        protected String doInBackground(String... params) {
-
-            try {
-                geocoder = new Geocoder(MapActivity.this);
-                addressList = geocoder.getFromLocation(x, y, 1);
-
-                str = new StringBuilder();
-
-                if (Geocoder.isPresent()) {
-
-                    if (addressList.size() > 0) {
-                        Address returnAddress = addressList.get(0);
-                        StringBuilder strReturnedAddress = new StringBuilder("");
-
-                        for (int i = 0; i < returnAddress.getMaxAddressLineIndex(); i++) {
-                            strReturnedAddress.append(returnAddress.getAddressLine(i)).append("\n");
-                        }
-                        completeAddress = strReturnedAddress.toString();
-                        pickupCountryCode = addressList.get(0).getCountryCode();
-
-                    }
-                }
-            } catch (IOException e) {
-                Log.e("tag", e.getMessage());
-            }
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                LogUtils.i("Address is " + completeAddress);
-                if (completeAddress != null) {
-                    originLocation.setText(completeAddress);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-        }
     }
 
     private Location convertLatLngToLocation(LatLng latLng) {
@@ -4358,7 +4241,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 
     private String calculateEstimate(double strDistance, String priceKM, String priceMin, String baseFare, String bookfee, String airportfee, String taxpercentage) {
 
@@ -4501,7 +4383,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                 if (error instanceof NoConnectionError) {
                     Toast.makeText(MapActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 }
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                LogUtils.d("Error: " + error.getMessage());
             }
         });
 
@@ -4607,7 +4489,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             }
         });
     }
-
 
     public void getRideLaterCarCategory(String rideLaterRequestID) {
 
@@ -4787,7 +4668,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
         LogUtils.i("data ddsaved==" + parentnode);
         requestID = parentnode;
-        processRequest(requestID);
+        // TODO: 27/7/17 PT - need to send backend calculated fare estimate as being sent for normal request of cab
+        processRequest(requestID, null);
         //Set a runnable task every 3 seconds
         AsynchTaskTimer(requestID, "ride_later_request");
 
@@ -4869,7 +4751,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         DrawableCompat.setTintList(wrappedDrawable, colors);
         return wrappedDrawable;
     }
-
 
     public float getDriverBearing(String key) {
 
@@ -4985,7 +4866,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         AppController.getInstance().addToRequestQueue(movieReq);
     }
 
-
     public String convertToDecimal(Double amount) {
 
         if (amount > 0) {
@@ -4993,60 +4873,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
             return new DecimalFormat("0.00").format(amount);
         } else {
             return String.valueOf(0);
-        }
-    }
-
-    public class DoubleArrayEvaluator implements TypeEvaluator<double[]> {
-
-        private double[] mArray;
-
-        /**
-         * Create a DoubleArrayEvaluator that does not reuse the animated value. Care must be taken
-         * when using this option because on every evaluation a new <code>double[]</code> will be
-         * allocated.
-         *
-         * @see #DoubleArrayEvaluator(double[])
-         */
-        public DoubleArrayEvaluator() {
-        }
-
-        /**
-         * Create a DoubleArrayEvaluator that reuses <code>reuseArray</code> for every evaluate() call.
-         * Caution must be taken to ensure that the value returned from
-         * {@link android.animation.ValueAnimator#getAnimatedValue()} is not cached, modified, or
-         * used across threads. The value will be modified on each <code>evaluate()</code> call.
-         *
-         * @param reuseArray The array to modify and return from <code>evaluate</code>.
-         */
-        public DoubleArrayEvaluator(double[] reuseArray) {
-            mArray = reuseArray;
-        }
-
-        /**
-         * Interpolates the value at each index by the fraction. If
-         * {@link #DoubleArrayEvaluator(double[])} was used to construct this object,
-         * <code>reuseArray</code> will be returned, otherwise a new <code>double[]</code>
-         * will be returned.
-         *
-         * @param fraction   The fraction from the starting to the ending values
-         * @param startValue The start value.
-         * @param endValue   The end value.
-         * @return A <code>double[]</code> where each element is an interpolation between
-         * the same index in startValue and endValue.
-         */
-        @Override
-        public double[] evaluate(float fraction, double[] startValue, double[] endValue) {
-            double[] array = mArray;
-            if (array == null) {
-                array = new double[startValue.length];
-            }
-
-            for (int i = 0; i < array.length; i++) {
-                double start = startValue[i];
-                double end = endValue[i];
-                array[i] = start + (fraction * (end - start));
-            }
-            return array;
         }
     }
 
@@ -5262,7 +5088,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d("onActivityResult()", Integer.toString(resultCode));
+        LogUtils.d("onActivityResult() " + Integer.toString(resultCode));
 
         switch (requestCode) {
             case Constants.REQUEST_CHECK_SETTINGS:
@@ -5599,7 +5425,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
     }
 
-
     private void sendfeedback(String subject, String feedback) {
 
         try {
@@ -5648,39 +5473,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         signUpReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 1, 1.0f));
         AppController.getInstance().addToRequestQueue(signUpReq);
     }
-
-
-    public class getPlaceType extends AsyncTask<String, Void, String> {
-
-        String latlng;
-
-        private getPlaceType(String latlng) {
-            this.latlng = latlng;
-        }
-
-
-        protected void onPreExecute() {
-
-        }
-
-        protected String doInBackground(String... arg0) {
-            try {
-
-                if (google_api_key != null)
-                    PlaceType(latlng);
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-        }
-    }
-
 
     public void PlaceType(String latlng) {
         //final String url="https://maps.googleapis.com/maps/api/place/details/json?placeid="+placeID+"&key="+google_api_key;
@@ -5764,7 +5556,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
                     Toast.makeText(MapActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 }
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                LogUtils.d("Error: " + error.getMessage());
 
             }
         });
@@ -5791,7 +5583,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
 
 
     }
-
 
     public Bitmap drawCircle() {
 
@@ -6170,7 +5961,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
                             try {
                                 JSONObject strJsonCategory = response.getJSONObject(i);
                                 strCarCategory = strJsonCategory.optString("subject");
-                                Log.d("OUTPUT IS", strCarCategory);
+                                LogUtils.d("OUTPUT IS " + strCarCategory);
                                 subjectcategory[0] = "Select a subject";
                                 subjectcategory[i + 1] = strCarCategory;
                                 LogUtils.i("CATEGORY" + subjectcategory[i]);
@@ -6254,10 +6045,161 @@ public class MapActivity extends AppCompatActivity implements ConnectionCallback
         String name = "MapActivity";
 
         // [START screen_view_hit]
-        Log.i(TAG, "Setting screen name: " + name);
+        LogUtils.i("Setting screen name: " + name);
         mTracker.setScreenName("Image~" + name);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         // [END screen_view_hit]
+    }
+
+    private class GetLocationAsync extends AsyncTask<String, Void, String> {
+
+        double x, y;
+        StringBuilder str;
+
+        public GetLocationAsync(double latitude, double longitude) {
+            // TODO Auto-generated constructor stub
+            x = latitude;
+            y = longitude;
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @SuppressLint("NewApi")
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                geocoder = new Geocoder(MapActivity.this);
+                addressList = geocoder.getFromLocation(x, y, 1);
+
+                str = new StringBuilder();
+
+                if (Geocoder.isPresent()) {
+
+                    if (addressList.size() > 0) {
+                        Address returnAddress = addressList.get(0);
+                        StringBuilder strReturnedAddress = new StringBuilder("");
+
+                        for (int i = 0; i < returnAddress.getMaxAddressLineIndex(); i++) {
+                            strReturnedAddress.append(returnAddress.getAddressLine(i)).append("\n");
+                        }
+                        completeAddress = strReturnedAddress.toString();
+                        pickupCountryCode = addressList.get(0).getCountryCode();
+
+                    }
+                }
+            } catch (IOException e) {
+                LogUtils.e("tag " + e.getMessage());
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                LogUtils.i("Address is " + completeAddress);
+                if (completeAddress != null) {
+                    originLocation.setText(completeAddress);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+        }
+    }
+
+    public class DoubleArrayEvaluator implements TypeEvaluator<double[]> {
+
+        private double[] mArray;
+
+        /**
+         * Create a DoubleArrayEvaluator that does not reuse the animated value. Care must be taken
+         * when using this option because on every evaluation a new <code>double[]</code> will be
+         * allocated.
+         *
+         * @see #DoubleArrayEvaluator(double[])
+         */
+        public DoubleArrayEvaluator() {
+        }
+
+        /**
+         * Create a DoubleArrayEvaluator that reuses <code>reuseArray</code> for every evaluate() call.
+         * Caution must be taken to ensure that the value returned from
+         * {@link android.animation.ValueAnimator#getAnimatedValue()} is not cached, modified, or
+         * used across threads. The value will be modified on each <code>evaluate()</code> call.
+         *
+         * @param reuseArray The array to modify and return from <code>evaluate</code>.
+         */
+        public DoubleArrayEvaluator(double[] reuseArray) {
+            mArray = reuseArray;
+        }
+
+        /**
+         * Interpolates the value at each index by the fraction. If
+         * {@link #DoubleArrayEvaluator(double[])} was used to construct this object,
+         * <code>reuseArray</code> will be returned, otherwise a new <code>double[]</code>
+         * will be returned.
+         *
+         * @param fraction   The fraction from the starting to the ending values
+         * @param startValue The start value.
+         * @param endValue   The end value.
+         * @return A <code>double[]</code> where each element is an interpolation between
+         * the same index in startValue and endValue.
+         */
+        @Override
+        public double[] evaluate(float fraction, double[] startValue, double[] endValue) {
+            double[] array = mArray;
+            if (array == null) {
+                array = new double[startValue.length];
+            }
+
+            for (int i = 0; i < array.length; i++) {
+                double start = startValue[i];
+                double end = endValue[i];
+                array[i] = start + (fraction * (end - start));
+            }
+            return array;
+        }
+    }
+
+    public class getPlaceType extends AsyncTask<String, Void, String> {
+
+        String latlng;
+
+        private getPlaceType(String latlng) {
+            this.latlng = latlng;
+        }
+
+
+        protected void onPreExecute() {
+
+        }
+
+        protected String doInBackground(String... arg0) {
+            try {
+
+                if (google_api_key != null)
+                    PlaceType(latlng);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
     }
 
 }

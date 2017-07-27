@@ -21,7 +21,6 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -69,54 +68,42 @@ import java.util.List;
 @EActivity(R.layout.activity_edit_profile)
 public class EditProfileActivity extends AppCompatActivity implements CountryCodePicker.OnCountryChangeListener, Validator.ValidationListener {
 
-    Validator validator;
-    public String userID, firstName, lastName, nickName, email, mobileNumber, referal_code, countryCode, profileImage, profileImageNew = "null", status, message;
-    private static final int CAMERA_CAPTURE_IMAGE = 100;
     public static final int MEDIA_TYPE_IMAGE = 1;
+    private static final int CAMERA_CAPTURE_IMAGE = 100;
+    public String userID, firstName, lastName, nickName, email, mobileNumber, referal_code, countryCode, profileImage, profileImageNew = "null", status, message;
+    Validator validator;
     String picturePath, profImage, updateURL;
     ProgressDialog progressDialog;
 
     SharedPreferences.Editor editor;
-
-    private Uri fileUri; // file url to store image/video
-
     @ViewById(R.id.profileImage)
     ImageView edtProfileImage;
-
     @ViewById(R.id.backButton)
     ImageButton backButton;
-
     @ViewById(R.id.save_button)
     Button saveButton;
-
     @NotEmpty(message = "Enter first name")
     @ViewById(R.id.edtFirstName)
     EditText inputFirstName;
-
     @NotEmpty(message = "Enter last name")
     @ViewById(R.id.edtLastName)
     EditText inputLastName;
-
     @NotEmpty(message = "Enter nick name")
     @ViewById(R.id.edtNickNamee)
     EditText inputNickName;
-
     @NotEmpty
     @ViewById(R.id.edtCountryCode)
     EditText inputCountryCode;
-
     @NotEmpty
     @ViewById(R.id.edtMobile)
     EditText inputMobileNumber;
-
     @ViewById(R.id.edtEmail)
     EditText inputEmail;
-
     @ViewById(R.id.edtreferral)
     TextView inputReferal;
-
     @ViewById(R.id.ccp)
     CountryCodePicker ccp;
+    private Uri fileUri; // file url to store image/video
 
     @AfterViews
     void settingsActivity() {
@@ -607,63 +594,8 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         }
     }
 
-    private class ImageuploadTask extends AsyncTask<String, Void, Boolean> {
-        private ProgressDialog dialog;
-        private EditProfileActivity activity;
-
-        ImageuploadTask(EditProfileActivity activity) {
-            this.activity = activity;
-            context = activity;
-            dialog = new ProgressDialog(context);
-        }
-
-        private Context context;
-
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(context);
-            dialog.setMessage("Uploading...");
-            dialog.setIndeterminate(false);
-            dialog.setCancelable(false);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            if (dialog != null && dialog.isShowing()) {
-                if (!activity.isFinishing() && !activity.isDestroyed()) {
-                    try {
-                        dialog.dismiss();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            if (success) {
-                LogUtils.i("success");
-            } else {
-                LogUtils.i("failure");
-            }
-        }
-
-        @Override
-        protected Boolean doInBackground(final String... args) {
-            try {
-                // ... processing ...
-                Upload_Server();
-                return true;
-            } catch (Exception e) {
-                Log.e("Schedule", "UpdateSchedule failed", e);
-                return false;
-            }
-        }
-    }
-
     protected void Upload_Server() {
-        // TODO Auto-generated method stub
         try {
-
-            Log.e("Image Upload", "Inside Upload");
 
             HttpURLConnection connection;
             DataOutputStream outputStream;
@@ -741,10 +673,10 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
             String Str1_imageurl = "";
 
             while ((str = inputStream1.readLine()) != null) {
-                Log.e("Debug", "Server Response " + str);
+                LogUtils.e("Server Response " + str);
 
                 Str1_imageurl = str;
-                Log.e("Debug", "Server Response String imageurl" + str);
+                LogUtils.e("Server Response String imageurl" + str);
             }
             inputStream1.close();
             LogUtils.i("image url" + Str1_imageurl);
@@ -839,5 +771,56 @@ public class EditProfileActivity extends AppCompatActivity implements CountryCod
         LogUtils.i("File Path1:" + filePath);
         cursor.close();
         return filePath;
+    }
+
+    private class ImageuploadTask extends AsyncTask<String, Void, Boolean> {
+        private ProgressDialog dialog;
+        private EditProfileActivity activity;
+        private Context context;
+
+        ImageuploadTask(EditProfileActivity activity) {
+            this.activity = activity;
+            context = activity;
+            dialog = new ProgressDialog(context);
+        }
+
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(context);
+            dialog.setMessage("Uploading...");
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(false);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (dialog != null && dialog.isShowing()) {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (success) {
+                LogUtils.i("success");
+            } else {
+                LogUtils.i("failure");
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(final String... args) {
+            try {
+                // ... processing ...
+                Upload_Server();
+                return true;
+            } catch (Exception e) {
+                LogUtils.e("Schedule - UpdateSchedule failed " + e);
+                return false;
+            }
+        }
     }
 }
